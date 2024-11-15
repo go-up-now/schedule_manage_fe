@@ -1,0 +1,196 @@
+import Table from "../../../component/Table";
+import Button from "../../../component/Button";
+import React, { useState, useEffect } from "react";
+
+function NotYetSubject() {
+  const headers = [
+    "Mã môn",
+    "Môn",
+    "Số tín chỉ",
+    "Lớp",
+    "Số lượng",
+    "Còn lại",
+    "Ca",
+    "Thứ",
+    "Thời gian",
+    " ",
+  ];
+
+  const header1s = ["Mã môn", "Môn", "Lớp", "Ca", "Thứ", " "];
+
+  const subjects = [
+    {
+      id: 1,
+      code: "COM108",
+      name: "Cơ sở dữ liệu",
+      credit: 3,
+      clazz: "SD18301",
+      amount: 40,
+      available: 30,
+      shift: 1,
+      day_of_week: "2, 4, 6",
+      time: "07:15:00 - 09:15:00",
+    },
+    {
+      id: 2,
+      code: "COM201",
+      name: "SQLServer",
+      credit: 3,
+      clazz: "SD18301",
+      amount: 40,
+      available: 19,
+      shift: 1,
+      day_of_week: "3, 5, 7",
+      time: "07:15:00 - 09:15:00",
+    },
+    {
+      id: 3,
+      code: "EN1.1",
+      name: "Tiếng Anh 1.1",
+      credit: 3,
+      clazz: "SD18301",
+      amount: 40,
+      available: 22,
+      shift: 1,
+      day_of_week: "2, 4, 6",
+      time: "07:15:00 - 09:15:00",
+    },
+    {
+      id: 4,
+      code: "EN1.2",
+      name: "Tiếng Anh 1.2",
+      credit: 3,
+      clazz: "SD18301",
+      amount: 40,
+      available: 34,
+      shift: 1,
+      day_of_week: "3, 5, 7",
+      time: "07:15:00 - 09:15:00",
+    },
+  ];
+
+  const renderRow = (item) => [
+    <td key={`item-code-${item.id}`} className="px-6 py-4">
+      {item.code}
+    </td>,
+    <td key={`item-name-${item.id}`} className="px-4 py-4">
+      {item.name}
+    </td>,
+    <td key={`item-credit-${item.id}`} className="px-6 py-4">
+      {item.credit}
+    </td>,
+    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
+      {item.clazz}
+    </td>,
+    <td key={`item-amount-${item.id}`} className="px-6 py-4">
+      {item.amount}
+    </td>,
+    <td key={`item-available-${item.id}`} className="px-6 py-4">
+      {item.available}
+    </td>,
+    <td key={`item-shift-${item.id}`} className="px-6 py-4">
+      {item.shift}
+    </td>,
+    <td key={`item-day_of_week-${item.id}`} className="px-4 py-4">
+      {item.day_of_week}
+    </td>,
+    <td key={`item-time-${item.id}`} className="px-6 py-4">
+      {item.time}
+    </td>,
+    <td key={`item-menu-${item.id}`} className="px-6 py-4">
+      <Button
+        label="Đăng ký"
+        className="bg-white font-bold text-blue-600 hover:bg-white hover:text-blue-700"
+      />
+    </td>,
+  ];
+
+  const renderRow1 = (item) => [
+    <td key={`item-code-${item.id}`} className="px-6 py-4">
+      {item.code}
+    </td>,
+    <td key={`item-name-${item.id}`} className="px-4 py-4">
+      {item.name}
+    </td>,
+    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
+      {item.clazz}
+    </td>,
+    <td key={`item-shift-${item.id}`} className="px-6 py-4">
+      {item.shift}
+    </td>,
+    <td key={`item-day_of_week-${item.id}`} className="px-4 py-4">
+      {item.day_of_week}
+    </td>,
+    <td key={`item-menu-${item.id}`} className="px-6 py-4">
+      <Button
+        label="Huỷ"
+        className="bg-white font-bold text-red-600 hover:bg-white hover:text-red-700"
+      />
+    </td>,
+  ];
+
+  const numberSelectBox = [
+    {
+      name: "Ngành",
+      title: "Ngành",
+      options: [{ value: "CNTT", label: "Công nghệ thông tin" }],
+    },
+  ];
+
+  const [desktop, setDesktop] = useState(true);
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 783) {
+        setMobile(true);
+        setDesktop(false);
+      } else {
+        setMobile(false);
+        setDesktop(true);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    // Kiểm tra kích thước màn hình khi component được mount
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [mobile, desktop]);
+
+  return (
+    <div className="">
+      {desktop && (
+        <>
+          <Table
+            DefaultTable={true}
+            showOptions={true}
+            showSearch={true}
+            showSelectBox={true}
+            optionsValue={numberSelectBox}
+            headers={headers}
+            renderRow={renderRow}
+            data={subjects}
+            maxRow={5}
+          />
+        </>
+      )}
+      {mobile && (
+        <>
+          <Table
+            DefaultTable={true}
+            showOptions={true}
+            showSearch={true}
+            showSelectBox={true}
+            optionsValue={numberSelectBox}
+            headers={header1s}
+            renderRow={renderRow1}
+            data={subjects}
+            maxRow={5}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+export default NotYetSubject;
