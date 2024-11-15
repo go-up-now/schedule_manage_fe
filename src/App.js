@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
 import "./App.css";
 import SideBar from "./component/SideBar";
 import Header from "./component/Header";
 import Footer from "./component/Footer.jsx";
 
+import Login from "./common/login/Login.jsx";
 import EventDescription from "./common/event-description/EventDescription.jsx";
 import PersonalInformation from "./common/personal-information/PersonalInformation.jsx";
 
@@ -49,7 +50,7 @@ const userAccount = {
   major: "Phát triển phần mềm",
   avatar:
     "https://static.vecteezy.com/system/resources/previews/011/459/666/original/people-avatar-icon-png.png",
-  role: "admin",
+  role: "student",
 };
 
 function App() {
@@ -84,6 +85,7 @@ function App() {
           <div className={`mt-1 pt-[69px] px-4 md:pt-0`}>
             <Routes>
               {/* Common */}
+              <Route path="/" element={<Login />} />
               <Route path="/event/:title" element={<EventDescription />} />
               <Route
                 path="/person-info/:code/:name"
