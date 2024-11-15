@@ -49,7 +49,7 @@ const userAccount = {
   major: "Phát triển phần mềm",
   avatar:
     "https://static.vecteezy.com/system/resources/previews/011/459/666/original/people-avatar-icon-png.png",
-  role: "admin",
+  role: "student",
 };
 
 function App() {

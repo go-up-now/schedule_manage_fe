@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import icon from "../images/logo.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -22,7 +22,6 @@ import {
   faBars,
   faAddressCard,
   faRightFromBracket,
-  faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
 import MiniMenu from "./MiniMenu";
@@ -141,12 +140,11 @@ function SideBar({ user, userRole }) {
       }
     };
     window.addEventListener("resize", handleResize);
-    // Kiểm tra kích thước màn hình khi component được mount
     handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [showMobile, showDesktop]);
+  }, []);
 
   const infoLink = () => {
     navigate(
@@ -168,6 +166,7 @@ function SideBar({ user, userRole }) {
       isDanger: false,
     },
   ];
+
   return (
     <>
       {showDesktop && (
@@ -183,22 +182,21 @@ function SideBar({ user, userRole }) {
             <div className="p-1">
               {sidebarItems.map((item, index) => (
                 <Tooltip key={index} text={item.title}>
-                  <Button
-                    label={
-                      <>
-                        <FontAwesomeIcon icon={item.icon} />
-                      </>
-                    }
-                    onClick={() => {
-                      window.location.pathname = item.link;
-                    }}
-                    className={
-                      "relative w-full h-[60px] text-xl bg-transparent justify-center text-black my-1 z-20 hover:bg-blue-50 transition-all ease-in-out duration-200" +
-                      (window.location.pathname.includes(item.link)
-                        ? "bg-[#E4F4FF] text-blue-500"
-                        : "")
-                    }
-                  />
+                  <Link to={item.link}>
+                    <Button
+                      label={
+                        <>
+                          <FontAwesomeIcon icon={item.icon} />
+                        </>
+                      }
+                      className={
+                        "relative w-full h-[60px] text-xl bg-transparent justify-center text-black my-1 z-20 hover:bg-blue-50 transition-all ease-in-out duration-200" +
+                        (window.location.pathname.includes(item.link)
+                          ? "bg-[#E4F4FF] text-blue-500"
+                          : "")
+                      }
+                    />
+                  </Link>
                 </Tooltip>
               ))}
             </div>
@@ -237,25 +235,22 @@ function SideBar({ user, userRole }) {
                 </div>
                 <div className="p-1 max-h-[430px] overflow-auto">
                   {sidebarItems.map((item, index) => (
-                    <Button
-                      key={index}
-                      label={
-                        <>
-                          <FontAwesomeIcon icon={item.icon} className="mr-4" />
-                          {item.title}
-                        </>
-                      }
-                      onClick={() => {
-                        window.location.pathname = item.link;
-                        setShowSideBar(false);
-                      }}
-                      className={
-                        "relative w-full h-[60px] text-xl bg-transparent pl-4 justify-start text-black my-1 z-20 hover:bg-blue-50 transition-all ease-in-out 0.2s" +
-                        (window.location.pathname.includes(item.link)
-                          ? "bg-[#E4F4FF] boder text-blue-500"
-                          : "")
-                      }
-                    />
+                    <Link to={item.link} key={index}>
+                      <Button
+                        label={
+                          <>
+                            <FontAwesomeIcon icon={item.icon} className="mr-4" />
+                            {item.title}
+                          </>
+                        }
+                        className={
+                          "relative w-full h-[60px] text-xl bg-transparent pl-4 justify-start text-black my-1 z-20 hover:bg-blue-50 transition-all ease-in-out 0.2s" +
+                          (window.location.pathname.includes(item.link)
+                            ? "bg-[#E4F4FF] boder text-blue-500"
+                            : "")
+                        }
+                      />
+                    </Link>
                   ))}
                 </div>
                 <div className="w-full border-t border-black p-1 px-4 mt-2">
@@ -263,7 +258,8 @@ function SideBar({ user, userRole }) {
                     <img
                       className="w-[60px] rounded-full ml-4 object-cover"
                       src={user.avatar}
-                    ></img>
+                      alt="Avatar"
+                    />
                     <div className="text-right w-full font-medium h-full flex flex-col">
                       <p>{user.name}</p>
                       <p>{user.code}</p>
@@ -281,22 +277,7 @@ function SideBar({ user, userRole }) {
                     }
                     onClick={infoLink}
                     className={
-                      "p-2 my-4 bg-transparent border rounded-md w-full flex items-center justify-center"
-                    }
-                  />
-                  <Button
-                    label={
-                      <>
-                        <FontAwesomeIcon
-                          icon={faRightFromBracket}
-                          className="mr-3"
-                        />
-                        Đăng xuất
-                      </>
-                    }
-                    onClick={infoLink}
-                    className={
-                      "p-2 my-2 bg-transparent border rounded-md w-full flex items-center justify-center"
+                      "p-2 my-4 bg-transparent border rounded-md w-full flex items-center justify-start"
                     }
                   />
                 </div>
