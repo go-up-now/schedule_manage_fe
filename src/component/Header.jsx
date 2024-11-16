@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getRoleFromToken } from "../api/DecodeToken";
+import { getStudentInfo } from "../api/Student";
+import { logout } from "../api/Authentication";
+
 import {
   faAddressCard,
   faRightFromBracket,
@@ -29,13 +33,38 @@ const sitemapStudent = [
   { title: "Tìm kiếm môn học", link: "/find-subject" },
 ];
 
-function Header({ userRole, user }) {
-  console.log("user: " + user);
+function Header({user }) {
+  const [userRole, setUserRole] = useState(null);
+  const [studentInfo, setStudentInfo] = useState('');
   const navigate = useNavigate();
   const [showUserInfo, setShowUserInfo] = useState(true);
   const [marginLeft, setMarginLeft] = useState("");
   const [fixed, setFixed] = useState("mt-1");
 
+  useEffect(() => {
+    const role = getRoleFromToken();  
+    setUserRole(role); 
+      getStudentInfo().then(response => {
+        // console.log("DL",response)
+        setStudentInfo(response); 
+      }).catch(error => {
+        console.error("Failed to fetch student info:", error);
+      });
+  }, []);
+
+  const handleLogout = () => {
+    const token = localStorage.getItem('token'); 
+    if (token) {
+      logout(token)
+        .then(response => {
+          localStorage.removeItem('token');
+          navigate('/login');
+        })
+        .catch(error => {
+          console.error("Logout failed", error);
+        });
+    }
+  };
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 783) {
@@ -113,15 +142,15 @@ function Header({ userRole, user }) {
   ];
 
   let sidemapItems;
-
   switch (userRole) {
-    case "student":
+   
+    case "ROLE_STUDENT":
       sidemapItems = sitemapStudent;
       break;
-    case "admin":
+    case "ROLE_ADMIN":
       sidemapItems = sitemapAdmin;
       break;
-    case "instructor":
+    case "ROLE_INSTRUCTOR":
       sidemapItems = sitemapInstructor;
       break;
     default:
@@ -140,14 +169,7 @@ function Header({ userRole, user }) {
   console.log("title:", title);
 
   const infoLink = () => {
-    navigate(
-      `/person-info/${encodeURIComponent(user.code)}/${encodeURIComponent(
-        user.name
-      )}`,
-      {
-        state: { user },
-      }
-    );
+    navigate('/person-info'); 
   };
 
   const menuItem = [
@@ -156,6 +178,7 @@ function Header({ userRole, user }) {
       icon: faRightFromBracket,
       text: "Đăng xuất",
       isDanger: false,
+      onClick: handleLogout
     },
   ];
 
@@ -170,6 +193,7 @@ function Header({ userRole, user }) {
     },
   ];
 
+  const baseUrl = " https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
   return (
     <div
       className={`w-full h-[64px] bg-white shadow-md flex items-center justify-between z-30 md:sticky md:top-0 fixed`}
@@ -182,12 +206,14 @@ function Header({ userRole, user }) {
         {showUserInfo && (
           <div className="flex h-full py-1 ml-1">
             <div className="text-right font-medium h-full flex flex-col justify-center items-center">
-              <p>{user.name}</p>
-              <p>{user.code}</p>
+              <p>{studentInfo.lastName}{studentInfo.firstName}</p>
+              <p>{studentInfo.code}</p> 
             </div>
             <img
               className="w-[60px] rounded-full ml-4 object-cover"
-              src={user.avatar}
+
+              src={`${baseUrl}${studentInfo.avatar}`}
+              alt="avatar"
             />
             <MiniMenu
               classNameMiniBox={"mt-3"}

@@ -1,13 +1,34 @@
 import React from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { getToken, introspect } from "../../api/Authentication";
+import { jwtDecode } from "jwt-decode";
+import { getRoleFromToken } from "../../api/DecodeToken"; 
 
 function Login() {
   const navigate = useNavigate();
 
-  const handleLoginSuccess = (response) => {
-    console.log(response);
-    navigate("/student/home");
+  const handleLoginSuccess = async (response) => {
+    try {
+      const googleToken = response.credential;
+      const decodedToken = jwtDecode(googleToken);
+      await getToken(decodedToken.email);
+
+      const role = getRoleFromToken();
+      console.log(role)
+      if (role === "ROLE_ADMIN") {
+        navigate("/admin/home");
+      } else if (role === "ROLE_STUDENT") {
+        navigate("/student/home");
+      } else if (role === "ROLE_INSTRUCTOR") {
+        navigate("/instructor/home");
+      } else {
+        alert("Tài khoản không đúng. Vui lòng thử lại.");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
   const handleLoginFailure = (error) => {
     console.error(error);
@@ -23,7 +44,7 @@ function Login() {
         />
       </div>
       <div className="w-full h-full border absolute bg-transparent flex items-start p-20">
-        <GoogleOAuthProvider clientId="YOUR_CLIENT_ID">
+        <GoogleOAuthProvider clientId="276809712128-5574t4arhjnv53n3pubg71cmhh802r9t.apps.googleusercontent.com">
           <div className="flex flex-col items-center p-10 bg-[#fafafa] rounded-md ">
             <h2 className="font-medium text-black text-3xl tracking-widest mb-8">
               ĐĂNG NHẬP

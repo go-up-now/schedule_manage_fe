@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import icon from "../images/logo.png";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getRoleFromToken } from "../api/DecodeToken";
 import {
   faHouse,
   faListUl,
@@ -99,18 +100,24 @@ const sidebarStudent = [
   },
 ];
 
-function SideBar({ user, userRole }) {
+function SideBar({ user }) {
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
+  useEffect(() => {
+    const role = getRoleFromToken();  
+    setUserRole(role); 
+  }, []);
+
   let sidebarItems;
 
   switch (userRole) {
-    case "student":
+    case "ROLE_STUDENT":
       sidebarItems = sidebarStudent;
       break;
-    case "admin":
+    case "ROLE_ADMIN":
       sidebarItems = sidebarAdmin;
       break;
-    case "instructor":
+    case "ROLE_INSTRUCTOR":
       sidebarItems = sidebarInstructor;
       break;
     default:
