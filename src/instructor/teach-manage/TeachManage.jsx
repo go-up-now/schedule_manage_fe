@@ -12,7 +12,7 @@ import {
   faEllipsis,
 } from "@fortawesome/free-solid-svg-icons";
 
-function TeachManage({ user }) {
+function TeachManage() {
   const navigate = useNavigate();
   //Biến responsive
   const [desktop, setDesktop] = useState(true);

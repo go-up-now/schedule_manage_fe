@@ -6,7 +6,7 @@ import "./checkAttendance.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 
-function CheckAttendance({ user }) {
+function CheckAttendance() {
   const location = useLocation();
   const { item } = location.state || {};
 

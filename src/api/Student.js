@@ -2,13 +2,13 @@ import axiosInstance from './AxiosConfig';
 
 export const getStudentInfo = () => {
   return axiosInstance.get(`/api/students/studentInfor`) 
-    .then(response => {
-      return response.data; 
-    })
-    .catch(error => {
-      console.error("Lỗi khi lấy thông tin sinh viên:", error);
-      throw error; 
-    });
+    // .then(response => {
+    //   return response.data; 
+    // })
+    // .catch(error => {
+    //   console.error("Lỗi khi lấy thông tin sinh viên:", error);
+    //   throw error; 
+    // });
 };
 
 export const updateStudentByStudent = (studentData, file) => {

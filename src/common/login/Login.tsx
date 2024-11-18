@@ -1,9 +1,9 @@
 import React from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { getToken, introspect } from "../../api/Authentication";
+import { getToken, introspect } from "../../api/Authentication.js";
 import { jwtDecode } from "jwt-decode";
-import { getRoleFromToken } from "../../api/DecodeToken"; 
+import { getUserScope } from "../../utils/authUtils.ts";
 
 function Login() {
   const navigate = useNavigate();
@@ -14,17 +14,13 @@ function Login() {
       const decodedToken = jwtDecode(googleToken);
       await getToken(decodedToken.email);
 
-      const role = getRoleFromToken();
+      const role = getUserScope();
       console.log(role)
-      if (role === "ROLE_ADMIN") {
-        navigate("/admin/home");
-      } else if (role === "ROLE_STUDENT") {
-        navigate("/student/home");
-      } else if (role === "ROLE_INSTRUCTOR") {
-        navigate("/instructor/home");
+      if (role === "ROLE_ADMIN" || role === "ROLE_STUDENT" || role === "ROLE_INSTRUCTOR") {
+        navigate("/");
       } else {
         alert("Tài khoản không đúng. Vui lòng thử lại.");
-        navigate("/login");
+        navigate("/dang-nhap");
       }
     } catch (error) {
       console.error("Login failed:", error);

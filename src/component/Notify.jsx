@@ -26,7 +26,7 @@ function Notify({ menuNotifys = [], iconNotify = "" }) {
   return (
     <div className="relative" ref={menuRef}>
       <Button
-        label={<FontAwesomeIcon icon={iconNotify} size={10} />}
+        label={<FontAwesomeIcon icon={iconNotify} size={'sm'} />}
         onClick={toggleMenu}
         className="p-2 block text-black text-3xl bg-transparent"
       />

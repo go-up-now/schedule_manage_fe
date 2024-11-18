@@ -6,7 +6,7 @@ import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleLeft, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 
-function ExamArrange({ user }) {
+function ExamArrange() {
   const location = useLocation();
   const { item } = location.state || {};
   const navigate = useNavigate();

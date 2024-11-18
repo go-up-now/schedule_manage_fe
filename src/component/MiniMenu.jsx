@@ -31,7 +31,7 @@ function MiniMenu({
   return (
     <div className="relative" ref={menuRef}>
       <Button
-        label={<FontAwesomeIcon icon={iconMenu} size={10} />}
+        label={<FontAwesomeIcon icon={iconMenu} size={'xs'} />}
         onClick={toggleMenu}
         className={`block text-black text-3xl bg-transparent focus:outline-none ${classNameBtn}`}
       />
@@ -48,9 +48,8 @@ function MiniMenu({
                 item.onClick();
                 setMiniMenu(false); // Close the menu after clicking
               }}
-              className={`block w-full px-4 py-1 text-left hover:bg-[#fafbfb] ${
-                item.isDanger ? "text-red-500" : ""
-              }`}
+              className={`block w-full px-4 py-1 text-left hover:bg-[#fafbfb] ${item.isDanger ? "text-red-500" : ""
+                }`}
             >
               {item.icon && (
                 <FontAwesomeIcon icon={item.icon} className="mr-2" />

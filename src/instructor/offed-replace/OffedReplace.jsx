@@ -6,7 +6,7 @@ import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-function OffedReplace({ user }) {
+function OffedReplace() {
   const navigate = useNavigate();
   //Biến responsive
   const [desktop, setDesktop] = useState(true);

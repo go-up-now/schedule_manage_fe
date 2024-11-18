@@ -7,7 +7,7 @@ import MiniMenu from "../../component/MiniMenu";
 import Accordion from "../../component/Accordion";
 import Button from "../../component/Button";
 
-function TeachDay({ user }) {
+function TeachDay() {
   const navigate = useNavigate();
 
   const [desktop, setDesktop] = useState(true);
