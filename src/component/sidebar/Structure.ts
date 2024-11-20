@@ -99,14 +99,14 @@ const sidebarStructure = [
                 icon: "dot",
                 role: [ROLE.STUDENT]
             },
-            {
-                id: "course-registration",
-                title: "Đổi lịch học",
-                name: "study.change-schedule",
-                link: "/doi-lich-hoc",
-                icon: "dot",
-                role: [ROLE.STUDENT]
-            },
+            // {
+            //     id: "course-registration",
+            //     title: "Đổi lịch học",
+            //     name: "study.change-schedule",
+            //     link: "/doi-lich-hoc",
+            //     icon: "dot",
+            //     role: [ROLE.STUDENT]
+            // },
             {
                 id: "schedule-child",
                 title: "Lịch học",
@@ -185,25 +185,8 @@ const sidebarStructure = [
         name: "clazz_list_manage",
         parent: true,
         icon: "clazz",
+        link: "/danh-sach-lop",
         role: [ROLE.INSTRUCTOR],
-        child: [
-            {
-                id: "student",
-                title: "Danh sách sinh viên",
-                name: "clazz_list_manage.student",
-                link: "/danh-sach-sinh-vien",
-                icon: "dot",
-                role: [ROLE.INSTRUCTOR]
-            },
-            {
-                id: "attendance",
-                title: "Điểm danh",
-                name: "clazz_list_manage.attendance",
-                link: "/diem-danh",
-                icon: "dot",
-                role: [ROLE.INSTRUCTOR]
-            }
-        ]
     },
     {
         id: "teach",
@@ -214,34 +197,18 @@ const sidebarStructure = [
         role: [ROLE.INSTRUCTOR],
         child: [
             {
-                id: "teachManage",
-                title: "Quản lý giảng dạy",
-                name: "teach.teachManage",
-                link: "/quan-ly-giang-day",
-                icon: "dot",
-                role: [ROLE.INSTRUCTOR]
-            },
-            {
                 id: "teachDay",
-                title: "Ngày giảng dạy",
+                title: "Lịch dạy theo ngày",
                 name: "teach.teachDay",
-                link: "/ngay-giang-day",
+                link: "/lich-day-theo-ngay",
                 icon: "dot",
                 role: [ROLE.INSTRUCTOR]
             },
             {
-                id: "offedReplace",
-                title: "Đặt lại lịch nghỉ",
-                name: "teach.offedReplace",
-                link: "/dat-lai-lich-nghi",
-                icon: "dot",
-                role: [ROLE.INSTRUCTOR]
-            },
-            {
-                id: "examArrange",
-                title: "Thay đổi lịch thi",
-                name: "teach.examArrange",
-                link: "/thay-doi-lich-thi",
+                id: "canceledSchedule",
+                title: "Lịch dạy đã hủy",
+                name: "teach.canceledSchedule",
+                link: "/lich-day-da-huy",
                 icon: "dot",
                 role: [ROLE.INSTRUCTOR]
             }

@@ -22,7 +22,7 @@ function Header() {
     // localStorage.removeItem('token');
 
     // Điều hướng đến trang đăng xuất
-    navigate('/sinh-vien/thong-tin-ca-nhan');
+    navigate('/thong-tin-ca-nhan');
   };
   return (
     <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">

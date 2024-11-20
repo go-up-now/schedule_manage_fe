@@ -80,6 +80,27 @@ const router = createBrowserRouter([
             </IF>
           </>
       },
+      {
+        path: "/thong-tin-ca-nhan",
+        element:
+          <>
+            <IF condition={getUserScope() === ROLE.STUDENT}>
+              < ProtectedRoute allowedRoles={[ROLE.STUDENT]} >
+                <PersonalInformation />
+              </ProtectedRoute>
+            </IF>
+            <IF condition={getUserScope() === ROLE.INSTRUCTOR}>
+              <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
+                <PersonalInformation />
+              </ProtectedRoute>
+            </IF>
+            <IF condition={getUserScope() === ROLE.ADMIN}>
+              <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
+                <PersonalInformation />
+              </ProtectedRoute>
+            </IF>
+          </>
+      },
 
       // COMMON ROLE
       {
@@ -91,13 +112,6 @@ const router = createBrowserRouter([
       },
 
       // STUDENT ROLE
-      {
-        path: "/thong-tin-ca-nhan",
-        element:
-          <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
-            <PersonalInformation />
-          </ProtectedRoute>,
-      },
       {
         path: "/lich-hoc",
         element:
@@ -158,12 +172,19 @@ const router = createBrowserRouter([
 
       // INSTRUCTOR ROLE
       {
-        path: "/ngay-giang-day",
+        path: "/lich-day-theo-ngay",
         element:
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <TeachDay />
           </ProtectedRoute>
       },
+      // {
+      //   path: "/danh-sach-lop",
+      //   element:
+      //     <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
+      //       <TeachDay />
+      //     </ProtectedRoute>
+      // },
       {
         path: "/diem-danh",
         element:

@@ -6,6 +6,8 @@ import Table from "../../component/Table";
 import MiniMenu from "../../component/MiniMenu";
 import Accordion from "../../component/Accordion";
 import Button from "../../component/Button";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function TeachDay() {
   const navigate = useNavigate();
@@ -124,19 +126,22 @@ function TeachDay() {
   }));
 
   return (
-    <div className="py-4">
-      {desktop && (
-        <Table
-          DefaultTable={true}
-          headers={headers}
-          renderRow={renderRow}
-          data={teach}
-          maxRow={5}
-        />
-      )}
+    <Container>
+      <TitleHeader title="CA DẠY THEO NGÀY"/>
+      <div className="py-4 mt-5">
+        {desktop && (
+          <Table
+            DefaultTable={true}
+            headers={headers}
+            renderRow={renderRow}
+            data={teach}
+            maxRow={5}
+          />
+        )}
 
-      {mobile && <Accordion items={items} maxRow={7} />}
-    </div>
+        {mobile && <Accordion items={items} maxRow={7} />}
+      </div>
+    </Container>
   );
 }
 

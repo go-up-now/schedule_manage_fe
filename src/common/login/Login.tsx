@@ -15,7 +15,6 @@ function Login() {
       await getToken(decodedToken.email);
 
       const role = getUserScope();
-      console.log(role)
       if (role === "ROLE_ADMIN" || role === "ROLE_STUDENT" || role === "ROLE_INSTRUCTOR") {
         navigate("/");
       } else {
