@@ -29,6 +29,15 @@ function ClassManage() {
     { value: "1", label: "Block 1" },
     { value: "2", label: "Block 2" },
   ];
+  // const headers = [
+  //   "Mã lớp",
+  //   "Mã môn",
+  //   "Mã GV",
+  //   "Ngày bắt đầu",
+  //   "Ca",
+  //   "Kiểu ngày",
+  //   "",
+  // ];
   const headers = [
     "Mã lớp",
     "Mã môn",
