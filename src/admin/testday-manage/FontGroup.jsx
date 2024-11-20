@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SelectBox from "../../component/SelectBox";
 import TextField from "../../component/TextField";
 import Button from "../../component/Button";
@@ -13,40 +13,60 @@ import {
 } from "./DataSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faPlus, faWrench } from "@fortawesome/free-solid-svg-icons";
+import { course } from "./DataSelect";
 
-function FontGroup() {
-  const handleSelectChange = (value) => {
-    console.log("Selected value:", value);
+function FontGroup({ exam, isEditDisabled }) {
+  const [selectedExam, setSelectedExam] = useState(exam || {});
+  const [areSelectBoxesDisabled, setAreSelectBoxesDisabled] = useState(false);
+
+  useEffect(() => {
+    setSelectedExam(exam || {});
+    setAreSelectBoxesDisabled(isEditDisabled);
+  }, [exam, isEditDisabled]);
+
+  const handleSelectChange = (field, value) => {
+    setSelectedExam((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleChange = (field, value) => {
+    setSelectedExam((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleNewClick = () => {
+    setAreSelectBoxesDisabled(false);
+    setSelectedExam({});
   };
 
   return (
-    <div className="p-2 mt-2">
-      <div className="my-2">
-        <TextField placeholder="Mã lớp" className="p-0" disabled />
+    <div className="px-2">
+      <TextField
+        onField={true}
+        placeholder="Code"
+        className=""
+        value={selectedExam.code || ""}
+        onChange={(e) => handleChange("code", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
+      />
+      {/* <div className="pt-6 mb-2">
+        <SelectBox
+          options={year}
+          nameSelect="Khoá"
+          onChange={(value) => handleSelectChange("year", value)}
+          value={selectedExam.year || ""}
+          disable={areSelectBoxesDisabled}
+        />
       </div>
-      <div className="my-2 mb-3">
-        <SelectBox options={nameSubject} onChange={handleSelectChange} />
-      </div>
-      <div className="my-2 mb-3">
-        <SelectBox options={instructor} onChange={handleSelectChange} />
-      </div>
-      <div className="my-2 mb-3">
-        <SelectBox options={date} onChange={handleSelectChange} />
-      </div>
-      <div className="my-2 mb-3">
-        <SelectBox options={room} onChange={handleSelectChange} />
-      </div>
-      <div className="my-2 mb-3">
-        <SelectBox options={base} onChange={handleSelectChange} />
-      </div>
-      <div className="my-2 mb-3">
-        <SelectBox options={ca} onChange={handleSelectChange} />
-      </div>
-      <div className="my-2 mb-3">
-        <TextField placeholder="Thời gian" className="p-0" disabled />
-      </div>
-      <div className="flex mt-8">
-        <div className="w-1/3 flex justify-center ">
+      <div className="pt-4 mb-2">
+        <SelectBox
+          options={year}
+          nameSelect="Khoá"
+          onChange={(value) => handleSelectChange("year", value)}
+          value={selectedExam.year || ""}
+          disable={areSelectBoxesDisabled}
+        />
+      </div> */}
+      <div className="flex mt-4">
+        <div className="w-1/3 flex justify-center">
           <Button
             label={
               <>
@@ -54,10 +74,11 @@ function FontGroup() {
                 Mới
               </>
             }
-            className="w-11/12 p-2 text-white justify-center "
+            className="w-11/12 p-2 text-white justify-center"
+            onClick={handleNewClick}
           />
         </div>
-        <div className="w-1/3 flex justify-center ">
+        <div className="w-1/3 flex justify-center">
           <Button
             label={
               <>
@@ -66,9 +87,10 @@ function FontGroup() {
               </>
             }
             className="w-11/12 p-2 text-white justify-center"
+            disabled={false}
           />
         </div>
-        <div className="w-1/3 flex justify-center ">
+        <div className="w-1/3 flex justify-center">
           <Button
             label={
               <>
@@ -77,6 +99,7 @@ function FontGroup() {
               </>
             }
             className="w-11/12 p-2 text-white justify-center"
+            disabled={areSelectBoxesDisabled}
           />
         </div>
       </div>

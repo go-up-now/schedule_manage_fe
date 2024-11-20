@@ -1,28 +1,52 @@
 import React, { useState } from "react";
 
-function SelectBox({ options, label, onChange, className, disable = false }) {
-  const [selectedValue, setSelectedValue] = useState(options[0]?.value || "");
+// function SelectBox({ options, label, onChange, className, disable = false }) {
+//   const [selectedValue, setSelectedValue] = useState(options[0]?.value || "");
 
-  const handleChange = (event) => {
-    const value = event.target.value;
-    setSelectedValue(value);
-    if (onChange) {
-      onChange(value);
-    }
-  };
+//   const handleChange = (event) => {
+//     const value = event.target.value;
+//     setSelectedValue(value);
+//     if (onChange) {
+//       onChange(value);
+//     }
+//   };
 
+//   return (
+//     <div className={`${className}`}>
+//       {label && (
+//         <label className="block -mt-4 text-sm font-medium text-gray-700">
+//           {label}
+//         </label>
+//       )}
+//       <select
+//         disabled={disable}
+//         value={selectedValue}
+//         onChange={onChange}
+//         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+//       >
+//         {options.map((option) => (
+//           <option key={option.value} value={option.value}>
+//             {option.label}
+//           </option>
+//         ))}
+//       </select>
+//     </div>
+//   );
+// }
+
+// SelectBox component (generic dropdown component)
+function SelectBox({ options, value, onChange, name, nameSelect, className }) {
   return (
-    <div className={`${className}`}>
-      {label && (
-        <label className="block -mt-4 text-sm font-medium text-gray-700">
-          {label}
-        </label>
-      )}
+    <div className={className}>
+      <label className="block -mt-4 text-sm font-medium text-gray-700">
+        {name}
+      </label>
       <select
-        value={selectedValue}
-        onChange={handleChange}
+        value={value}
+        onChange={onChange}
         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
       >
+        <option value="">{nameSelect}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

@@ -75,27 +75,36 @@ function Table({
     }
   };
 
-  // RESPONSED MOBILE
-  // const [displayStyle, setDisplayStyle] = useState("");
-  // const [widthStyle, setWidthStyle] = useState("");
+  // Pagination: Show range of pages like 1...4...lastNumber
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const visiblePages = 5; // Number of visible page buttons (including the first, current, last)
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     const inWidth = window.innerWidth;
-  //     if (inWidth <= 783) {
-  //       setDisplayStyle("flex-col");
-  //     } else {
-  //       setDisplayStyle("flex-row");
-  //       setWidthStyle("w-full"); // Set max width to 1200px
-  //     }
-  //   };
-  //   window.addEventListener("resize", handleResize);
-  //   // Check screen size when component mounts
-  //   handleResize();
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, []);
+    // Always show the first page
+    if (currentPage > visiblePages - 1) pageNumbers.push(0);
+
+    // Show pages before the current page
+    for (let i = Math.max(currentPage - 2, 0); i < currentPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    // Show the current page
+    pageNumbers.push(currentPage);
+
+    // Show pages after the current page
+    for (
+      let i = currentPage + 1;
+      i < Math.min(currentPage + 3, totalPages);
+      i++
+    ) {
+      pageNumbers.push(i);
+    }
+
+    // Always show the last page if not already included
+    if (totalPages - 1 > currentPage + 2) pageNumbers.push(totalPages - 1);
+
+    return pageNumbers;
+  };
 
   return (
     <div className="">
@@ -123,23 +132,25 @@ function Table({
                     key={index}
                     options={selectBox.options}
                     name={selectBox.name}
-                    onChange={(e) => setSelectedFilter(e.target.value)}
+                    nameSelect={selectBox.nameSelect}
+                    onChange={selectBox.onChange}
+                    value={selectBox.value}
+                    className={selectBox.className}
                   />
                 ))}
               </div>
             )}
             {showSelectBoxes && (
-              <div className="md:w-1/2 w-full flex my-2 mx-2 justify-evenly">
+              <div className="md:w-full w-full flex my-2 mx-2 justify-evenly">
                 {numberSelectBox.map((selectBox, index) => (
                   <SelectBox
                     key={index}
-                    label={selectBox.title}
                     options={selectBox.options}
                     name={selectBox.name}
-                    onChange={(selectedOption) =>
-                      setSelectedFilter(selectedOption.value)
-                    }
-                    className="w-[200px] mr-0 md:mr-2"
+                    nameSelect={selectBox.nameSelect}
+                    onChange={selectBox.onChange}
+                    value={selectBox.value}
+                    className={selectBox.className}
                   />
                 ))}
               </div>
@@ -157,7 +168,7 @@ function Table({
 
                 <input
                   id="search"
-                  className="border shadow-md text-gray-900 text-sm rounded-lg w-full pl-10 p-2.5 focus:outline-none"
+                  className="border text-gray-900 text-sm rounded-lg w-full pl-10 p-2.5 focus:outline-none"
                   name="search"
                   aria-label="Search Bar"
                   placeholder="Tìm kiếm..."
@@ -220,23 +231,24 @@ function Table({
                 currentPage === 0 ? "text-[#909db0]" : "text-[#000000]"
               }
             >
-              {" "}
-              Trước{" "}
+              Trước
             </p>
           </button>
+
           <div className="mx-3 flex">
-            {Array.from({ length: totalPages }, (_, index) => (
+            {getPageNumbers().map((page, index) => (
               <button
                 key={index}
                 className={`mx-0 px-4 py-2 font-bold ${
-                  currentPage === index ? "bg-blue-50" : ""
+                  currentPage === page ? "bg-blue-50" : ""
                 } rounded`}
-                onClick={() => setCurrentPage(index)}
+                onClick={() => setCurrentPage(page)}
               >
-                {index + 1}
+                {page + 1}
               </button>
             ))}
           </div>
+
           <button
             onClick={handleNextPage}
             disabled={currentPage === totalPages - 1}
@@ -248,8 +260,7 @@ function Table({
                   : "text-[#000000]"
               }
             >
-              {" "}
-              Tiếp{" "}
+              Tiếp
             </p>
           </button>
         </section>
