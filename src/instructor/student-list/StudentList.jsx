@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 
-function StudentList() {
+function StudentList({ user }) {
   const { code, clazz } = useParams();
   const location = useLocation();
   const { item } = location.state || {};

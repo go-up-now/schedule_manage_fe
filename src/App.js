@@ -7,26 +7,14 @@ import Footer from "./component/Footer.jsx";
 import { useDispatch } from 'react-redux';
 import { getStudentInfo } from './api/Student.js'
 import { setUser } from './reducers/userSlice.tsx';
-import { getUserScope } from "./utils/authUtils.ts";
 
 function App() {
   const [sideMenuIsExpand, setSideMenuIsExpand] = useState(true);
   const dispatch = useDispatch();
 
   const handleUserInfor = async () => {
-    const role = getUserScope();
-    let response;
     try {
-      if (role === "ROLE_ADMIN") {
-
-      }
-      else if (role === "ROLE_STUDENT") {
-        response = await getStudentInfo();
-      }
-      else if (role === "ROLE_INSTRUCTOR") {
-
-      }
-
+      let response = await getStudentInfo();
       if (response && response.statusCode === 200) {
         dispatch(setUser({
           userInfo: response.data,

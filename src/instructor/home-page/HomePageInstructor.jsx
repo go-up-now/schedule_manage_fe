@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import events from "./events";
+import { getEvent } from "../../api/Event";
+import { getRoleFromToken } from "../../api/DecodeToken";
+import { format } from "date-fns";
 
 function HomePageInstructor() {
   const navigate = useNavigate();
@@ -23,25 +25,48 @@ function HomePageInstructor() {
     };
   }, [className]);
 
+  const [userRole, setUserRole] = useState(null);
+  const [eventInfo, setEventInfo] = useState([]);
+  useEffect(() => {
+    const role = getRoleFromToken();
+    setUserRole(role);
+    getEvent()
+      .then((response) => {
+        setEventInfo(response);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch event info:", error);
+      });
+  }, []);
+
+  const baseUrl =
+    " https://res.cloudinary.com/dc06mgef2/image/upload/v1731903390/";
+
   return (
     <div className="p-1">
-      {events.map((event) => (
+      {eventInfo.map((event) => (
         <div key={event.id} className={`w-1/2 md:w-1/4 p-4 inline-block`}>
           <button
             className="w-full rounded-md overflow-hidden bg-slate-100"
             onClick={() => {
-              navigate(`/event/${encodeURIComponent(event.title)}`, {
+              navigate(`/event/${encodeURIComponent(event.name)}`, {
                 state: { event },
               });
             }}
           >
-            <img className="w-full" src={event.img} alt={event.title} />
+            <img
+              className="w-full"
+              src={`${baseUrl}${event.image}`}
+              alt={event.name}
+            />
             <div className="px-4">
               <p className="text-left font-medium text-lg truncate my-1">
-                {event.title}
+                {event.name}
               </p>
               <p className="text-left truncate my-1">{event.place}</p>
-              <p className="text-right text-slate-500 my-1">{event.date}</p>
+              <p className="text-right text-slate-500 my-1">
+                {format(new Date(event.date), "dd-MM-yyyy")}
+              </p>
             </div>
           </button>
         </div>

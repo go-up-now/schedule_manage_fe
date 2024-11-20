@@ -1,104 +1,115 @@
 import MiniMenu from "../../component/MiniMenu";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Table from "../../component/Table";
 import Button from "../../component/Button";
 import Modal from "../../component/Modal";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faFileImport } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup";
-
-import { dates } from "./dates";
 import TextFieldGroup from "./TextFieldGroup";
+import { major, course } from "./DataSelect";
+import { getAllStudentbyCourseAndMajor } from "../../api/Student";
 
 function StudentManage() {
-  const options = [
-    { value: "", label: "-Khoá-" },
-    { value: "18.1", label: "18.1" },
-    { value: "18.2", label: "18.2" },
-    { value: "18.3", label: "18.3" },
-  ];
-
-  const options1 = [
-    { value: "", label: "-Ngành-" },
-    { value: "CNTT", label: "CNTT" },
-    { value: "KT", label: "Kinh tế" },
-  ];
-
-  const headers = ["Mã lớp", "Mã SV", "Mã SV", "Số tín chỉ", ""];
+  const headers = ["Code", "Name", "Gender", ""];
 
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const openModal = (dates) => setSelectedStudent(dates);
+  const [editStudent, setEditStudent] = useState(null);
+  const [isEditDisabled, setIsEditDisabled] = useState(false);
+
+  const handleEditClick = useCallback((student) => {
+    setEditStudent(student);
+    setIsEditDisabled(true);
+  }, []);
+
+  const openModal = (student) => setSelectedStudent(student);
   const closeModal = () => setSelectedStudent(null);
 
   const renderRow = (item) => [
-    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
-      {item.clazz}
-    </td>,
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
+    <td key={`item-code-${item.id}`} className=" border-b">
       {item.code}
     </td>,
-    <td key={`item-name-${item.id}`} className="px-6 py-4">
-      {item.name}
+    <td key={`item-name-${item.id}`} className=" border-b">
+      {item.lastName} {item.firstName}
     </td>,
-    <td key={`item-ownCredit-${item.id}`} className="px-6 py-4">
-      {item.ownCredit}
+    <td key={`item-gender-${item.id}`} className=" border-b">
+      {item.gender ? "Nam" : "Nữ"}
     </td>,
-    <td key={`item-case-${item.id}`} className="px-6 py-4">
-      <MiniMenu
-        className="text-xs p-4 "
-        iconMenu={faCaretDown}
-        menuItems={[
-          {
-            text: "Chi tiết",
-            onClick: () => {
-              openModal(item);
-              console.log(item);
+    <td key={`item-case-${item.id}`}>
+      <div className="flex justify-center items-center">
+        <MiniMenu
+          className="text-xs p-4"
+          iconMenu={faCaretDown}
+          menuItems={[
+            {
+              text: "Chi tiết",
+              onClick: () => openModal(item),
             },
-          },
-          {
-            text: "Sửa đổi",
-            isDanger: false,
-          },
-        ]}
-      />
+            {
+              text: "Sửa đổi",
+              onClick: () => handleEditClick(item),
+            },
+          ]}
+        />
+      </div>
     </td>,
   ];
 
-  // const [flexCol, setFlexCol] = useState("");
-  // const [flex1, setFlex1] = useState("w-[300px]");
+  // Call API
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [students, setStudents] = useState([]);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth <= 783) {
-  //       setFlexCol("flex-col");
-  //       setFlex1("flex-1");
-  //     } else {
-  //       setFlexCol("");
-  //       setFlex1("w-[300px]");
-  //     }
-  //   };
-  //   window.addEventListener("resize", handleResize);
-  //   // Kiểm tra kích thước màn hình khi component được mount
-  //   handleResize();
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, [flexCol, flex1]);
+  const handleCourseChange = (event) => {
+    setSelectedCourse(event.target.value);
+  };
+
+  const handleMajorChange = (event) => {
+    setSelectedMajor(event.target.value);
+  };
+
+  // Fetch students whenever course or major is selected
+  useEffect(() => {
+    if (selectedCourse && selectedMajor) {
+      getAllStudentbyCourseAndMajor(selectedCourse, selectedMajor)
+        .then((data) => {
+          setStudents(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching students:", error);
+        });
+    }
+  }, [selectedCourse, selectedMajor]);
+
+  const selectBoxs = [
+    {
+      options: course,
+      nameSelect: "Khoá",
+      onChange: handleCourseChange,
+      value: selectedCourse,
+      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+    },
+    {
+      options: major,
+      nameSelect: "Chuyên ngành",
+      onChange: handleMajorChange,
+      value: selectedMajor,
+      className: "w-full md:w-[200px] ml-1 pt-4 md:pt-4",
+    },
+  ];
 
   return (
-    <div className={`flex flex-col md:flex-row`}>
+    <div className={`flex flex-col md:flex-row min-h-svh`}>
       <div className="p-2 flex-1">
         <Table
-          showSearchWithManyCbo={true}
-          optionsValue={options}
-          showOption1={true}
-          optionsValue1={options1}
-          advanced={false} // Ẩn Search bar
-          showSelectBox={false} // Ẩn Select box
+          DefaultTable={true}
+          showOptions={true}
+          showSearch={true}
+          showSelectBoxes={true}
+          numberSelectBox={selectBoxs}
           headers={headers}
           renderRow={renderRow}
-          data={dates}
+          data={students} // Pass the fetched students data
           maxRow={10}
         />
         {selectedStudent && (
@@ -124,7 +135,7 @@ function StudentManage() {
         )}
       </div>
       <div className={`p-2 w-full md:w-[300px]`}>
-        <div className="px-2">
+        <div className="px-2 pt-4 mb-5">
           <Button
             className="w-full p-2 text-white justify-center"
             label={
@@ -135,7 +146,7 @@ function StudentManage() {
             }
           ></Button>
         </div>
-        <FontGroup />
+        <FontGroup student={editStudent} isEditDisabled={isEditDisabled} />
       </div>
     </div>
   );
