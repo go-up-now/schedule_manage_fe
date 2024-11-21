@@ -4,11 +4,14 @@ import logo from '../../images/logo.png';
 import { useNavigate } from 'react-router-dom';
 import 'flowbite';
 import React from 'react';
+import { getUserScope } from '../../utils/authUtils.ts'
+import { ROLE } from "../../enum/Role.tsx"
 
 function Header() {
   const userInfo = useSelector((state) => state.user.userInfo);  // Lấy thông tin người dùng từ Redux
   const navigate = useNavigate();
   const baseUrl = " https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
+  const role = getUserScope();
 
   const handleSignOut = () => {
     // Xoá token đăng nhập khỏi localStorage
@@ -22,7 +25,7 @@ function Header() {
     // localStorage.removeItem('token');
 
     // Điều hướng đến trang đăng xuất
-    navigate('/thong-tin-ca-nhan');
+    navigate('/sinh-vien/thong-tin-ca-nhan');
   };
   return (
     <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -88,13 +91,15 @@ function Header() {
               </div>
               <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
                 <ul className="px-4 py-3" role="none">
-                  <li>
-                    <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                      onClick={handleDetailInfor}
-                    >
-                      Thông tin cá nhân
-                    </button>
-                  </li>
+                  {role === ROLE.STUDENT &&
+                    <li>
+                      <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        onClick={handleDetailInfor}
+                      >
+                        Thông tin cá nhân
+                      </button>
+                    </li>
+                  }
                   <li>
                     <button
                       onClick={handleSignOut}

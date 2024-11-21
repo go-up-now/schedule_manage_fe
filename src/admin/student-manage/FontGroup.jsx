@@ -1,73 +1,130 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SelectBox from "../../component/SelectBox";
 import TextField from "../../component/TextField";
 import Button from "../../component/Button";
-import { major, clazz } from "./DataSelect";
-import Modal from "../../component/Modal";
+import { major, course, gender, educationProgramId } from "./DataSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faPlus, faWrench } from "@fortawesome/free-solid-svg-icons";
 
-function FontGroup() {
-  const handleSelectChange = (value) => {
-    console.log("Selected value:", value);
+function FontGroup({ student, isEditDisabled }) {
+  const [selectedStudent, setSelectedStudent] = useState(student || {});
+  const [areSelectBoxesDisabled, setAreSelectBoxesDisabled] = useState(false);
+
+  useEffect(() => {
+    setSelectedStudent(student || {});
+    setAreSelectBoxesDisabled(isEditDisabled);
+  }, [student, isEditDisabled]);
+
+  const handleSelectChange = (field, value) => {
+    setSelectedStudent((prev) => ({ ...prev, [field]: value }));
   };
 
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const openModal = (dates) => setSelectedStudent(dates);
-  const closeModal = () => setSelectedStudent(null);
+  const handleChange = (field, value) => {
+    setSelectedStudent((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleNewClick = () => {
+    setAreSelectBoxesDisabled(false);
+    setSelectedStudent({});
+  };
 
   return (
-    <div className="p-2">
-      <TextField
-        onField={true}
-        placeholder="Ngày bắt đầu"
-        className="p-0 mt-2"
-      />
-      <div className={"mt-2 mb-2"}>
-        <SelectBox options={major} onChange={handleSelectChange} />
-      </div>
-
-      <TextField onField={true} placeholder="Mã sinh viên" className="p-0" />
-      <div className={"mt-2 mb-2"}>
-        <SelectBox options={clazz} onChange={handleSelectChange} />
-      </div>
-      <TextField onField={true} placeholder="Email" className="p-0" />
-      <TextField
-        onField={true}
-        placeholder="Email cá nhân"
-        className="p-0 mt-2"
-      />
-      <TextField
-        onField={true}
-        placeholder="Số điện thoại"
-        className="p-0 mt-2"
-      />
-      <TextField onField={true} placeholder="Địa chỉ" className="p-0 mt-2" />
-      <div className="">
-        <TextField
-          onField={true}
-          label="Số tín chỉ"
-          placeholder="Số tín chỉ"
-          className="p-0 mt-2"
-          disabled
-        />
-        <TextField
-          onField={true}
-          label="Tín chỉ đã có"
-          placeholder="Tín chỉ đã có"
-          className="p-0 mt-2"
-          disabled
+    <div className="px-2 pt-1 ">
+      <div className="pt-2 mb-2">
+        <SelectBox
+          options={major}
+          nameSelect="Chuyên Ngành"
+          onChange={(value) => handleSelectChange("majorId", value)}
+          value={selectedStudent.majorId || ""}
+          disable={areSelectBoxesDisabled}
         />
       </div>
-
-      <Button
-        label="Bảng điểm"
-        className="w-full bg-blue-400 p-2 text-white justify-center mt-2"
-        onClick={openModal}
+      <div className="pt-4 mb-2">
+        <SelectBox
+          options={course}
+          nameSelect="Khoá"
+          onChange={(value) => handleSelectChange("course", value)}
+          value={selectedStudent.course || ""}
+          disable={areSelectBoxesDisabled}
+        />
+      </div>
+      <TextField
+        onField={true}
+        placeholder="Code"
+        className="p-0 mt-2"
+        value={selectedStudent.code || ""}
+        onChange={(e) => handleChange("code", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
       />
-
-      <div className="flex mt-8">
-        <div className="w-1/3 flex justify-center ">
+      <TextField
+        onField={true}
+        placeholder="Last Name"
+        className="p-0 mt-2"
+        value={selectedStudent.lastName || ""}
+        onChange={(e) => handleChange("lastName", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
+      />
+      <TextField
+        onField={true}
+        placeholder="First Name"
+        className="p-0 mt-2"
+        value={selectedStudent.firstName || ""}
+        onChange={(e) => handleChange("firstName", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
+      />
+      <div className="pt-6 mb-2">
+        <SelectBox
+          options={gender}
+          nameSelect="Giới tính"
+          onChange={(value) => handleSelectChange("gender", value)}
+          value={
+            selectedStudent.gender !== undefined ? selectedStudent.gender : ""
+          }
+          disable={areSelectBoxesDisabled}
+        />
+      </div>
+      <TextField
+        onField={true}
+        placeholder="Email"
+        className="p-0 mt-2"
+        value={selectedStudent.email || ""}
+        onChange={(e) => handleChange("email", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
+      />
+      <TextField
+        onField={true}
+        placeholder="Birthday"
+        className="p-0 mt-2"
+        value={selectedStudent.birthday || ""}
+        onChange={(e) => handleChange("birthday", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
+      />
+      <TextField
+        onField={true}
+        placeholder="Phone"
+        className="p-0 mt-2"
+        value={selectedStudent.phone || ""}
+        onChange={(e) => handleChange("phone", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
+      />
+      <TextField
+        onField={true}
+        placeholder="Address"
+        className="p-0 mt-2"
+        value={selectedStudent.address || ""}
+        onChange={(e) => handleChange("address", e.target.value)}
+        disabled={false} // Không bị vô hiệu hoá
+      />
+      <div className="pt-6 mb-2">
+        <SelectBox
+          options={educationProgramId}
+          nameSelect="Chương trình đào tạo"
+          onChange={(value) => handleSelectChange("educationProgramId", value)}
+          value={selectedStudent.educationProgramId || ""}
+        />
+      </div>
+      <div className="flex mt-4">
+        <div className="w-1/3 flex justify-center">
           <Button
             label={
               <>
@@ -75,10 +132,11 @@ function FontGroup() {
                 Mới
               </>
             }
-            className="w-11/12 p-2 text-white justify-center "
+            className="w-11/12 p-2 text-white justify-center"
+            onClick={handleNewClick}
           />
         </div>
-        <div className="w-1/3 flex justify-center ">
+        <div className="w-1/3 flex justify-center">
           <Button
             label={
               <>
@@ -87,9 +145,10 @@ function FontGroup() {
               </>
             }
             className="w-11/12 p-2 text-white justify-center"
+            disabled={false}
           />
         </div>
-        <div className="w-1/3 flex justify-center ">
+        <div className="w-1/3 flex justify-center">
           <Button
             label={
               <>
@@ -98,18 +157,10 @@ function FontGroup() {
               </>
             }
             className="w-11/12 p-2 text-white justify-center"
+            disabled={areSelectBoxesDisabled}
           />
         </div>
       </div>
-
-      {selectedStudent && (
-        <Modal isOpen={true} onClose={closeModal} className="">
-          <h2 className="text-xl font-bold"></h2>
-          <div>
-            <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2"></div>
-          </div>
-        </Modal>
-      )}
     </div>
   );
 }

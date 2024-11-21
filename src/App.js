@@ -15,19 +15,8 @@ function App() {
   const dispatch = useDispatch();
 
   const handleUserInfor = async () => {
-    const role = getUserScope();
-    let response;
     try {
-      if (role === "ROLE_ADMIN") {
-
-      }
-      else if (role === "ROLE_STUDENT") {
-        response = await getStudentInfo();
-      }
-      else if (role === "ROLE_INSTRUCTOR") {
-
-      }
-
+      let response = await getStudentInfo();
       if (response && response.statusCode === 200) {
         dispatch(setUser({
           userInfo: response.data,

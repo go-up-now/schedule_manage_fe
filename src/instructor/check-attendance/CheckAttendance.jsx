@@ -114,18 +114,18 @@ function CheckAttendance() {
 
   return (
     <div className="py-4">
-      {/* <div className="border rounded-md mb-2 h-10 ">
+      <div className="border rounded-md mb-2 h-10 ">
         {item ? (
           <div className="h-full px-4 flex items-center justify-between font-medium text-lg text-blue-700">
-            <p>Class id: {item.clazz.id}</p>
-            <p>Class Code: {item.clazz.code}</p>
-            <p>Subject: {item.clazz.subject.name}</p>
-            <p>Subject Code: {item.clazz.subject.code}</p>
+            <p>Class id: {item.clazzId}</p>
+            <p>Class Code: {item.code}</p>
+            <p>Subject: {item.subjectName}</p>
+            <p>Subject Code: {item.subjectCode}</p>
           </div>
         ) : (
           <p>No item data available</p>
         )}
-      </div> */}
+      </div>
 
       <Table
         DefaultTable={true}

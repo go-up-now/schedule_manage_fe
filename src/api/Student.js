@@ -1,34 +1,52 @@
-import axiosInstance from './AxiosConfig'; 
+import axiosInstance from "./AxiosConfig";
 
 export const getStudentInfo = () => {
-  return axiosInstance.get(`/api/students/studentInfor`) 
-    // .then(response => {
-    //   return response.data; 
-    // })
-    // .catch(error => {
-    //   console.error("Lỗi khi lấy thông tin sinh viên:", error);
-    //   throw error; 
-    // });
+  return axiosInstance
+    .get(`/api/students/studentInfor`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Lỗi khi lấy thông tin sinh viên:", error);
+      throw error;
+    });
 };
 
 export const updateStudentByStudent = (studentData, file) => {
   const formData = new FormData();
-  formData.append('request', JSON.stringify(studentData)); 
+  formData.append("request", JSON.stringify(studentData)); // Append student data (as JSON)
+
   if (file) {
-    formData.append('file', file);
+    formData.append("file", file); // Append file (avatar) if it exists
   } else {
-    formData.append('file', '1.png_20241028103613.jpg');
+    // Fallback if no file is selected (you can customize this)
+    formData.append("file", "1.png_20241028103613.jpg");
   }
 
-  return axiosInstance.put(`/api/students/updateStudentByStudent`, formData)
-    .then(response => {
-      return response.data; 
+  return axiosInstance
+    .put("/api/students/updateStudentByStudent", formData)
+    .then((response) => {
+      return response.data; // Return the updated student data
     })
-    .catch(error => {
-      console.error("Lỗi khi cập nhật thông tin sinh viên:", error);
-      throw error; 
+    .catch((error) => {
+      console.error("Error updating student info:", error);
+      throw error; // Throw error to be caught in the handleSubmit function
     });
 };
 
-
-
+export const getAllStudentbyCourseAndMajor = (course, majorId) => {
+  return axiosInstance
+    .get(`/api/students/getAllStudentByCourseAndMajor`, {
+      params: {
+        course: course,
+        majorId: majorId,
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Lỗi khi lấy thông tin lịch dạy của giảng viên:", error);
+      throw error;
+    });
+};

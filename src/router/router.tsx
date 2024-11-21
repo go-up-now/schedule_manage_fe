@@ -82,27 +82,27 @@ const router = createBrowserRouter([
             </IF>
           </>
       },
-      {
-        path: "/thong-tin-ca-nhan",
-        element:
-          <>
-            <IF condition={role === ROLE.STUDENT}>
-              < ProtectedRoute allowedRoles={[ROLE.STUDENT]} >
-                <PersonalInformation />
-              </ProtectedRoute>
-            </IF>
-            <IF condition={role === ROLE.INSTRUCTOR}>
-              <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
-                <PersonalInformation />
-              </ProtectedRoute>
-            </IF>
-            <IF condition={role === ROLE.ADMIN}>
-              <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
-                <PersonalInformation />
-              </ProtectedRoute>
-            </IF>
-          </>
-      },
+      // {
+      //   path: "/thong-tin-ca-nhan",
+      //   element:
+      //     <>
+      //       <IF condition={role === ROLE.STUDENT}>
+      //         < ProtectedRoute allowedRoles={[ROLE.STUDENT]} >
+      //           <PersonalInformation />
+      //         </ProtectedRoute>
+      //       </IF>
+      //       <IF condition={role === ROLE.INSTRUCTOR}>
+      //         <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
+      //           <PersonalInformation />
+      //         </ProtectedRoute>
+      //       </IF>
+      //       <IF condition={role === ROLE.ADMIN}>
+      //         <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
+      //           <PersonalInformation />
+      //         </ProtectedRoute>
+      //       </IF>
+      //     </>
+      // },
 
       // COMMON ROLE
       {
@@ -114,6 +114,13 @@ const router = createBrowserRouter([
       },
 
       // STUDENT ROLE
+      {
+        path: "/thong-tin-ca-nhan",
+        element:
+          <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
+            <PersonalInformation />
+          </ProtectedRoute>,
+      },
       {
         path: "/lich-hoc",
         element:
@@ -174,19 +181,12 @@ const router = createBrowserRouter([
 
       // INSTRUCTOR ROLE
       {
-        path: "/lich-day-theo-ngay",
+        path: "/ngay-giang-day",
         element:
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <TeachDay />
           </ProtectedRoute>
       },
-      // {
-      //   path: "/danh-sach-lop",
-      //   element:
-      //     <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
-      //       <TeachDay />
-      //     </ProtectedRoute>
-      // },
       {
         path: "/diem-danh",
         element:
