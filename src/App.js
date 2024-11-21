@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { getStudentInfo } from './api/Student.js'
 import { setUser } from './reducers/userSlice.tsx';
 import { getUserScope } from "./utils/authUtils.ts";
+import { initFlowbite } from 'flowbite';
 
 function App() {
   const [sideMenuIsExpand, setSideMenuIsExpand] = useState(true);
@@ -39,6 +40,7 @@ function App() {
 
   useEffect(() => {
     handleUserInfor();
+    initFlowbite(); // Reinitialize Flowbite components
   }, []);
 
   return (

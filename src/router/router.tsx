@@ -35,6 +35,8 @@ import StudentManage from "../admin/student-manage/StudentManage";
 import ScheduleManage from "../admin/schedule-manage/ScheduleManage";
 import SemesterManage from "../admin/semester-manage/SemesterManage";
 
+const role = getUserScope();
+
 const router = createBrowserRouter([
   {
     path: "/dang-nhap",
@@ -63,17 +65,17 @@ const router = createBrowserRouter([
         path: "/",
         element:
           <>
-            <IF condition={getUserScope() === ROLE.STUDENT}>
+            <IF condition={role === ROLE.STUDENT}>
               < ProtectedRoute allowedRoles={[ROLE.STUDENT]} >
                 <HomePage />
               </ProtectedRoute>
             </IF>
-            <IF condition={getUserScope() === ROLE.INSTRUCTOR}>
+            <IF condition={role === ROLE.INSTRUCTOR}>
               <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
                 <HomePageInstructor />
               </ProtectedRoute>
             </IF>
-            <IF condition={getUserScope() === ROLE.ADMIN}>
+            <IF condition={role === ROLE.ADMIN}>
               <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
                 <Statistic />
               </ProtectedRoute>
@@ -84,17 +86,17 @@ const router = createBrowserRouter([
         path: "/thong-tin-ca-nhan",
         element:
           <>
-            <IF condition={getUserScope() === ROLE.STUDENT}>
+            <IF condition={role === ROLE.STUDENT}>
               < ProtectedRoute allowedRoles={[ROLE.STUDENT]} >
                 <PersonalInformation />
               </ProtectedRoute>
             </IF>
-            <IF condition={getUserScope() === ROLE.INSTRUCTOR}>
+            <IF condition={role === ROLE.INSTRUCTOR}>
               <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
                 <PersonalInformation />
               </ProtectedRoute>
             </IF>
-            <IF condition={getUserScope() === ROLE.ADMIN}>
+            <IF condition={role === ROLE.ADMIN}>
               <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
                 <PersonalInformation />
               </ProtectedRoute>

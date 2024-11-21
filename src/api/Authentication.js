@@ -1,21 +1,21 @@
-import axiosInstance from './AxiosConfig'; 
+import axiosInstance from './AxiosConfig';
 
 export const getToken = (email) => {
-  return axiosInstance.post('/auth/token', { email}) 
+  return axiosInstance.post('/auth/token', { email })
     .then(response => {
-      localStorage.setItem('token', response.data.token);  
-      return response; 
+      localStorage.setItem('token', response.data.token);
+      return response;
     })
     .catch(error => {
       console.error("Error getting token:", error);
-      throw error; 
+      throw error;
     });
 };
 
-export const introspect = ( token) => {
-  return axiosInstance.post('/auth/introspect',{token})  
+export const introspect = (token) => {
+  return axiosInstance.post('/auth/introspect', { token })
     .then(response => {
-      return response;  
+      return response;
     })
     .catch(error => {
       console.error("Error introspecting token:", error);
@@ -24,29 +24,21 @@ export const introspect = ( token) => {
 };
 
 
-export const logout = (token) => {
-  return axiosInstance.post('/auth/logout',{token}) 
-    .then(() => {
-      localStorage.removeItem('token'); 
-      return { message: "Logged out successfully" }; 
-    })
-    .catch(error => {
-      console.error("Error logging out:", error);
-      throw error;
-    });
+export const logoutAPI = (token) => {
+  return axiosInstance.post('/auth/logout', { token: token });
 };
 
 
 export const refreshToken = () => {
-  const refreshToken = localStorage.getItem('refreshToken');  
+  const refreshToken = localStorage.getItem('refreshToken');
   if (!refreshToken) {
-    throw new Error("No refresh token available"); 
+    throw new Error("No refresh token available");
   }
 
-  return axiosInstance.post('/auth/refresh', { refreshToken })  
+  return axiosInstance.post('/auth/refresh', { refreshToken })
     .then(response => {
-      localStorage.setItem('token', response.token);  
-      return response; 
+      localStorage.setItem('token', response.token);
+      return response;
     })
     .catch(error => {
       console.error("Error refreshing token:", error);

@@ -1,13 +1,32 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../component/Spinner.tsx';
+import { logoutAPI } from '../api/Authentication.js';
 
 const LogoutPage: React.FC = () => {
     const navigate = useNavigate();
 
+
+    const handleLogout = async () => {
+        try {
+            let token = localStorage.getItem('token')
+            let response = await logoutAPI(token);
+            if (response.statusCode === 200) {
+                console.log("logout", response)
+                localStorage.removeItem('token');
+                navigate('/dang-nhap');
+                window.location.reload();
+            }
+        } catch (error) {
+            console.log("Lỗi đăng xuất: ", error)
+        }
+
+    }
+
     useEffect(() => {
-        localStorage.removeItem('jwt');
-        navigate('/dang-nhap');
+
+        handleLogout()
+
     }, [navigate]);
 
     return <div className="flex justify-center gap-5 items-center min-h-screen">

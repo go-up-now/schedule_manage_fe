@@ -17,6 +17,7 @@ function Login() {
       const role = getUserScope();
       if (role === "ROLE_ADMIN" || role === "ROLE_STUDENT" || role === "ROLE_INSTRUCTOR") {
         navigate("/");
+        window.location.reload();
       } else {
         alert("Tài khoản không đúng. Vui lòng thử lại.");
         navigate("/dang-nhap");

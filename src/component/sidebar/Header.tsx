@@ -70,7 +70,7 @@ function Header() {
                 <>
                   Xin chào, {userInfo.lastName + ' ' + userInfo.firstName}
                 </>
-              ) : "please login"
+              ) : "User not found"
               }
             </p>
             <div className="flex items-center ms-3">
@@ -79,8 +79,8 @@ function Header() {
                 <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                   <span className="sr-only">Open user menu</span>
                   <img className="w-10 h-10 rounded-full" src={
-                    `${baseUrl}${userInfo ? (
-                      userInfo.avatar ? userInfo.avatar : avatar
+                    `${userInfo ? (
+                      baseUrl + userInfo.avatar ? baseUrl + userInfo.avatar : avatar
                     ) : avatar
                     }`} alt="user photo"
                   />
