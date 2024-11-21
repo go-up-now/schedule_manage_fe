@@ -12,7 +12,7 @@ import { ROLE } from '../enum/Role.tsx';
 import HomePage from "../student/home-page/HomePage";
 import HomePageInstructor from "../instructor/home-page/HomePageInstructor";
 import EventDescription from "../common/event-description/EventDescription";
-import PersonalInformation from "../common/personal-information/PersonalInformation";
+import PersonalInformation from "../common/personal-information/PersonalInformation.tsx";
 import StudySchedule from "../student/study-schedule/StudySchedule";
 import ExamSchedule from "../student/exam-schedule/ExamSchedule";
 import CurrentSubject from "../student/current-subject/CurrentSubject";
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
             </IF>
           </>
       },
-      
+
       // {
       //   path: "/thong-tin-ca-nhan",
       //   element:
