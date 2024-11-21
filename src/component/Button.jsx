@@ -9,6 +9,7 @@ function Button({
   to,
   href,
   onClick,
+  icon,
   ...passProps
 }) {
   let Comp = "button";
@@ -43,6 +44,7 @@ function Button({
       className={`rounded flex items-center bg-blue-500 text-black ${className} `}
       disabled={disabled}
     >
+      {props.icon && <span>{props.icon}</span>}
       {label}
     </button>
   );

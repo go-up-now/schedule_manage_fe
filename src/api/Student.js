@@ -42,3 +42,7 @@ export const getAllStudentbyCourseAndMajor = (course, majorId) => {
       throw error;
     });
 };
+
+export const updateImageAPI = (id, formData) => {
+  return axiosInstance.put(`/api/students/update-image/${id}`, formData)
+}

@@ -4,10 +4,32 @@ import TextField from "../../component/TextField.jsx";
 import Button from "../../component/Button.jsx";
 import TextArea from "../../component/TextArea.jsx";
 import BarCharts from "./BarCharts.jsx";
-import { getStudentInfo, updateStudentByStudent } from "../../api/Student.js";
+import { getStudentInfo, updateStudentByStudent, updateImageAPI } from "../../api/Student.js";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../reducers/userSlice.tsx';
+import avatar from '../../images/avatarUser.jpg';
+import { faCamera, faPlus } from '@fortawesome/free-solid-svg-icons';
+import Modal2 from "../../component/Modal2.tsx";
+import AvatarModal from "./AvatarModal.tsx";
+import { toast } from 'react-toastify';
+import Spinner from '../../component/Spinner.tsx'
+
+interface Student {
+  id: number;
+  code: string;
+  lastName: string;
+  firstName: string;
+  email: string;
+  gender: number;
+  birthday: string;
+  phone: string;
+  address: string;
+  description: string;
+  avatar: string;
+}
 
 function PersonalInformation() {
   const [studentInfo, setStudentInfo] = useState({
@@ -26,6 +48,15 @@ function PersonalInformation() {
 
   const [openInfo, setOpenInfo] = useState(true);
   const [openWork, setOpenWork] = useState(false);
+  const [userInfo, setUserInfo] = useState<Student>();
+  const [className, setClassName] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [isHidden, setIsHidden] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const baseUrl = "https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
+  const dispatch = useDispatch();
 
   const handleOpenInfo = () => {
     setOpenInfo(true);
@@ -36,8 +67,6 @@ function PersonalInformation() {
     setOpenInfo(false);
     setOpenWork(true);
   };
-
-  const [className, setClassName] = useState("");
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,111 +83,119 @@ function PersonalInformation() {
     };
   }, []);
 
-  useEffect(() => {
-    getStudentInfo().then(response => {
-      setStudentInfo(response);
-    }).catch(error => {
-      console.error("Failed to fetch student info:", error);
-    });
-  }, []);
-
-  const baseUrl = "https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setStudentInfo(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+  // Hàm nhận tệp hình ảnh từ component con
+  const handleImageChange = (file) => {
+    setImageFile(file);
+    if (file == null)
+      setIsHidden(true)
+    else
+      setIsHidden(false)
   };
+
+  // Hàm cập nhật hình đại diện
+  const handleSubmitImage = async () => {
+    setLoading(true); // Bắt đầu loading
+
+    const formData = new FormData();
+
+    // Thêm file ảnh vào FormData nếu có
+    if (imageFile) {
+      formData.append('avatar', imageFile);
+    }
+    else {
+      formData.append('avatar', "");
+    }
+
+    // formData.append('publicId', publicId);
+
+    try {
+      let response = await updateImageAPI(userInfo.id, formData);
+      if (response && response.statusCode == 200) {
+        handleImageAPI();
+        toast.success(response.message)
+      }
+      else {
+        toast.error('Cập nhật hình đại diện không thành công1')
+      }
+    } catch (error) {
+      toast.error(error.data.message)
+      console.log("error: ", error)
+    }
+    setLoading(false); // Kết thúc loading
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  }
+
+  const handleImageAPI = async () => {
+    let response = await getStudentInfo();
+    if (response && response.data) {
+      setUserInfo(response.data)
+      dispatch(setUser({
+        userInfo: response.data,
+      }));
+    }
+  }
+
+  useEffect(() => {
+    handleImageAPI();
+  }, [])
 
   return (
     <Container>
       <TitleHeader title="THÔNG TIN SINH VIÊN" />
       <div className={`p-5 flex h-full ${className}`}>
-
         <div className="w-full lg:w-4/12 p-1 flex flex-col items-center">
           <div className="relative">
             <label htmlFor="avatar" className="w-40 ">
               <div className="w-40 h-40 rounded-full border border-2 border-gray-300 flex items-center justify-center">
                 <img className="w-40 h-40 rounded-full" src={
-                  userInfo && userInfo.user ? (
-                    userInfo.user.avatar ? userInfo.user.avatar : avatar
+                  userInfo ? (
+                    userInfo.avatar ? baseUrl + userInfo.avatar : avatar
                   ) : avatar
                 } alt="Preview" />
               </div>
             </label>
-            <div className="absolute bottom-5 right-0">
+            <div className="absolute bottom-3 right-0">
               <Button
                 type="button"
                 size="xs"
                 variant="btn-none"
-                className="text-slate-600 bg-gray-200 text-2xl w-8 h-8 p-2 self-center rounded-full "
+                className="text-slate-600 bg-gray-200 text-2xl w-10 h-10 p-2 self-center rounded-full "
                 onClick={openModal}
+                label={<FontAwesomeIcon icon={faCamera} />}
               >
-                <FontAwesomeIcon icon={faCamera} />
+
               </Button>
             </div>
           </div>
           <div className="w-full flex flex-wrap">
             <div className="w-full mt-2">
               <TextField
-                label="Mã Số Sinh Viên"
-                id="code"
-                width="w-full"
-                disable={true}
-                type="text"
-                disableLabel={false}
-                className={`w-full`}
-                value={userInfo && userInfo.user ? userInfo.user.code : ''}
+                onField={true}
+                label={"Mã Số Sinh Viên"}
+                className="my-3"
+                value={userInfo ? userInfo.code : ''}
+                disabled
               />
             </div>
             <div className="w-full mt-2">
               <TextField
-                label="Họ Tên"
-                id="name"
-                width="w-full"
-                disable={true}
-                type="text"
-                disableLabel={false}
-                className={`w-full`}
-                value={userInfo && userInfo.user ? userInfo.user.lastName + ' ' + userInfo.user.firstName : ''}
-              />
-            </div>
-            <div className="w-full mt-2">
-              <TextField
-                label="Email"
-                id="email"
-                width="w-full"
-                disable={true}
-                type="text"
-                disableLabel={false}
-                className={`w-full`}
-                value={userInfo && userInfo.user ? userInfo.user.email : ''}
+                onField={true}
+                label={"Email"}
+                className="my-3"
+                value={userInfo ? userInfo.email : ''}
+                disabled
               />
             </div>
           </div>
         </div>
-
-        {/* <div className="w-[400px] rounded-md p-2 px-4 py-4 flex flex-col justify-between items-center">
-          <img className="w-4/5" src={`${baseUrl}${studentInfo.avatar}`} alt="User Avatar" />
-          <div className="w-full">
-            <TextField
-              onField={true}
-              label={"Email"}
-              className="my-3"
-              value={studentInfo.email}
-              disabled
-            />
-            <TextField
-              onField={true}
-              label={"Code"}
-              className="my-3"
-              value={studentInfo.code}
-              disabled
-            />
-          </div>
-        </div> */}
         <div className="flex-1 p-6">
           <div className="w-full flex px-1">
             <Button
@@ -177,15 +214,15 @@ function PersonalInformation() {
               <div className="w-full flex my-2">
                 <TextField
                   onField={true}
-                  label={"Tên"}
-                  value={`${studentInfo.lastName} ${studentInfo.firstName} `}
+                  label={"Họ Tên"}
+                  value={userInfo ? userInfo.lastName + ' ' + userInfo.firstName : ''}
                   className="flex-1 mr-5"
                   disabled={true}
                 />
                 <TextField
                   onField={true}
                   label={"Giới tính"}
-                  value={studentInfo.gender ? "Nam" : "Nữ"}
+                  value={userInfo ? userInfo.gender ? "Nam" : "Nữ" : ''}
                   className="flex-1"
                   disabled={true}
                 />
@@ -194,73 +231,74 @@ function PersonalInformation() {
                 <TextField
                   onField={true}
                   label={"Năm sinh"}
-                  value={studentInfo.birthday}
+                  value={userInfo ? userInfo.birthday : ''}
                   className="flex-1 mr-5"
                   disabled={true}
                 />
                 <TextField
                   onField={true}
                   label={"Số điện thoại"}
-                  value={studentInfo.phone}
+                  value={userInfo ? userInfo.phone : ''}
                   name="phone"
                   className="flex-1"
-                  onChange={handleChange} // Added onChange handler
+                  disabled
                 />
               </div>
               <TextField
                 onField={true}
-                label={"Email cá nhân"}
-                value={studentInfo.email}
-                className="my-2"
-                name="email"
-                onChange={handleChange} // Added onChange handler
-              />
-              <TextField
-                onField={true}
                 label={"Địa chỉ"}
                 className="my-2"
-                value={studentInfo.address}
+                value={userInfo ? userInfo.address : ''}
                 name="address"
-                onChange={handleChange} // Added onChange handler
+                disabled
               />
               <TextArea
                 label={"Mô tả"}
                 className="my-2"
-                value={studentInfo.description}
+                value={userInfo ? userInfo.description : ''}
                 name="description"
-                onChange={handleChange} // Added onChange handler
-              />
-              <Button
-                label={"Cập nhật thông tin"}
-                className="w-full bg-blue-500 text-white p-2 justify-center"
+                disabled
               />
             </div>
           )}
           {openWork && (
             <div className="p-2 shadow-inner shadow-gray-200 rounded-md mt-4 px-8 h-[535px] overflow-y-auto">
-              <div className="w-full flex my-2">
-                <TextField
-                  onField={true}
-                  label={"Mã tài khoản"}
-                  value={studentInfo.code}
-                  className="flex-1 mr-5"
-                  disabled={true}
-                />
-                <TextField
-                  onField={true}
-                  label={"Cấp"}
-                  value={studentInfo.role || "N/A"}
-                  className="flex-1"
-                  disabled={true}
-                />
-              </div>
               <div className="mt-10">
-                <BarCharts className="" />
+                <BarCharts />
               </div>
             </div>
           )}
         </div>
       </div>
+      <Modal2 id={"updateImage"}
+        width="w-full md:max-w-2xl h-auto"
+        title={`Cập nhật hình đại diện`}
+        content={
+          <AvatarModal
+            onImageChange={handleImageChange}
+          />
+        }
+        positionButton="end"
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        type="message"
+        buttonConfirm={
+          !isHidden &&
+          <Button
+            className={`flex-1 rounded-none hover:bg-blue-100 text-[18px] justify-center font-medium ${openWork ? "border-b-2 border-black" : ""}`}
+            label={loading ? (
+              <>
+                <Spinner className="text-white" />
+              </>
+            ) : "Lưu"
+            }
+            onClick={handleSubmitImage}
+            icon={!loading &&
+              <FontAwesomeIcon icon={faPlus} />}
+          />
+        }
+      >
+      </Modal2>
     </Container>
   );
 }
