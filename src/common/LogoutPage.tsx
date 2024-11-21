@@ -12,7 +12,6 @@ const LogoutPage: React.FC = () => {
             let token = localStorage.getItem('token')
             let response = await logoutAPI(token);
             if (response.statusCode === 200) {
-                console.log("logout", response)
                 localStorage.removeItem('token');
                 navigate('/dang-nhap');
                 window.location.reload();

@@ -6,17 +6,30 @@ import Header from "./component/sidebar/Header.tsx";
 import Footer from "./component/Footer.jsx";
 import { useDispatch } from 'react-redux';
 import { getStudentInfo } from './api/Student.js'
+import { getAdminInforAPI } from './api/admin.js'
+import { getInstructorInforAPI } from './api/Instructor.js'
 import { setUser } from './reducers/userSlice.tsx';
 import { getUserScope } from "./utils/authUtils.ts";
 import { initFlowbite } from 'flowbite';
+import { ROLE } from './enum/Role.tsx'
 
 function App() {
   const [sideMenuIsExpand, setSideMenuIsExpand] = useState(true);
   const dispatch = useDispatch();
 
   const handleUserInfor = async () => {
+    const role = getUserScope();
+    let response;
     try {
-      let response = await getStudentInfo();
+      if (role === ROLE.ADMIN) {
+        response = await getAdminInforAPI();
+      }
+      else if (role === ROLE.STUDENT) {
+        response = await getStudentInfo();
+      }
+      else if (role === ROLE.INSTRUCTOR) {
+        response = await getInstructorInforAPI();
+      }
       if (response && response.statusCode === 200) {
         dispatch(setUser({
           userInfo: response.data,
@@ -26,6 +39,7 @@ function App() {
       console.log("Lỗi lấy thông tin sinh viên: ", error)
     }
   }
+
 
   useEffect(() => {
     handleUserInfor();
