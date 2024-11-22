@@ -151,6 +151,7 @@ function Table({
                     onChange={selectBox.onChange}
                     value={selectBox.value}
                     className={selectBox.className}
+                    optionNameSelect={selectBox.optionNameSelect}
                   />
                 ))}
               </div>
