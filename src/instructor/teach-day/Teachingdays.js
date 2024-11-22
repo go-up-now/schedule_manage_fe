@@ -551,7 +551,7 @@ export const teach = [
   {
     clazzId: 112,
     date: "28/10/2024",
-    Ca: 1,
+    shiftId: 1,
     code: "SD18301",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
@@ -560,7 +560,7 @@ export const teach = [
   {
     clazzId: 113,
     date: "28/10/2024",
-    Ca: 2,
+    shiftId: 2,
     code: "SD18302",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
@@ -569,7 +569,7 @@ export const teach = [
   {
     clazzId: 114,
     date: "28/10/2024",
-    Ca: 3,
+    shiftId: 3,
     code: "SD18303",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
@@ -578,7 +578,7 @@ export const teach = [
   {
     clazzId: 115,
     date: "28/10/2024",
-    Ca: 4,
+    shiftId: 4,
     code: "SD18304",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
@@ -587,7 +587,7 @@ export const teach = [
   {
     clazzId: 116,
     date: "29/10/2024",
-    Ca: 1,
+    shiftId: 1,
     code: "SD18301",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
@@ -596,7 +596,7 @@ export const teach = [
   {
     clazzId: 117,
     date: "29/10/2024",
-    Ca: 2,
+    shiftId: 2,
     code: "SD18302",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
@@ -605,7 +605,7 @@ export const teach = [
   {
     clazzId: 118,
     date: "29/10/2024",
-    Ca: 5,
+    shiftId: 5,
     code: "SD18303",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
@@ -614,7 +614,7 @@ export const teach = [
   {
     clazzId: 119,
     date: "29/10/2024",
-    Ca: 6,
+    shiftId: 6,
     code: "SD18304",
     subjectCode: "MOB102",
     subjectName: "Lập trình Java 2",
