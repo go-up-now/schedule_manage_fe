@@ -81,7 +81,7 @@ function FindSubjectInstructor() {
               Chi tiết
             </>
           }
-          className="w-full md:w-1/3 flex items-center justify-center p-3 text-white "
+          className="w-full md:w-1/2 flex items-center justify-center p-3 text-white "
         />
       </div>
     </td>,
@@ -127,49 +127,59 @@ function FindSubjectInstructor() {
       {selectedSubject && (
         <Modal className={"md:w-[70%]"} isOpen={true} onClose={closeModal}>
           <h2 className="text-xl font-bold">
-            {selectedSubject.name} - {selectedSubject.code}
+            Môn: {selectedSubject.name} - Mã: {selectedSubject.code}
           </h2>
           <div className="border-t border-black mt-4 py-4 h-[400px] overflow-y-auto md:overscroll-none md:h-auto">
             <div className="w-full flex flex-col md:flex-row p-2">
               <TextField
-                sideField={true}
-                label={"Môn:"}
+                onField={true}
+                label={"Tên Môn:"}
                 value={selectedSubject.name}
                 className={"mr-0 md:mr-3 w-full"}
+                disabled={true}
               />
               <TextField
-                sideField={true}
-                label={"Code:"}
+                onField={true}
+                label={"Mã Môn:"}
                 value={selectedSubject.code}
                 className={"mt-2 md:mt-0 w-full"}
+                disabled={true}
               />
             </div>
             <div className="w-full flex flex-col md:flex-row p-2">
               <TextField
-                sideField={true}
-                label={"Credit"}
+                onField={true}
+                label={"Tín chỉ:"}
                 value={selectedSubject.credits}
                 className={"mr-0 md:mr-3 w-full"}
+                disabled={true}
               />
               <TextField
-                sideField={true}
-                label={"Hour"}
+                onField={true}
+                label={"Giờ học:"}
                 value={selectedSubject.total_hours}
                 className={"mt-2 md:mt-0 w-full"}
+                disabled={true}
               />
             </div>
             <div className="w-full flex flex-col md:flex-row p-2">
               <TextArea
                 value={selectedSubject.mission}
                 className={"w-full mr-0 md:mr-3"}
+                disabled={true}
               />
               <TextArea
                 value={selectedSubject.description}
                 className={"w-full"}
+                disabled={true}
               />
             </div>
             <div className={"w-full p-2 -mt-3 md:-mt-6"}>
-              <TextArea value={selectedSubject.note} className={"w-full"} />
+              <TextArea
+                value={selectedSubject.note}
+                className={"w-full"}
+                disabled={true}
+              />
             </div>
           </div>
         </Modal>
