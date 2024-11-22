@@ -8,9 +8,10 @@ import { student } from "./student";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function StudentList() {
-  const { code, clazz } = useParams();
   const location = useLocation();
   const { item } = location.state || {};
   const navigate = useNavigate();
@@ -106,9 +107,9 @@ function StudentList() {
   const handleExamClick = useCallback(
     (item) => {
       navigate(
-        `/instructor/exam-arrange/${encodeURIComponent(
-          item.code
-        )}/${encodeURIComponent(item.subject.code)}`,
+        `/xep-dot-thi/${encodeURIComponent(item.clazz)}/${encodeURIComponent(
+          item.subjectCode
+        )}`,
         {
           state: { item },
         }
@@ -148,70 +149,74 @@ function StudentList() {
   }, [className]);
 
   return (
-    <div className="py-4">
-      <div className="border rounded-md mb-2 h-10 ">
-        {item ? (
-          <div className="h-full px-4 flex items-center justify-between font-medium text-lg text-blue-700">
-            <p>idClazz: {item.id}</p>
-            <p>codeClazz: {item.code}</p>
-            <p>codeSubject: {item.subject.code}</p>
-            <p>nameSubject: {item.subject.name}</p>
-          </div>
-        ) : (
-          <p>No item data available</p>
+    <Container>
+      <TitleHeader title={`Danh sách học sinh lớp ${item.clazz}`} />
+
+      <div className="min-h-[600px]">
+        {/* <div className="border rounded-md mb-2 h-10 ">
+          {item ? (
+            <div className="h-full px-4 flex items-center justify-between font-medium text-lg text-blue-700">
+              <p>idClazz: {item.clazzId}</p>
+              <p>codeClazz: {item.clazz}</p>
+              <p>codeSubject: {item.subjectCode}</p>
+              <p>nameSubject: {item.subjectName}</p>
+            </div>
+          ) : (
+            <p>No item data available</p>
+          )}
+        </div> */}
+        <Table
+          DefaultTable={true}
+          showOptions={true}
+          showSearch={true}
+          showBtnEnd={true}
+          btnEnd={btnEnd}
+          headers={headers}
+          renderRow={renderRow}
+          data={student}
+          maxRow={student.length}
+          showTurnPage={false}
+        />
+        {selectedStudent && (
+          <Modal isOpen={true} onClose={closeModal} className={`${className}`}>
+            <h2 className="text-xl font-bold">
+              {selectedStudent.name} - {selectedStudent.code}
+            </h2>
+            <div>
+              <div className="w-full flex flex-col flex-wrap h-[380px] border-t border-t-gray-500 mt-5 py-5`">
+                {headers.slice(2, -2).map((header, index) => (
+                  <div key={index} className="my-1 p-1">
+                    <TextField
+                      sideField={true}
+                      label={header}
+                      value={
+                        selectedStudent[`lab${index + 1}`] ||
+                        selectedStudent[`asm${index + 1}`] ||
+                        selectedStudent[header.toLowerCase().replace(/\s/g, "")]
+                      }
+                      placeholder={`Enter ${header.toLowerCase()}`}
+                      className={"p-1"}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center justify-between px-2 border-t border-t-black pt-6">
+                <TextField
+                  sideField={true}
+                  label="ASM Final:"
+                  value={selectedStudent.asmFinal}
+                  className="flex-1 items-center mr-10"
+                />
+                <Button
+                  label="LƯU"
+                  className="flex-1 items-center justify-center p-2"
+                ></Button>
+              </div>
+            </div>
+          </Modal>
         )}
       </div>
-      <Table
-        DefaultTable={true}
-        showOptions={true}
-        showSearch={true}
-        showBtnEnd={true}
-        btnEnd={btnEnd}
-        headers={headers}
-        renderRow={renderRow}
-        data={student}
-        maxRow={student.length}
-        showTurnPage={false}
-      />
-      {selectedStudent && (
-        <Modal isOpen={true} onClose={closeModal} className={`${className}`}>
-          <h2 className="text-xl font-bold">
-            {selectedStudent.name} - {selectedStudent.code}
-          </h2>
-          <div>
-            <div className="w-full flex flex-col flex-wrap h-[380px] border-t border-t-gray-500 mt-5 py-5`">
-              {headers.slice(2, -2).map((header, index) => (
-                <div key={index} className="my-1 p-1">
-                  <TextField
-                    sideField={true}
-                    label={header}
-                    value={
-                      selectedStudent[`lab${index + 1}`] ||
-                      selectedStudent[`asm${index + 1}`] ||
-                      selectedStudent[header.toLowerCase().replace(/\s/g, "")]
-                    }
-                    placeholder={`Enter ${header.toLowerCase()}`}
-                    className={"p-1"}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center justify-between px-2 border-t border-t-black pt-6">
-              <TextField
-                sideField={true}
-                label="ASM Final:"
-                value={selectedStudent.asmFinal}
-                className="flex-1 items-center mr-10"
-              />
-              <Button
-                label="LƯU"
-                className="flex-1 items-center justify-center p-2"
-              ></Button>
-            </div>
-          </div>
-        </Modal>
-      )}
-    </div>
+    </Container>
   );
 }
 

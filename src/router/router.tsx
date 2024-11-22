@@ -1,14 +1,14 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import ProtectedRoute from '../component/ProtectedRoute.tsx';
+import ProtectedRoute from "../component/ProtectedRoute.tsx";
 import App from "../App.js";
-import IF from '../component/IF.tsx';
-import { getUserScope } from '../utils/authUtils.ts'
+import IF from "../component/IF.tsx";
+import { getUserScope } from "../utils/authUtils.ts";
 import ErrorPage from "../common/ErrorPage.tsx";
 import Login from "../common/login/Login.tsx";
-import LogoutPage from '../common/LogoutPage.tsx';
-import UnAuthorizedPage from '../common/UnAuthorizedPage.tsx';
-import { ROLE } from '../enum/Role.tsx';
+import LogoutPage from "../common/LogoutPage.tsx";
+import UnAuthorizedPage from "../common/UnAuthorizedPage.tsx";
+import { ROLE } from "../enum/Role.tsx";
 import HomePage from "../student/home-page/HomePage";
 import HomePageInstructor from "../instructor/home-page/HomePageInstructor";
 import EventDescription from "../common/event-description/EventDescription";
@@ -55,18 +55,21 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element:
-      <ProtectedRoute allowedRoles={[ROLE.ADMIN, ROLE.STUDENT, ROLE.INSTRUCTOR]}>
+    element: (
+      <ProtectedRoute
+        allowedRoles={[ROLE.ADMIN, ROLE.STUDENT, ROLE.INSTRUCTOR]}
+      >
         <App />
-      </ProtectedRoute>,
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
-        element:
+        element: (
           <>
             <IF condition={role === ROLE.STUDENT}>
-              < ProtectedRoute allowedRoles={[ROLE.STUDENT]} >
+              <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
                 <HomePage />
               </ProtectedRoute>
             </IF>
@@ -81,6 +84,7 @@ const router = createBrowserRouter([
               </ProtectedRoute>
             </IF>
           </>
+        ),
       },
 
       // {
@@ -105,168 +109,189 @@ const router = createBrowserRouter([
       //     </>
       // },
 
-
       // COMMON ROLE
       {
-        path: "/event",
-        element:
+        path: "/su-kien/:nameEvent",
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT, ROLE.INSTRUCTOR]}>
             <EventDescription />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
 
       // STUDENT ROLE
       {
         path: "/thong-tin-ca-nhan",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <PersonalInformation />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/lich-hoc",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <StudySchedule />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/lich-thi",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <ExamSchedule />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/mon-hoc-hien-tai",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <CurrentSubject />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/doi-lich-hoc",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <ChangeSchedule />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/dang-ky-mon-hoc",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <RegisterSubject />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
 
       {
         path: "/lich-su-hoc-tap",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <StudyHistory />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/lich",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <Calendar />
-          </ProtectedRoute>,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/tim-kiem-mon-hoc",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <FindSubject />
           </ProtectedRoute>
+        ),
       },
 
       // INSTRUCTOR ROLE
       {
-        path: "/ngay-giang-day",
-        element:
+        path: "/lich-day",
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <TeachDay />
           </ProtectedRoute>
+        ),
       },
       {
-        path: "/diem-danh",
-        element:
+        path: "/diem-danh/:codeSubject/:codeClazz",
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <CheckAttendance />
           </ProtectedRoute>
+        ),
       },
       {
-        path: "/danh-sach-sinh-vien",
-        element:
+        path: "/danh-sach-sinh-vien/:codeSubject/:codeClazz",
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <StudentList />
           </ProtectedRoute>
+        ),
       },
       {
         path: "/tim-mon-hoc",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <FindSubjectInstructor />
           </ProtectedRoute>
+        ),
       },
       {
-        path: "/quan-ly-giang-day",
-        element:
+        path: "/danh-sach-lop-day",
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <TeachManage />
           </ProtectedRoute>
+        ),
       },
       {
         path: "/dat-lai-lich-nghi",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <OffedReplace />
           </ProtectedRoute>
+        ),
       },
       {
-        path: "/thay-doi-lich-thi",
-        element:
+        path: "/xep-dot-thi/:codeSubject/:codeClazz",
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.INSTRUCTOR]}>
             <ExamArrange />
           </ProtectedRoute>
+        ),
       },
 
       // ADMIN ROLE
       {
         path: "/quan-ly-lop-hoc",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <ClassManage />
           </ProtectedRoute>
+        ),
       },
       {
         path: "/quan-ly-ngay-kiem-tra",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <TestdayManage />
           </ProtectedRoute>
+        ),
       },
       {
         path: "/quan-ly-sinh-vien",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <StudentManage />
           </ProtectedRoute>
+        ),
       },
       {
         path: "/quan-ly-lich-hoc",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <ScheduleManage />
           </ProtectedRoute>
+        ),
       },
       {
         path: "/quan-ly-hoc-ky",
-        element:
+        element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <SemesterManage />
           </ProtectedRoute>
+        ),
       },
     ],
   },

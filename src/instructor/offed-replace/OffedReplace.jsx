@@ -5,6 +5,8 @@ import Table from "../../component/Table";
 import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function OffedReplace() {
   const navigate = useNavigate();
@@ -159,34 +161,37 @@ function OffedReplace() {
   ];
 
   return (
-    <div className="py-4">
-      {desktop && (
-        <Table
-          DefaultTable={true}
-          showOptions={true}
-          showSearch={true}
-          showSelectBoxes={true}
-          numberSelectBox={selectBoxs}
-          headers={headers}
-          renderRow={renderRow}
-          data={clazz}
-          maxRow={5}
-        />
-      )}
-      {mobile && (
-        <Table
-          DefaultTable={true}
-          showOptions={true}
-          showSearch={true}
-          showSelectBoxes={true}
-          numberSelectBox={selectBoxs}
-          headers={header1s}
-          renderRow={renderRow1}
-          data={clazz}
-          maxRow={5}
-        />
-      )}
-    </div>
+    <Container>
+      <TitleHeader title="Danh sách ngày đã nghỉ" />
+      <div className="min-h-[600px]">
+        {desktop && (
+          <Table
+            DefaultTable={true}
+            showOptions={true}
+            showSearch={true}
+            showSelectBoxes={true}
+            numberSelectBox={selectBoxs}
+            headers={headers}
+            renderRow={renderRow}
+            data={clazz}
+            maxRow={5}
+          />
+        )}
+        {mobile && (
+          <Table
+            DefaultTable={true}
+            showOptions={true}
+            showSearch={true}
+            showSelectBoxes={true}
+            numberSelectBox={selectBoxs}
+            headers={header1s}
+            renderRow={renderRow1}
+            data={clazz}
+            maxRow={5}
+          />
+        )}
+      </div>
+    </Container>
   );
 }
 

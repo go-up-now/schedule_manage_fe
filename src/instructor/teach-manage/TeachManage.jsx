@@ -11,6 +11,8 @@ import {
   faClipboardList,
   faEllipsis,
 } from "@fortawesome/free-solid-svg-icons";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function TeachManage() {
   const navigate = useNavigate();
@@ -22,13 +24,13 @@ function TeachManage() {
 
   const renderRow = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.code}
+      {item.clazz}
     </td>,
     <td key={`item-subjectCode-${item.id}`} className="px-6 py-4">
-      {item.subject.code}
+      {item.subjectCode}
     </td>,
     <td key={`item-subjectName-${item.id}`} className="px-6 py-4">
-      {item.subject.name}
+      {item.subjectName}
     </td>,
     <td key={`item-option-${item.id}`} className="px-6 py-4">
       <div className="flex justify-center w-full">
@@ -39,7 +41,7 @@ function TeachManage() {
               sách
             </>
           }
-          className="w-full md:w-1/3 flex items-center justify-center p-3 text-white"
+          className="w-full md:w-2/4 flex items-center justify-center p-3 text-white"
           onClick={() => handleStudentListClick(item)}
         />
       </div>
@@ -49,9 +51,9 @@ function TeachManage() {
   const handleStudentListClick = useCallback(
     (item) => {
       navigate(
-        `/instructor/student-list/${encodeURIComponent(
-          item.code
-        )}/${encodeURIComponent(item.subject.code)}`,
+        `/danh-sach-sinh-vien/${encodeURIComponent(
+          item.clazz
+        )}/${encodeURIComponent(item.subjectCode)}`,
         { state: { item } }
       );
     },
@@ -115,19 +117,22 @@ function TeachManage() {
   ];
 
   return (
-    <div className="py-4">
-      <Table
-        DefaultTable={true}
-        showOptions={true}
-        showSearch={true}
-        showSelectBoxes={true}
-        numberSelectBox={selectBoxs}
-        headers={headers}
-        renderRow={renderRow}
-        data={clazz}
-        maxRow={5}
-      />
-    </div>
+    <Container>
+      <TitleHeader title="Danh sách lớp phụ trách" />
+      <div className="max-h-[600px]">
+        <Table
+          DefaultTable={true}
+          showOptions={true}
+          showSearch={true}
+          showSelectBoxes={true}
+          numberSelectBox={selectBoxs}
+          headers={headers}
+          renderRow={renderRow}
+          data={clazz}
+          maxRow={10}
+        />
+      </div>
+    </Container>
   );
 }
 
