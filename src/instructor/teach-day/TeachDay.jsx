@@ -8,6 +8,9 @@ import Button from "../../component/Button";
 import { getTeacherSchedule } from "../../api/Teacher";
 import { addDays, format } from "date-fns";
 import { teach } from "./Teachingdays";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
+
 function TeachDay() {
   const navigate = useNavigate();
   const [desktop, setDesktop] = useState(true);
@@ -49,7 +52,9 @@ function TeachDay() {
   const [selectedDay, setSelectedDay] = useState(7); // Default to 7 days
   const [teachDays, setTeachDays] = useState([]);
   const [today] = useState(new Date()); // Today's date
-
+  // Log the current date to verify it's correct
+  //console.log("Current Date:", today);
+  const formattedToday = format(today, "yyyy-MM-dd");
   // Handle day selection change
   const handleDayChange = (event) => {
     setSelectedDay(parseInt(event.target.value));
@@ -57,38 +62,36 @@ function TeachDay() {
 
   // Fetch teacher's schedule
   useEffect(() => {
-    if (today && selectedDay) {
+    if (selectedDay) {
       const selectedDate = addDays(today, selectedDay);
-      const formattedToday = format(today, "yyyy-MM-dd");
       const formattedSelectedDate = format(selectedDate, "yyyy-MM-dd");
 
       getTeacherSchedule(formattedToday, formattedSelectedDate)
         .then((data) => {
           setTeachDays(data);
-          console.log("Fetched Teach Days:", data);
+          //console.log("Fetched Teach Days:", data);
         })
         .catch((error) => {
           console.error("Error fetching teach days:", error);
         });
     }
-  }, [today, selectedDay]);
+  }, [selectedDay]);
 
   const selectBoxs = [
     {
       options: [
-        { value: 7, label: "7 ngày tới" },
         { value: 14, label: "14 ngày tới" },
         { value: 30, label: "30 ngày tới" },
       ],
-      optionNameSelect: false,
-      nameSelect: "Ngày tới",
+      nameSelect: "7 Ngày tới",
+      nameSelectValue: 7,
       onChange: handleDayChange,
       value: selectedDay,
       className: "mr-1 w-full pt-4 md:pt-4",
     },
   ];
 
-  console.log("Teach Days:", teachDays);
+  //console.log("Teach Days:", teachDays);
 
   // Grouping classes by date
   const groupedByDate = teachDays.reduce((acc, current) => {
@@ -99,11 +102,11 @@ function TeachDay() {
     return acc;
   }, {});
 
-  console.log("Grouped By Date:", groupedByDate);
+  //console.log("Grouped By Date:", groupedByDate);
 
   // Render the class information for each Ca
   const renderShiftId = (clazz) => {
-    console.log("Rendering Class:", clazz); // Log each class
+    //console.log("Rendering Class:", clazz); // Log each class
     return clazz ? (
       <div className="w-24 h-22 flex flex-col items-start p-2 rounded-md shadow-inner border relative">
         <div className="w-full text-left">
@@ -137,7 +140,7 @@ function TeachDay() {
     const shiftIdArray = Array(6).fill(null);
 
     classes.forEach((clazz) => {
-      console.log("Class in renderRow:", clazz);
+      //console.log("Class in renderRow:", clazz);
       if (clazz.shiftId >= 1 && clazz.shiftId <= 6) {
         shiftIdArray[clazz.shiftId - 1] = clazz;
       }
@@ -160,65 +163,71 @@ function TeachDay() {
     classes,
   }));
 
-  console.log("Table Data:", tableData);
+  //console.log("Table Data:", tableData);
+  const thatDate = format(today, "dd-MM-yyyy");
 
   return (
-    <div className="py-4">
-      {desktop && (
-        <Table
-          DefaultTable={true}
-          showOptions={true}
-          showSelectBoxes={true}
-          numberSelectBox={selectBoxs}
-          headers={headers}
-          renderRow={(row) => renderRow(row.date, row.classes)}
-          data={tableData}
-          maxRow={7}
-        />
-      )}
+    <Container>
+      <TitleHeader title={`Danh sách lịch dạy từ ngày ${thatDate}`} />
+      <div className="min-h-[600px]">
+        {desktop && (
+          <Table
+            DefaultTable={true}
+            showOptions={true}
+            showSelectBoxes={true}
+            numberSelectBox={selectBoxs}
+            headers={headers}
+            renderRow={(row) => renderRow(row.date, row.classes)}
+            data={tableData}
+            maxRow={7}
+          />
+        )}
 
-      {mobile && (
-        <Accordion
-          items={tableData.map((item) => ({
-            title: item.date,
-            content: item.classes.map((clazz) => (
-              <div
-                className="flex items-center justify-between border py-3 px-2 my-2"
-                key={clazz.clazzId}
-              >
-                <div className="flex flex-col">
-                  <div>
-                    <span className="text-[18px] font-medium">
-                      Ca {clazz.Ca}
-                    </span>{" "}
-                    -
-                    <span className="text-[18px] font-medium">
-                      {clazz.room}
-                    </span>
+        {mobile && (
+          <Accordion
+            items={tableData.map((item) => ({
+              title: item.date,
+              content: item.classes.map((clazz) => (
+                <div
+                  className="flex items-center justify-between border py-3 px-2 my-2"
+                  key={clazz.clazzId}
+                >
+                  <div className="flex flex-col">
+                    <div>
+                      <span className="text-[18px] font-medium">
+                        Ca {clazz.Ca}
+                      </span>{" "}
+                      -
+                      <span className="text-[18px] font-medium">
+                        {clazz.room}
+                      </span>
+                    </div>
+                    <h3 className="text-[16px]">{clazz.code}</h3>
+                    <h3 className="text-[16px] truncate">
+                      {clazz.subjectName}
+                    </h3>
                   </div>
-                  <h3 className="text-[16px]">{clazz.code}</h3>
-                  <h3 className="text-[16px] truncate">{clazz.subjectName}</h3>
+                  <div className="flex">
+                    <Button
+                      key={clazz.clazzId}
+                      label="Điểm danh"
+                      onClick={() => handleAttendanceClick(clazz)}
+                      className="text-white p-1 mx-1 text-[16px]"
+                    />
+                    <Button
+                      key={clazz.clazzId}
+                      label="X"
+                      className="text-white p-2 px-4 mx-1 text-[16px] bg-red-700"
+                    />
+                  </div>
                 </div>
-                <div className="flex">
-                  <Button
-                    key={clazz.clazzId}
-                    label="Điểm danh"
-                    onClick={() => handleAttendanceClick(clazz)}
-                    className="text-white p-1 mx-1 text-[16px]"
-                  />
-                  <Button
-                    key={clazz.clazzId}
-                    label="X"
-                    className="text-white p-2 px-4 mx-1 text-[16px] bg-red-700"
-                  />
-                </div>
-              </div>
-            )),
-          }))}
-          maxRow={7}
-        />
-      )}
-    </div>
+              )),
+            }))}
+            maxRow={7}
+          />
+        )}
+      </div>
+    </Container>
   );
 }
 

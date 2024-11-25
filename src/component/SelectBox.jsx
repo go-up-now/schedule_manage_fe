@@ -35,7 +35,8 @@ import React, { useState } from "react";
 // }
 
 // SelectBox component (generic dropdown component)
-function SelectBox({ options, value, onChange, name, nameSelect, className, className1, disable = false }) {
+
+function SelectBox({ options, value, onChange, name, nameSelect, nameSelectValue, className, className1, disable = false }) {
   return (
     <div className={className}>
       <label className="block -mt-4 text-sm font-medium text-gray-700">
@@ -47,7 +48,8 @@ function SelectBox({ options, value, onChange, name, nameSelect, className, clas
         disabled={disable}
         className={`${className1} w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500`}
       >
-        <option value="">{nameSelect}</option>
+        <option value={nameSelectValue}>{nameSelect}</option>
+
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
