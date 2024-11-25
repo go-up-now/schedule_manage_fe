@@ -1,7 +1,7 @@
 import Table from "../../../component/Table";
 import Button from "../../../component/Button";
 import React, { useState, useEffect } from "react";
-
+import Container from "../../../component/Container.tsx";
 function PlanSubject() {
   const headers = [
     "Mã môn",
@@ -135,6 +135,7 @@ function PlanSubject() {
   }, [mobile, desktop]);
 
   return (
+    <Container>
     <div className="">
       {desktop && (
         <>
@@ -167,6 +168,7 @@ function PlanSubject() {
         </>
       )}
     </div>
+    </Container>
   );
 }
 export default PlanSubject;

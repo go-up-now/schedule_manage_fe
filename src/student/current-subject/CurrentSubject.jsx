@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function CurrentSubject() {
   const navigate = useNavigate();
@@ -109,6 +111,8 @@ function CurrentSubject() {
   // }, [mobile, desktop]);
 
   return (
+    <Container>
+      <TitleHeader title={'MÔN HỌC HIỆN TẠI'}/>
     <div className="py-4">
       <Table
         advanced={false}
@@ -145,6 +149,7 @@ function CurrentSubject() {
         </div>
       </Modal>
     </div>
+    </Container>
   );
 }
 

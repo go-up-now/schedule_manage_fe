@@ -1,5 +1,7 @@
 import Table from "../../component/Table";
 import React, { useState, useEffect } from "react";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function StudyHistory() {
   const headers = [
@@ -108,6 +110,8 @@ function StudyHistory() {
 
   return (
     <>
+    <Container>
+    <TitleHeader title={'LỊCH SỬ HỌC TẬP'}/>
       <div className="py-4">
         {desktop && (
           <>
@@ -137,6 +141,7 @@ function StudyHistory() {
         <p className="px-6 py-2">Điểm trung bình: </p>
         <p className="px-6 py-2">Số tín chỉ: </p>
       </div>
+      </Container>
     </>
   );
 }
