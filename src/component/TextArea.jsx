@@ -25,7 +25,7 @@ const TextArea = ({
         rows={rows}
         disabled={disabled}
         className={`border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 ${
-          disabled ? "bg-gray-200 cursor-not-allowed" : "focus:ring-blue-500"
+          disabled ? "bg-gray-50 cursor-not-allowed" : "focus:ring-blue-500"
         }`}
         style={{ resize: "vertical" }} // Cho phép thay đổi kích thước chiều cao
       />

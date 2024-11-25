@@ -1,60 +1,80 @@
 import TextField from "../../component/TextField";
 
 function TextFieldGroup({
-  major,
-  email,
-  perEmail,
-  clazz,
-  phone,
-  address,
-  credit,
-  ownCredit,
+  ...props
 }) {
   return (
     <div className="flex">
       <div className="w-2/4">
         <TextField
-          label="Chuyên ngành:"
-          value={major}
+          onField={true}
+          label="Học kỳ nhập học:"
+          value={props.semester + ' ' + props.year}
           className="pt-4 px-4"
           disabled
         />
         <TextField
-          label="Email:"
-          value={email}
+          onField={true}
+          label="Khóa:"
+          value={props.course}
           className="pt-4 px-4"
           disabled
         />
         <TextField
-          label="Email cá nhân:"
-          value={perEmail}
+          onField={true}
+          label="Mã sinh viên:"
+          value={props.code}
           className="pt-4 px-4"
           disabled
         />
-        <TextField label="Lớp:" value={clazz} className="pt-4 px-4" disabled />
+        <TextField
+          onField={true}
+          label="Họ và tên:"
+          value={props.lastName + ' ' + props.firstName}
+          className="pt-4 px-4"
+          disabled
+        />
+        <TextField
+          onField={true}
+          label="Giới tính:"
+          value={props.gender ? 'Nam' : 'Nữ'}
+          className="pt-4 px-4"
+          disabled
+        />
       </div>
       <div className="w-2/4">
         <TextField
+          onField={true}
+          label="Email:"
+          value={props.email}
+          className="pt-4 px-4"
+          disabled
+        />
+        <TextField
+          onField={true}
+          label="Ngày sinh:"
+          value={props.birthday}
+          className="pt-4 px-4"
+          disabled
+        />
+        <TextField
+          onField={true}
           label="Số di động:"
-          value={phone}
+          value={props.phone}
           className="pt-4 px-4"
           disabled
         />
         <TextField
+          onField={true}
           label="Địa chỉ:"
-          value={address}
+          value={props.address}
           className="pt-4 px-4"
           disabled
         />
         <TextField
-          label="Số tín chỉ:"
-          value={credit}
-          className="pt-4 px-4"
-          disabled
-        />
-        <TextField
-          label="Số tín chỉ đã hoàn thành:"
-          value={ownCredit}
+          onField={true}
+          label="Mô tả:"
+          value={props.description}
           className="pt-4 px-4"
           disabled
         />

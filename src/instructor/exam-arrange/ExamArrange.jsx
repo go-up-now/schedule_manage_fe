@@ -5,6 +5,8 @@ import DragDrop, { listExam } from "../../component/DragDrop";
 import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleLeft, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function ExamArrange() {
   const location = useLocation();
@@ -25,9 +27,9 @@ function ExamArrange() {
   const handleStudentListClick = useCallback(
     (item) => {
       navigate(
-        `/instructor/student-list/${encodeURIComponent(
-          item.code
-        )}/${encodeURIComponent(item.subject.code)}`,
+        `/danh-sach-sinh-vien/${encodeURIComponent(
+          item.clazz
+        )}/${encodeURIComponent(item.subjectCode)}`,
         { state: { item } }
       );
     },
@@ -55,8 +57,10 @@ function ExamArrange() {
   };
 
   return (
-    <div className="py-4">
-      {/* <div className="border rounded-md h-10 ">
+    <Container>
+      <TitleHeader title={`Xếp đợt thi lớp ${item.clazz}`} />
+      <div className="min-h-[600px]">
+        {/* <div className="border rounded-md h-10 ">
         {item ? (
           <div className="h-full px-4 flex items-center justify-between font-medium text-lg text-blue-700">
             <p>Phòng: {item.room}</p>
@@ -69,30 +73,31 @@ function ExamArrange() {
         )}
       </div> */}
 
-      <div className="h-[500px]">
-        <DragDrop
-          numberBoard={numberBoard}
-          initialStudents={students}
-          showOptions={true}
-          showSearchItem={true}
-          showRandomBtn={true}
-          showOtherBtn={true}
-          otherBtns={getbackBtn}
-        />
-      </div>
+        <div className="h-[500px]">
+          <DragDrop
+            numberBoard={numberBoard}
+            initialStudents={students}
+            showOptions={true}
+            showSearchItem={true}
+            showRandomBtn={true}
+            showOtherBtn={true}
+            otherBtns={getbackBtn}
+          />
+        </div>
 
-      <div className="flex md:mt-10 mt-36 justify-center">
-        <Button
-          label={
-            <>
-              <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" /> Lưu
-            </>
-          }
-          className="w-full md:w-1/2 bg-blue-400 h-10 text-white flex justify-center font-medium"
-          onClick={saveList}
-        />
+        <div className="flex md:mt-10 mt-36 justify-center">
+          <Button
+            label={
+              <>
+                <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" /> Lưu
+              </>
+            }
+            className="w-full md:w-1/2 bg-blue-400 h-10 text-white flex justify-center font-medium"
+            onClick={saveList}
+          />
+        </div>
       </div>
-    </div>
+    </Container>
   );
 }
 

@@ -14,6 +14,7 @@ const TextField = ({
   onField = false,
   sideField = false,
   className,
+  className1 = ''
 }) => {
   return (
     <div className={`${className}`}>
@@ -23,7 +24,7 @@ const TextField = ({
             <label className="block text-sm text-gray-500 mb-1">{label}</label>
           )}
           <div
-            className={`flex items-center border border-gray-300 rounded-lg p-2 w-full ${disabled ? "bg-gray-50" : ""
+            className={`flex items-center border border-gray-300 rounded-lg p-2 w-full ${className1} ${disabled ? "bg-gray-50" : ""
               } focus-within:ring-2 focus-within:ring-blue-500`}
           >
             {icon && (
