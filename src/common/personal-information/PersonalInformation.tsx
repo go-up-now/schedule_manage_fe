@@ -115,7 +115,7 @@ function PersonalInformation() {
         toast.success(response.message)
       }
       else {
-        toast.error('Cập nhật hình đại diện không thành công1')
+        toast.error('Cập nhật hình đại diện không thành công')
       }
     } catch (error) {
       toast.error(error.data.message)

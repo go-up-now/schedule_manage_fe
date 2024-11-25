@@ -4,7 +4,7 @@ export const major = [
 ];
 
 export const educationProgramId = [
-  { value: 1, label: "Phát triển phần mêm" },
+  { value: 1, label: "Phát triển phần mềm" },
   { value: 2, label: "Phát triển phần mềm java" },
   { value: 3, label: "Phát triển phần mềm C#" },
 ];
@@ -16,6 +16,6 @@ export const course = [
 ];
 
 export const gender = [
-  { value: true, label: "Nam" },
-  { value: false, label: "Nữ" },
+  { value: 'true', label: "Nam" },
+  { value: 'false', label: "Nữ" },
 ];
