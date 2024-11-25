@@ -4,6 +4,11 @@ import TextField from "../../component/TextField";
 import Radio from "../../component/Radio";
 import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from 'react-toastify';
+import { getNotesByMonth, postNote } from "../../api/NoteStudent";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
+
 import {
   faBook,
   faCalendarPlus,
@@ -112,6 +117,8 @@ function Calendar() {
   }, [mobile, desktop]);
 
   return (
+    <Container>
+    <TitleHeader title={'NOTE'}/>
     <div className={`w-full flex flex-col md:flex-row justify-between py-4`}>
       <div className="w-full h-full mb-6">
         <DateCalendar />
@@ -273,6 +280,7 @@ function Calendar() {
         </div>
       </div>
     </div>
+    </Container>
   );
 }
 

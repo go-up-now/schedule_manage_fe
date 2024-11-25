@@ -141,6 +141,7 @@ function Table({
               </div>
             )}
             {showSelectBoxes && (
+              /* <div className="md:w-full w-full flex my-2 mx-2 justify-evenly"> */
               <div className="md:w-full w-full flex my-2 mx-2 justify-evenly">
                 {numberSelectBox.map((selectBox, index) => (
                   <SelectBox
