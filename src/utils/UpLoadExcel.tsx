@@ -20,9 +20,6 @@ const UploadExcelModal = ({
     isReLoadTable,
     setIsReLoadTable,
 }) => {
-    const course = useSelector((state) => state.course.course);
-    const major = useSelector((state) => state.major.major);
-    console.log("course", course, major)
 
     // export excel activity
     const handleExportActivitiesToExcel = () => {
@@ -88,8 +85,6 @@ const UploadExcelModal = ({
                     toast.error(response.message)
                 if (response.statusCode === 200) {
                     toast.success("Import excel thành công")
-                    // let responseAll = await getAllObject(course, major);
-                    // setListAPI(responseAll)
                     setIsReLoadTable(!isReLoadTable);
                 }
             }

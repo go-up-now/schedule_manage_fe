@@ -133,13 +133,6 @@ function ClassManage() {
     </td>,
   ];
 
-  // const handleYearChange = (event) => {
-  //   setSelectedYear(event.target.value);
-  //   // dispatch(setYear({
-  //   //   Year: event.target.value,
-  //   // }));
-  // };
-
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
   };
@@ -151,13 +144,6 @@ function ClassManage() {
   const handleBlockChange = (event) => {
     setSelectedBlock(event.target.value);
   };
-
-  // const handleMajorChange = (event) => {
-  //   setSelectedMajor(event.target.value);
-  //   dispatch(setMajor({
-  //     major: event.target.value,
-  //   }));
-  // };
 
   // call api
   const callAPI = async () => {
@@ -265,12 +251,7 @@ function ClassManage() {
       else
         formattedClazz = { ...values };
 
-      // const formattedClazz = {
-      //   ...values, subjectId
-      // };
-      console.log("clazz", formattedClazz)
       const action = async () => {
-
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading
           try {
