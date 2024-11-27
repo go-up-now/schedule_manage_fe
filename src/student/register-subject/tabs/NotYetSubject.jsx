@@ -1,8 +1,14 @@
 import Table from "../../../component/Table";
 import Button from "../../../component/Button";
 import React, { useState, useEffect } from "react";
-
+import {
+  getClazzByStudent,
+  postClazzByStudent,
+} from "../../../api/ClazzStudent";
+import { toast } from "react-toastify";
 function NotYetSubject() {
+  const [getclazz, setGetClazz] = useState([]);
+
   const headers = [
     "Mã môn",
     "Môn",
@@ -18,113 +24,89 @@ function NotYetSubject() {
 
   const header1s = ["Mã môn", "Môn", "Lớp", "Ca", "Thứ", " "];
 
-  const subjects = [
-    {
-      id: 1,
-      code: "COM108",
-      name: "Cơ sở dữ liệu",
-      credit: 3,
-      clazz: "SD18301",
-      amount: 40,
-      available: 30,
-      shift: 1,
-      day_of_week: "2, 4, 6",
-      time: "07:15:00 - 09:15:00",
-    },
-    {
-      id: 2,
-      code: "COM201",
-      name: "SQLServer",
-      credit: 3,
-      clazz: "SD18301",
-      amount: 40,
-      available: 19,
-      shift: 1,
-      day_of_week: "3, 5, 7",
-      time: "07:15:00 - 09:15:00",
-    },
-    {
-      id: 3,
-      code: "EN1.1",
-      name: "Tiếng Anh 1.1",
-      credit: 3,
-      clazz: "SD18301",
-      amount: 40,
-      available: 22,
-      shift: 1,
-      day_of_week: "2, 4, 6",
-      time: "07:15:00 - 09:15:00",
-    },
-    {
-      id: 4,
-      code: "EN1.2",
-      name: "Tiếng Anh 1.2",
-      credit: 3,
-      clazz: "SD18301",
-      amount: 40,
-      available: 34,
-      shift: 1,
-      day_of_week: "3, 5, 7",
-      time: "07:15:00 - 09:15:00",
-    },
-  ];
+  useEffect(() => {
+    const fetchClazzByStudent = async () => {
+      try {
+        const response = await getClazzByStudent();
+        if (response) {
+          setGetClazz(response.data);
+          console.log("data", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchClazzByStudent();
+  }, []);
 
+  const handleRegister = async (clazzId) => {
+    try {
+      const response = await postClazzByStudent(clazzId);
+      toast.success("Đăng ký thành công!");
+      const updatedClazzes = await getClazzByStudent();
+      setGetClazz(updatedClazzes.data);
+    } catch (error) {
+      toast.error("Đăng ký thất bại!");
+    }
+  };
   const renderRow = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.code}
+      {item.subjectCode}
     </td>,
     <td key={`item-name-${item.id}`} className="px-4 py-4">
-      {item.name}
+      {item.subject_name}
     </td>,
     <td key={`item-credit-${item.id}`} className="px-6 py-4">
-      {item.credit}
+      {item.credits}
     </td>,
     <td key={`item-clazz-${item.id}`} className="px-6 py-4">
-      {item.clazz}
+      {item.code}
     </td>,
     <td key={`item-amount-${item.id}`} className="px-6 py-4">
-      {item.amount}
+      {item.quantity}
     </td>,
     <td key={`item-available-${item.id}`} className="px-6 py-4">
-      {item.available}
+      {item.quantity - item.amout}
     </td>,
     <td key={`item-shift-${item.id}`} className="px-6 py-4">
       {item.shift}
     </td>,
     <td key={`item-day_of_week-${item.id}`} className="px-4 py-4">
-      {item.day_of_week}
+      {item.study_day}
     </td>,
     <td key={`item-time-${item.id}`} className="px-6 py-4">
-      {item.time}
+      {item.start_time} - {item.end_time}
     </td>,
     <td key={`item-menu-${item.id}`} className="px-6 py-4">
       <Button
         label="Đăng ký"
+        onClick={() => handleRegister(item.id)}
         className="bg-white font-bold text-blue-600 hover:bg-white hover:text-blue-700"
       />
     </td>,
   ];
 
   const renderRow1 = (item) => [
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
+    <td key={`subject-code-${item.id}`} className="px-6 py-4">
+      {item.subjectCode}
+    </td>,
+    <td key={`subject-name-${item.id}`} className="px-4 py-4">
+      {item.subject_name}
+    </td>,
+    <td key={`class-code-${item.id}`} className="px-6 py-4">
       {item.code}
     </td>,
-    <td key={`item-name-${item.id}`} className="px-4 py-4">
-      {item.name}
-    </td>,
-    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
-      {item.clazz}
-    </td>,
-    <td key={`item-shift-${item.id}`} className="px-6 py-4">
+    <td key={`shift-${item.id}`} className="px-6 py-4">
       {item.shift}
     </td>,
-    <td key={`item-day_of_week-${item.id}`} className="px-4 py-4">
-      {item.day_of_week}
+    <td key={`study-day-${item.id}`} className="px-4 py-4">
+      {item.study_day}
     </td>,
-    <td key={`item-menu-${item.id}`} className="px-6 py-4">
+    <td key={`action-${item.id}`} className="px-6 py-4">
       <Button
-        label="Huỷ"
-        className="bg-white font-bold text-red-600 hover:bg-white hover:text-red-700"
+        label="Đăng ký"
+        onClick={() => handleRegister(item.id)}
+        className="bg-white font-bold text-blue-600 hover:bg-white hover:text-blue-700"
       />
     </td>,
   ];
@@ -170,7 +152,7 @@ function NotYetSubject() {
             optionsValue={numberSelectBox}
             headers={headers}
             renderRow={renderRow}
-            data={subjects}
+            data={getclazz}
             maxRow={5}
           />
         </>
@@ -185,7 +167,7 @@ function NotYetSubject() {
             optionsValue={numberSelectBox}
             headers={header1s}
             renderRow={renderRow1}
-            data={subjects}
+            data={getclazz}
             maxRow={5}
           />
         </>

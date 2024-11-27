@@ -1,17 +1,51 @@
 import Table from "../../component/Table";
 import React, { useState, useEffect } from "react";
+import { getExamSchedule } from "../../api/ExamScheduleStudent";
+import { calculateDates } from "../../api/ScheduleStudent";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
+
 function ExamSchedule() {
+  const [selectedDay, setSelectedDay] = useState(7);
+  const [examSchedule, setExamScheduleData] = useState([]);
+
+  const handleDayChange = (event) => {
+    const newSelectedDay = Number(event.target.value);
+    if (isNaN(newSelectedDay)) {
+      return;
+    }
+    setSelectedDay(newSelectedDay);
+  };
+
   const numberSelectBox = [
     {
-      name: "Thời gian",
-      title: "Thời gian",
       options: [
-        { value: "7", label: "7 ngày tới" },
-        { value: "14", label: "14 ngày tới" },
-        { value: "30", label: "30 ngày tới" },
+        { value: 7, label: "7 ngày tới" },
+        { value: 14, label: "14 ngày tới" },
+        { value: 30, label: "30 ngày tới" },
       ],
+      onChange: handleDayChange,
+      value: selectedDay,
+      className: "mr-1 w-full pt-4 md:pt-4",
+      nameSelect: "Chọn thời gian",
+      nameSelectValue: 7,
     },
   ];
+
+  useEffect(() => {
+    const fetchExamSchedule = async () => {
+      try {
+        const { startTime, endTime } = calculateDates(selectedDay);
+        const response = await getExamSchedule(startTime, endTime );
+        if (response && response.data) {
+          setExamScheduleData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching schedule data:", error);
+      }
+    };
+    fetchExamSchedule();
+  }, [selectedDay]);
 
   const headers = [
     "Ngày",
@@ -34,54 +68,51 @@ function ExamSchedule() {
     "Lý do cấm thi",
   ];
 
-  const subjects = [
-    // { id: 1, date: "Thứ Hai 25/10/2024", room: "T804 (Nhà T)", code: "PTCN2", name: "Phát triển cá nhân 2", clazz: "SD18301", instructor: "liemht6", shift: 1, time: "07:15:00 - 09:15:00", reason:"" },
-  ];
-
   const renderRow = (item) => [
-    <td key={`item-date-${item.id}`} className="px-6 py-4">
-      {item.date}
+    <td key={`item-examDate-${item.id}`} className="px-6 py-4">
+      {item.examDate}
     </td>,
-    <td key={`item-room-${item.id}`} className="px-6 py-4">
-      {item.room}
+    <td key={`item-roomName-${item.id}`} className="px-6 py-4">
+      {item.roomName}
     </td>,
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.code}
+    <td key={`item-subjectCode-${item.id}`} className="px-6 py-4">
+      {item.subjectCode}
     </td>,
-    <td key={`item-name-${item.id}`} className="px-6 py-4">
-      {item.name}
+    <td key={`item-subjectName-${item.id}`} className="px-6 py-4">
+      {item.subjectName}
     </td>,
-    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
-      {item.clazz}
+    <td key={`item-clazzCode-${item.id}`} className="px-6 py-4">
+      {item.clazzCode}
     </td>,
-    <td key={`item-instructor-${item.id}`} className="px-6 py-4">
-      {item.instructor}
+    <td key={`item-instructorCode-${item.id}`} className="px-6 py-4">
+      {item.instructorCode}
     </td>,
-    <td key={`item-shift-${item.id}`} className="px-6 py-4">
-      {item.shift}
+    <td key={`item-shiftId-${item.id}`} className="px-6 py-4">
+      {item.shiftId}
     </td>,
     <td key={`item-time-${item.id}`} className="px-6 py-4">
-      {item.time}
+      {`${item.startTime} - ${item.endTime}`}
     </td>,
   ];
-
+  
   const renderRow1 = (item) => [
-    <td key={`item-date-${item.id}`} className="px-6 py-4">
-      {item.date}
+    <td key={`item-examDate-${item.id}`} className="px-6 py-4">
+      {item.examDate}
     </td>,
-    <td key={`item-room-${item.id}`} className="px-6 py-4">
-      {item.room}
+    <td key={`item-roomName-${item.id}`} className="px-6 py-4">
+      {item.roomName}
     </td>,
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.code}
+    <td key={`item-subjectCode-${item.id}`} className="px-6 py-4">
+      {item.subjectCode}
     </td>,
-    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
-      {item.clazz}
+    <td key={`item-clazzCode-${item.id}`} className="px-6 py-4">
+      {item.clazzCode}
     </td>,
-    <td key={`item-shift-${item.id}`} className="px-6 py-4">
-      {item.shift}
+    <td key={`item-shiftId-${item.id}`} className="px-6 py-4">
+      {item.shiftId}
     </td>,
   ];
+  
 
   const [desktop, setDesktop] = useState(true);
   const [mobile, setMobile] = useState(false);
@@ -105,36 +136,39 @@ function ExamSchedule() {
   }, [mobile, desktop]);
 
   return (
-    <div className="py-4">
-      {desktop && (
-        <>
-          <Table
-            DefaultTable={true}
-            showOptions={true}
-            showSelectBox={true}
-            optionsValue={numberSelectBox}
-            headers={headers}
-            renderRow={renderRow}
-            data={subjects}
-            maxRow={5}
-          />
-        </>
-      )}
-      {mobile && (
-        <>
-          <Table
-            DefaultTable={true}
-            showOptions={true}
-            showSelectBox={true}
-            optionsValue={numberSelectBox}
-            headers={header1s}
-            renderRow={renderRow1}
-            data={subjects}
-            maxRow={5}
-          />
-        </>
-      )}
-    </div>
+    <Container>
+      <TitleHeader title={'LỊCH THI'}/>
+      <div className="py-4">
+        {desktop && (
+          <>
+            <Table
+              DefaultTable={true}
+              showOptions={true}
+              showSelectBox={true}
+              optionsValue={numberSelectBox}
+              headers={headers}
+              renderRow={renderRow}
+              data={examSchedule}
+              maxRow={5}
+            />
+          </>
+        )}
+        {mobile && (
+          <>
+            <Table
+              DefaultTable={true}
+              showOptions={true}
+              showSelectBox={true}
+              optionsValue={numberSelectBox}
+              headers={header1s}
+              renderRow={renderRow1}
+              data={examSchedule}
+              maxRow={5}
+            />
+          </>
+        )}
+      </div>
+    </Container>
   );
 }
 export default ExamSchedule;

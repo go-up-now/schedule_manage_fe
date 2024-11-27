@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../../component/Modal";
 import TextField from "../../component/TextField";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function FindSubject() {
   const headers = ["Mã môn học", "Tên môn học", "Số tín chỉ", "Giờ học", " "];
@@ -61,6 +63,8 @@ function FindSubject() {
   };
 
   return (
+    <Container>
+    <TitleHeader title={'TÌM KIẾM MÔN HỌC'}/>
     <div className="py-4">
       <Table
         selectBoxName="date-range-filter"
@@ -96,6 +100,7 @@ function FindSubject() {
         </Modal>
       )}
     </div>
+    </Container>
   );
 }
 export default FindSubject;
