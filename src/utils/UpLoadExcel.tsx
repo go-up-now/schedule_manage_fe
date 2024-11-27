@@ -10,13 +10,15 @@ import { useSelector } from 'react-redux';
 const UploadExcelModal = ({
     onClose,
     dataExport,
-    setListAPI,
+    // setListAPI,
     dataTemplate,
     exportFileName,
     exportFileNamePattern,
     sheetName,
-    getAllObject,
+    // getAllObject,
     importExcelAPI,
+    isReLoadTable,
+    setIsReLoadTable,
 }) => {
     const course = useSelector((state) => state.course.course);
     const major = useSelector((state) => state.major.major);
@@ -86,13 +88,14 @@ const UploadExcelModal = ({
                     toast.error(response.message)
                 if (response.statusCode === 200) {
                     toast.success("Import excel thành công")
-                    let responseAll = await getAllObject(course, major);
-                    setListAPI(responseAll)
+                    // let responseAll = await getAllObject(course, major);
+                    // setListAPI(responseAll)
+                    setIsReLoadTable(!isReLoadTable);
                 }
             }
         } catch (error) {
             console.log("Error uploading file:", error);
-            toast.error("Error uploading file")
+            toast.error(error.data.message)
         }
         onClose();
     };

@@ -43,7 +43,7 @@ interface Student {
 }
 
 function StudentManage() {
-  const headers = ["Code", "Name", "Gender", ""];
+  const headers = ["Mã sinh viên", "Họ và tên", "Giới tính", ""];
 
   const [selectedStudent, setSelectedStudent] = useState<Student>();
   const [editStudent, setEditStudent] = useState<Student>();
@@ -444,13 +444,15 @@ function StudentManage() {
             <UploadExcelModal
               onClose={closeModal}
               dataExport={extractedData}
-              setListAPI={setStudents}
+              // setListAPI={setStudents}
               dataTemplate={dataTemplate}
               exportFileName="Danh sách sinh viên"
               exportFileNamePattern="Danh sách sinh viên mẫu để import"
               sheetName='DSSV'
-              getAllObject={getAllStudentbyCourseAndMajor}
+              // getAllObject={getAllStudentbyCourseAndMajor}
               importExcelAPI={importExcelStudentAPI}
+              isReLoadTable={isReLoadTable}
+              setIsReLoadTable={setIsReLoadTable}
             />
           }
           isOpen={isModalOpenExcel}

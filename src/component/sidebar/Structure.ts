@@ -56,9 +56,9 @@ const sidebarStructure = [
       },
       {
         id: "Testday",
-        title: "Quản lý ngày kiểm tra",
+        title: "Quản lý lịch thi",
         name: "studyManagement.Testday",
-        link: "/quan-ly-ngay-kiem-tra",
+        link: "/quan-ly-lich-thi",
         icon: "dot",
         role: [ROLE.ADMIN],
       },

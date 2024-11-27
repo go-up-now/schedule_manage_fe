@@ -1,15 +1,7 @@
 import TextField from "../../component/TextField";
 
 function TextFieldGroup({
-  major,
-  nameSubject,
-  codeSubject,
-  instructor,
-  clazz,
-  dateBegin,
-  dateEnd,
-  ca,
-  day,
+  ...props
 }) {
   return (
     <div className="flex">
