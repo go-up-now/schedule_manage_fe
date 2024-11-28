@@ -21,6 +21,7 @@ import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
 import { useDispatch } from 'react-redux';
 import UploadExcelModal from "../../utils/UpLoadExcel.tsx";
+import TextFieldGroup from './TextFieldGroup.jsx';
 
 interface Clazz {
   id: number;
@@ -35,6 +36,8 @@ interface Clazz {
   subjectName: string;
   instructorId: number;
   instructorCode: string;
+  instructorLastName: string;
+  instructorFirstName: string;
   shiftId: number;
   roomName: string;
   roomId: number;
@@ -52,7 +55,7 @@ function ClassManage() {
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const [isClazz, setIsClazz] = useState<Clazz | null>(null);
   const [isReLoadTable, setIsReLoadTable] = useState(false);
-  const headers = ["Mã lớp", "Mã môn", "Giảng viên", "Phòng", "Ca", "Ngày trong tuần", ""];
+  const headers = ["Mã lớp", "Mã môn", "Giảng viên", "Phòng", "Ca", "Ngày trong tuần", "Link online", ""];
   const [editExam, setEditExam] = useState(null);
   const [years, setYears] = useState([]);
   // Call API
@@ -108,6 +111,9 @@ function ClassManage() {
     </td>,
     <td key={`item-weekday-${item.id}`} className=" border-b">
       {item.weekdays}
+    </td>,
+    <td key={`item-weekday-${item.id}`} className=" border-b">
+      {item.onlineLink}
     </td>,
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
@@ -396,21 +402,28 @@ function ClassManage() {
           />
           {selectedClazz && (
             <Modal isOpen={true} onClose={closeModal} className="">
-              <h2 className="text-xl font-bold">
-                {selectedClazz.block} - {selectedClazz.code}
+              <h2 className="text-xl font-bold ps-10">
+                 {selectedClazz.code}
               </h2>
               <div>
-                <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
-                  {/* <TextFieldGroup
-                    major={selectedClazz.major}
-                    email={selectedClazz.email}
-                    perEmail={selectedClazz.perEmail}
-                    clazz={selectedClazz.clazz}
-                    phone={selectedClazz.phone}
-                    address={selectedClazz.address}
-                    credit={selectedClazz.credit}
-                    ownCredit={selectedClazz.ownCredit}
-                  /> */}
+                <div className="w-[700px] h-[400px] border-t border-t-gray-500 m-5 py-2">
+                  <TextFieldGroup
+                    code={selectedClazz.code}
+                    onlineLink={selectedClazz.onlineLink}
+                    quantity={selectedClazz.quantity}
+                    block={selectedClazz.block}
+                    semester={selectedClazz.semester}
+                    year={selectedClazz.year}
+                    subjectCode={selectedClazz.subjectCode}
+                    subjectName={selectedClazz.subjectName}
+                    instructorLastName={selectedClazz.instructorLastName}
+                    instructorFirstName={selectedClazz.instructorFirstName}
+                    instructorCode={selectedClazz.instructorCode}
+                    shiftId={selectedClazz.shiftId}
+                    roomName={selectedClazz.roomName}
+                    building={selectedClazz.building}
+                    weekdays={selectedClazz.weekdays}
+                  />
                 </div>
               </div>
             </Modal>

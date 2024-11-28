@@ -7,49 +7,76 @@ function TextFieldGroup({
     <div className="flex">
       <div className="w-2/4">
         <TextField
-          label="Chuyên ngành:"
-          value={major}
-          className=" pt-4 px-4"
+          onField={true}
+          label="Mã lớp:"
+          value={props.code}
+          className="pt-4 px-4"
           disabled
         />
         <TextField
-          label="Tên Môn:"
-          value={nameSubject}
-          className=" pt-4 px-4"
+          onField={true}
+          label="Số lượng sinh viên:"
+          value={props.quantity}
+          className="pt-4 px-4"
           disabled
         />
         <TextField
-          label="Mã Môn:"
-          value={codeSubject}
-          className=" pt-4 px-4"
+          onField={true}
+          label="Học kỳ:"
+          value={props.semester + ' ' + props.year}
+          className="pt-4 px-4"
           disabled
         />
         <TextField
-          label="Giảng viên:"
-          value={instructor}
-          className=" pt-4 px-4"
+          onField={true}
+          label="Block:"
+          value={props.block}
+          className="pt-4 px-4"
           disabled
         />
-        <TextField label="Lớp:" value={clazz} className=" pt-4 px-4" disabled />
+        <TextField
+          onField={true}
+          label="Môn học:"
+          value={props.subjectCode + ' ' + props.subjectName}
+          className="pt-4 px-4"
+          disabled
+        />
       </div>
+
       <div className="w-2/4">
         <TextField
-          label="Bắt đầu:"
-          value={dateBegin}
-          className=" pt-4 px-4"
+          onField={true}
+          label="Giảng viên:"
+          value={props.instructorCode + ' - ' + props.instructorLastName + ' ' + props.instructorFirstName}
+          className="pt-4 px-4"
           disabled
         />
         <TextField
-          label="Kết thúc:"
-          value={dateEnd}
-          className=" pt-4 px-4"
+          onField={true}
+          label="Phòng học:"
+          value={props.building + ' (' + props.roomName + ')'}
+          className="pt-4 px-4"
           disabled
         />
-        <TextField label="Ca:" value={ca} className=" pt-4 px-4" disabled />
         <TextField
-          label="Kiểu ngày:"
-          value={day}
-          className=" pt-4 px-4"
+          onField={true}
+          label="Ca học:"
+          value={props.shiftId}
+          className="pt-4 px-4"
+          disabled
+        />
+        <TextField
+          onField={true}
+          label="Ngày học trong tuần:"
+          value={props.weekdays}
+          className="pt-4 px-4"
+          disabled
+        />
+        <TextField
+          onField={true}
+          label="Link học online:"
+          value={props.onlineLink}
+          className="pt-4 px-4"
           disabled
         />
       </div>

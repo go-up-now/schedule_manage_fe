@@ -10,12 +10,10 @@ import { useSelector } from 'react-redux';
 const UploadExcelModal = ({
     onClose,
     dataExport,
-    // setListAPI,
     dataTemplate,
     exportFileName,
     exportFileNamePattern,
     sheetName,
-    // getAllObject,
     importExcelAPI,
     isReLoadTable,
     setIsReLoadTable,
