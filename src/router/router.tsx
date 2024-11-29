@@ -35,6 +35,7 @@ import StudentManage from "../admin/student-manage/StudentManage.tsx";
 import ScheduleManage from "../admin/schedule-manage/ScheduleManage";
 import SemesterManage from "../admin/semester-manage/SemesterManage";
 import InstructorManage from "../admin/instructor-manage/InstructorManage.tsx";
+import EventManage from "../admin/event-manage/EventManage.tsx";
 
 const role = getUserScope();
 
@@ -267,6 +268,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <InstructorManage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/quan-ly-su-kien",
+        element: (
+          <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
+            <EventManage />
           </ProtectedRoute>
         ),
       },

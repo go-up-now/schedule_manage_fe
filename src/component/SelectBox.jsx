@@ -40,7 +40,7 @@ import React, { useState } from "react";
 function SelectBox({ options, value, onChange, name, nameSelect, nameSelectValue, className, className1, disable = false }) {
   return (
     <div className={className}>
-      <label className="block -mt-4 text-sm font-medium text-gray-700">
+      <label className="block -mt-4 text-sm text-gray-500">
         {name}
       </label>
       <select

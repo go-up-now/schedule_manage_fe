@@ -10,7 +10,6 @@ import { faCaretDown, faFileImport, faCircleExclamation } from "@fortawesome/fre
 import FontGroup from "./FontGroup.tsx";
 import TextFieldGroup from "./TextFieldGroup.jsx";
 import { specializationOption } from "./DataSelect.js";
-// import { getAllInstructorbyCourseAndMajor, createInstructorAPI, updateInstructorByAdminAPI, importExcelInstructorAPI, deleteInstructorAPI } from "../../api/Instructor.js";
 import { getAllInstructorBySpecializationIdAPI, createInstructorAPI, updateInstructorAPI, deleteInstructorAPI, importExcelInstructorAPI } from '../../api/Instructor.js';
 import Container from '../../component/Container.tsx'
 import TitleHeader from '../../component/TitleHeader.tsx'
@@ -20,9 +19,6 @@ import { instructorValidationSchema } from './FontGroup.tsx';
 import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
 import UploadExcelModal from "../../utils/UpLoadExcel.tsx";
-import { useDispatch } from 'react-redux';
-import { setCourse } from '../../reducers/courseSlice.tsx';
-import { setMajor } from '../../reducers/majorSlice.tsx';
 import { getAllSpecializationsAPI } from '../../api/Specialization.js';
 
 interface Instructor {
@@ -125,29 +121,6 @@ function InstructorManage() {
   const handleSpecializationChange = (event) => {
     setSelectedSpecialization(event.target.value);
   };
-
-  // const handleMajorChange = (event) => {
-  //   setSelectedMajor(event.target.value);
-  //   dispatch(setMajor({
-  //     major: event.target.value,
-  //   }));
-  // };
-
-  // Tìm giá trị course lớn nhất trong options
-  // const getMaxValue = () => {
-  //   return course.reduce((max, option) => {
-  //     const currentValue = parseFloat(option.value); // Chuyển giá trị về kiểu số
-  //     return currentValue > max ? currentValue : max;
-  //   }, Number.MIN_VALUE).toString(); // Đổi lại thành chuỗi
-  // };
-
-  // useEffect(() => {
-  //   let courseMax = getMaxValue();
-  //   setSelectedCourse(courseMax); // Đặt giá trị lớn nhất làm mặc định
-  //   dispatch(setCourse({
-  //     course: courseMax,
-  //   }));
-  // }, []);
 
   // Fetch Instructors whenever course or major is selected
   useEffect(() => {
@@ -284,7 +257,7 @@ function InstructorManage() {
 
   // Excel
   const extractedData = instructors.map(item => ({
-    code: item.code, // Lấy mã chương trình học
+    code: item.code,
     lastName: item.lastName,
     firstName: item.firstName,
     schoolEmail: item.schoolEmail,
