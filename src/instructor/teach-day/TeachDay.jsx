@@ -10,6 +10,7 @@ import { addDays, format } from "date-fns";
 import { teach } from "./Teachingdays";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import { cancelSchedule } from "../../api/Schedule.js";
 
 function TeachDay() {
   const navigate = useNavigate();
@@ -104,6 +105,26 @@ function TeachDay() {
 
   //console.log("Grouped By Date:", groupedByDate);
 
+  // Hàm huỷ lịch dạy
+  const handleCancelSchedule = (clazz) => {
+    const request = {
+      id: clazz.scheculeId,
+      clazzId: clazz.clazzId,
+      date: clazz.date,
+      status: false,
+    };
+    console.log("Request data:", request);
+    console.log("Class data:", clazz);
+
+    cancelSchedule(clazz.scheculeId, request)
+      .then((response) => {
+        console.log("Lịch dạy đã được huỷ thành công:", response);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi huỷ lịch dạy:", error);
+      });
+  };
+
   // Render the class information for each Ca
   const renderShiftId = (clazz) => {
     //console.log("Rendering Class:", clazz); // Log each class
@@ -125,7 +146,10 @@ function TeachDay() {
                 text: "Điểm danh",
                 onClick: () => handleAttendanceClick(clazz),
               },
-              { text: "Huỷ lịch dạy" },
+              {
+                text: "Huỷ lịch dạy",
+                onClick: () => handleCancelSchedule(clazz),
+              },
             ]}
           />
         </div>
@@ -165,6 +189,8 @@ function TeachDay() {
 
   //console.log("Table Data:", tableData);
   const thatDate = format(today, "dd-MM-yyyy");
+
+  console.log(tableData);
 
   return (
     <Container>
@@ -217,6 +243,7 @@ function TeachDay() {
                     <Button
                       key={clazz.clazzId}
                       label="X"
+                      onClick={() => handleCancelSchedule(clazz)}
                       className="text-white p-2 px-4 mx-1 text-[16px] bg-red-700"
                     />
                   </div>
