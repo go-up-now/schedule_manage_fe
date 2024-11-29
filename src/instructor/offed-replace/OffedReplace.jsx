@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import { getScheduleStatusFalse } from "../../api/Schedule.js";
+import { format } from "date-fns";
 
 function OffedReplace() {
   const navigate = useNavigate();
@@ -14,20 +16,32 @@ function OffedReplace() {
   const [desktop, setDesktop] = useState(true);
   const [mobile, setMobile] = useState(false);
 
+  // call API
+  const [offdays, setOffdays] = useState([]);
+  useEffect(() => {
+    getScheduleStatusFalse()
+      .then((response) => {
+        setOffdays(response);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch all schedule Status False:", error);
+      });
+  }, []);
+
   const headers = ["Clazz", "Mã Môn", "Tên Môn", "Ngày", ""];
 
   const renderRow = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.clazz.code}
+      {item.clazzCode}
     </td>,
     <td key={`item-subjectCode-${item.id}`} className="px-6 py-4">
-      {item.clazz.subject.code}
+      {item.codeSubject}
     </td>,
     <td key={`item-subjectName-${item.id}`} className="px-6 py-4">
-      {item.clazz.subject.name}
+      {item.subjectName}
     </td>,
     <td key={`item-date-${item.id}`} className="px-6 py-4">
-      {item.date}
+      {item.date ? format(new Date(item.date), "dd-MM-yyyy") : ""}
     </td>,
     <td
       key={`item-option-${item.id}`}
@@ -51,13 +65,13 @@ function OffedReplace() {
 
   const renderRow1 = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.clazz.code}
+      {item.clazzCode}
     </td>,
     <td key={`item-subjectName-${item.id}`} className="px-6 py-4">
-      {item.clazz.subject.name}
+      {item.subjectName}
     </td>,
     <td key={`item-date-${item.id}`} className="px-6 py-4">
-      {item.date}
+      {item.date ? format(new Date(item.date), "dd-MM-yyyy") : ""}
     </td>,
     <td key={`item-option-${item.id}`} className="px-6 py-4">
       <div className="flex justify-center w-full">
@@ -169,12 +183,10 @@ function OffedReplace() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            showSelectBoxes={true}
-            numberSelectBox={selectBoxs}
             headers={headers}
             renderRow={renderRow}
-            data={clazz}
-            maxRow={5}
+            data={offdays}
+            maxRow={10}
           />
         )}
         {mobile && (
@@ -182,12 +194,10 @@ function OffedReplace() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            showSelectBoxes={true}
-            numberSelectBox={selectBoxs}
             headers={header1s}
             renderRow={renderRow1}
-            data={clazz}
-            maxRow={5}
+            data={offdays}
+            maxRow={10}
           />
         )}
       </div>

@@ -1,7 +1,7 @@
 import axiosInstance from "./AxiosConfig";
 
 export const getStudentInfo = () => {
-  return axiosInstance.get(`/api/students/studentInfor`)
+  return axiosInstance.get(`/api/students/studentInfor`);
 };
 
 export const updateStudentByStudent = (studentData, file) => {
@@ -44,37 +44,49 @@ export const getAllStudentbyCourseAndMajor = (course, majorId) => {
 };
 
 export const updateImageAPI = (id, formData) => {
-  return axiosInstance.put(`/api/students/update-image/${id}`, formData)
-}
+  return axiosInstance.put(`/api/students/update-image/${id}`, formData);
+};
 
 export const createStudentAPI = (formData) => {
-  return axiosInstance.post(`/api/students/createStudent`, formData)
-}
+  return axiosInstance.post(`/api/students/createStudent`, formData);
+};
 
 export const updateStudentByAdminAPI = (id, formData) => {
-  return axiosInstance.put(`/api/students/updateStudentByAdmin`, formData,
-    {
-      params: {
-        studentId: id,
-      },
-    })
-}
+  return axiosInstance.put(`/api/students/updateStudentByAdmin`, formData, {
+    params: {
+      studentId: id,
+    },
+  });
+};
 
 export const importExcelStudentAPI = (formData) => {
-  return axiosInstance.post('/api/students/import', formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  )
-}
+  return axiosInstance.post("/api/students/import", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
 
 export const deleteStudentAPI = (id) => {
-  return axiosInstance.delete(`/api/students/deleteStudent`,
-    {
+  return axiosInstance.delete(`/api/students/deleteStudent`, {
+    params: {
+      id: id,
+    },
+  });
+};
+
+export const getAllStudentbyClazzId = (clazzId) => {
+  return axiosInstance
+    .get(`/api/students/getStudentsByInstructorIdAndClazzId`, {
       params: {
-        id: id,
+        clazzId: clazzId,
       },
     })
-}
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Lỗi khi lấy danh sách sinh viên theo clazz ID:", error);
+      throw error;
+    });
+};
