@@ -31,15 +31,15 @@ function FontGroup({ exam, isEditDisabled }) {
 
   return (
     <div className="px-2">
-      <TextField
+      {/* <TextField
         onField={true}
-        placeholder="Code"
+        placeholder="block"
         className=""
-        value={selectedExam.code || ""}
-        onChange={(e) => handleChange("code", e.target.value)}
+        value={selectedExam.block || ""}
+        onChange={(e) => handleChange("block", e.target.value)}
         disabled={false} // Không bị vô hiệu hoá
-      />
-      <div className="pt-6 mb-2">
+      /> */}
+      {/* <div className="pt-6 mb-2">
         <SelectBox
           options={course}
           nameSelect="Khoá"
@@ -56,7 +56,7 @@ function FontGroup({ exam, isEditDisabled }) {
           value={selectedExam.course || ""}
           disable={areSelectBoxesDisabled}
         />
-      </div>
+      </div> */}
       <div className="flex mt-4">
         <div className="w-1/3 flex justify-center">
           <Button

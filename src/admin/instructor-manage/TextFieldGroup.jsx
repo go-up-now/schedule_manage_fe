@@ -8,20 +8,6 @@ function TextFieldGroup({
       <div className="w-2/4">
         <TextField
           onField={true}
-          label="Học kỳ nhập học:"
-          value={props.semester + ' ' + props.year}
-          className="pt-4 px-4"
-          disabled
-        />
-        <TextField
-          onField={true}
-          label="Khóa:"
-          value={props.course}
-          className="pt-4 px-4"
-          disabled
-        />
-        <TextField
-          onField={true}
           label="Mã sinh viên:"
           value={props.code}
           className="pt-4 px-4"
@@ -36,6 +22,20 @@ function TextFieldGroup({
         />
         <TextField
           onField={true}
+          label="Email giảng viên:"
+          value={props.schoolEmail}
+          className="pt-4 px-4"
+          disabled
+        />
+        <TextField
+          onField={true}
+          label="Email cá nhân:"
+          value={props.privateEmail}
+          className="pt-4 px-4"
+          disabled
+        />
+        <TextField
+          onField={true}
           label="Giới tính:"
           value={props.gender ? 'Nam' : 'Nữ'}
           className="pt-4 px-4"
@@ -43,13 +43,7 @@ function TextFieldGroup({
         />
       </div>
       <div className="w-2/4">
-        <TextField
-          onField={true}
-          label="Email:"
-          value={props.email}
-          className="pt-4 px-4"
-          disabled
-        />
+
         <TextField
           onField={true}
           label="Ngày sinh:"

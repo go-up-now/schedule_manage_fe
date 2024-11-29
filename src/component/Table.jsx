@@ -19,7 +19,7 @@ function Table({
   showSelectBox = false,
   optionsValue = [],
   showSelectBoxes = false,
-  numberSelectBox = [],
+  numberSelectBox = [{}],
   showBtnStart = false,
   btnStart = [],
   showBtnEnd = false,
@@ -141,6 +141,7 @@ function Table({
               </div>
             )}
             {showSelectBoxes && (
+              /* <div className="md:w-full w-full flex my-2 mx-2 justify-evenly"> */
               <div className="md:w-full w-full flex my-2 mx-2 justify-evenly">
                 {numberSelectBox.map((selectBox, index) => (
                   <SelectBox
@@ -240,9 +241,8 @@ function Table({
             {getPageNumbers().map((page, index) => (
               <button
                 key={index}
-                className={`mx-0 px-4 py-2 font-bold ${
-                  currentPage === page ? "bg-blue-50" : ""
-                } rounded`}
+                className={`mx-0 px-4 py-2 font-bold ${currentPage === page ? "bg-blue-50" : ""
+                  } rounded`}
                 onClick={() => setCurrentPage(page)}
               >
                 {page + 1}

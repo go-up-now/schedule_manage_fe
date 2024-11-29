@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Button = ({ className = "", label = "", onClick, disabled = false }) => {
+const Button = ({ className = "", label, onClick, disabled = false }) => {
   return (
     <button
       onClick={onClick}

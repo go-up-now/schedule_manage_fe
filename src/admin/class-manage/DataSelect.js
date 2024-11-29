@@ -1,22 +1,32 @@
-export const major = [
-  { value: 1, label: "Công nghệ thông tin" },
-  { value: 2, label: "Kinh tế" },
+export const semesters = [
+  { value: 'Spring', label: "Spring" },
+  { value: 'Summer', label: "Summer" },
+  { value: 'Fall', label: "Fall" },
 ];
 
-export const course = [
-  { value: "18.1", label: "18.1" },
-  { value: "18.2", label: "18.2" },
-  { value: "18.3", label: "18.3" },
+export const year = [
+  { value: "2023", label: "2023" },
+  { value: "2024", label: "2024" },
+  { value: "2025", label: "2025" },
 ];
 
-export const nameSubject = [
-  { value: null, label: "- Môn -" },
-  { value: "Lập trình cơ bản", label: "Lập trình cơ bản" },
+export const blocks = [
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
 ];
 
-export const codeSubject = [
-  { value: null, label: "- Mã Môn -" },
-  { value: "SOF101", label: "SOF101" },
+export const shifts = [
+  { value: '1', label: "Ca 1 (07h15 - 09h15)" },
+  { value: '2', label: "Ca 2 (09h25 - 11h25)" },
+  { value: '3', label: "Ca 3 (12h00 - 14h00)" },
+  { value: '4', label: "Ca 4 (14h10 - 16h10)" },
+  { value: '5', label: "Ca 5 (16h20 - 18h20)" },
+  { value: '6', label: "Ca 6 (18h30 - 20h30)" },
+];
+
+export const weekdays = [
+  { value: "2, 4, 6", label: "2, 4, 6" },
+  { value: "3, 5, 7", label: "3, 5, 7" },
 ];
 
 export const instructor = [

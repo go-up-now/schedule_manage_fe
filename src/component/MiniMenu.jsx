@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "./Button";
 
 function MiniMenu({
-  menuItems = [],
-  iconMenu = "",
-  classNameBtn,
-  classNameMiniBox,
+  menuItems = [{}],
+  iconMenu,
+  classNameBtn = '',
+  classNameMiniBox = '',
 }) {
   const [miniMenu, setMiniMenu] = useState(false);
   const menuRef = useRef(null);

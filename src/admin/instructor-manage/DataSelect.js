@@ -9,10 +9,10 @@ export const educationProgramId = [
   { value: 3, label: "Phát triển phần mềm C#" },
 ];
 
-export const course = [
-  { value: "18.1", label: "18.1" },
-  { value: "18.2", label: "18.2" },
-  { value: "18.3", label: "18.3" },
+export const specializationOption = [
+  { value: "1", label: "Công nghệ thông tin" },
+  { value: "2", label: "Quản trị kinh doanh" },
+  { value: "3", label: "Công nghệ kỹ thuật điều khiển & Tự động hóa" },
 ];
 
 export const gender = [

@@ -29,11 +29,12 @@ import TeachManage from "../instructor/teach-manage/TeachManage";
 import OffedReplace from "../instructor/offed-replace/OffedReplace";
 import ExamArrange from "../instructor/exam-arrange/ExamArrange";
 import Statistic from "../admin/statistics/Statistic";
-import ClassManage from "../admin/class-manage/ClassManage";
+import ClassManage from "../admin/class-manage/ClassManage.tsx";
 import TestdayManage from "../admin/testday-manage/TestdayManage";
-import StudentManage from "../admin/student-manage/StudentManage";
+import StudentManage from "../admin/student-manage/StudentManage.tsx";
 import ScheduleManage from "../admin/schedule-manage/ScheduleManage";
 import SemesterManage from "../admin/semester-manage/SemesterManage";
+import InstructorManage from "../admin/instructor-manage/InstructorManage.tsx";
 
 const role = getUserScope();
 
@@ -262,7 +263,15 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/quan-ly-ngay-kiem-tra",
+        path: "/quan-ly-giang-vien",
+        element: (
+          <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
+            <InstructorManage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/quan-ly-lich-thi",
         element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <TestdayManage />
