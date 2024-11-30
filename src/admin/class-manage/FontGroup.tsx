@@ -22,6 +22,7 @@ interface FontGroupProps {
   years
   instructorValue
   subjectValue
+  setInstructorValue
 }
 
 interface Room {
@@ -78,7 +79,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
   setIsEditDisabled,
   years,
   instructorValue = '',
-  subjectValue = ''
+  subjectValue = '',
+  setInstructorValue,
 }) => {
   const [areSelectBoxesDisabled, setAreSelectBoxesDisabled] = useState(false);
   const [listRoom, setListRoom] = useState<Room[]>([]);
@@ -88,21 +90,21 @@ const FontGroup: React.FC<FontGroupProps> = ({
   const [isOnlineLink, setIsOnlineLink] = useState(false);
   const [isRoom, setIsRoom] = useState(false);
 
-  const defaultValues = {
-    id: 0,
-    code: '',
-    onlineLink: '',
-    quantity: '',
-    block: '',
-    semester: '',
-    year: '',
-    subjectId: '',
-    subjectName: '',
-    instructorId: '',
-    shiftId: '',
-    roomId: '',
-    weekdays: '',
-  };
+  // const defaultValues = {
+  //   id: 0,
+  //   code: '',
+  //   onlineLink: '',
+  //   quantity: '',
+  //   block: '1',
+  //   semester: 'Spring',
+  //   year: selectedYear,
+  //   subjectId: '1',
+  //   subjectName: '',
+  //   instructorId: '1',
+  //   shiftId: '1',
+  //   roomId: '1',
+  //   weekdays: '2, 4, 6',
+  // };
 
   const handleResetForm = () => {
     setAreSelectBoxesDisabled(false)
@@ -112,7 +114,9 @@ const FontGroup: React.FC<FontGroupProps> = ({
       formik.resetForm();
     }
     else {
-      setEditClazz(defaultValues)
+      setEditClazz(null);
+      setInstructorValue(null)
+      setIsInstructor(true)
     }
   };
 
@@ -141,12 +145,12 @@ const FontGroup: React.FC<FontGroupProps> = ({
   const handleChangeSubject = async (value) => {
     // Tìm option dựa trên giá trị được chọn
     const selectOption = subjectOptions.filter(option => option.value == value)
-    console.log('selectOption', selectOption)
+
     // Lấy giá trị 'specializationId' từ option đã chọn
     if (selectOption) {
       const specializationId = selectOption[0]?.specializationId;
       if (specializationId) {
-        console.log('specializationId', specializationId)
+
         let responseRooms = await getAllInstructorBySpecializationIdAPI(specializationId);
         if (responseRooms && responseRooms.data) {
           setListInstructor(responseRooms.data)
@@ -199,7 +203,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
 
     // Tìm option tương ứng với giá trị mới
     const selectedOption = subjectOptions.find(option => option.value == subjectValue);
-    console.log('handleEdit', subjectValue, selectedOption)
+
     // Gọi hàm onChange thủ công
     if (selectedOption) {
       handleChangeSubject(subjectValue);

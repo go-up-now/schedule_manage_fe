@@ -36,6 +36,7 @@ import ScheduleManage from "../admin/schedule-manage/ScheduleManage";
 import SemesterManage from "../admin/semester-manage/SemesterManage";
 import InstructorManage from "../admin/instructor-manage/InstructorManage.tsx";
 import EventManage from "../admin/event-manage/EventManage.tsx";
+import EducationProgramManage from "../admin/education-program-manage/EducationProgramManage.tsx";
 
 const role = getUserScope();
 
@@ -256,10 +257,10 @@ const router = createBrowserRouter([
 
       // ADMIN ROLE
       {
-        path: "/quan-ly-lop-hoc",
+        path: "/quan-ly-sinh-vien",
         element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
-            <ClassManage />
+            <StudentManage />
           </ProtectedRoute>
         ),
       },
@@ -280,18 +281,26 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/quan-ly-lich-thi",
+        path: "/quan-ly-chuong-trinh-dao-tao",
         element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
-            <TestdayManage />
+            <EducationProgramManage />
           </ProtectedRoute>
         ),
       },
       {
-        path: "/quan-ly-sinh-vien",
+        path: "/quan-ly-hoc-ky",
         element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
-            <StudentManage />
+            <SemesterManage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/quan-ly-lop-hoc",
+        element: (
+          <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
+            <ClassManage />
           </ProtectedRoute>
         ),
       },
@@ -304,10 +313,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/quan-ly-hoc-ky",
+        path: "/quan-ly-lich-thi",
         element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
-            <SemesterManage />
+            <TestdayManage />
           </ProtectedRoute>
         ),
       },

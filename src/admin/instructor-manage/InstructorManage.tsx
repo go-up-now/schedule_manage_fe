@@ -128,7 +128,6 @@ function InstructorManage() {
       getAllInstructorBySpecializationIdAPI(selectedSpecialization)
         .then((data) => {
           setInstructors(data.data);
-          console.log("check", data)
         })
         .catch((error) => {
           console.error("Error fetching Instructors:", error);
@@ -415,7 +414,7 @@ function InstructorManage() {
           onClose={closeModal}
         />
 
-        {/* Xóa sinh viên */}
+        {/* Xóa giảng viên */}
         <Modal2 id={"denyConfirmModal"}
           width="max-w-xl"
           title={`Bạn muốn xóa giảng viên ${isInstructor?.code}?`}

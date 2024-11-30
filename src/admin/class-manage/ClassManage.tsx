@@ -93,7 +93,7 @@ function ClassManage() {
     setIsModalConfirmOpen(false);
   }
 
-  const renderRow = (item) => [
+  const renderRow = (item: Clazz) => [
     <td key={`item-code-${item.id}`} className=" border-b">
       {item.code}
     </td>,
@@ -112,7 +112,7 @@ function ClassManage() {
     <td key={`item-weekday-${item.id}`} className=" border-b">
       {item.weekdays}
     </td>,
-    <td key={`item-weekday-${item.id}`} className=" border-b">
+    <td key={`item-onlineLink-${item.id}`} className=" border-b">
       {item.onlineLink}
     </td>,
     <td key={`item-case-${item.id}`}>
@@ -211,21 +211,21 @@ function ClassManage() {
     },
   ];
 
-  const defaultValues = {
-    id: 0,
-    code: '',
-    onlineLink: '',
-    quantity: '',
-    block: '',
-    semester: '',
-    year: '',
-    subjectId: '',
-    subjectName: '',
-    instructorId: '',
-    shiftId: '',
-    roomId: '',
-    weekdays: '',
-  };
+  // const defaultValues = {
+  //   id: 0,
+  //   code: '',
+  //   onlineLink: '',
+  //   quantity: '',
+  //   block: '1',
+  //   semester: 'Spring',
+  //   year: selectedYear,
+  //   subjectId: '1',
+  //   subjectName: '',
+  //   instructorId: '1',
+  //   shiftId: '1',
+  //   roomId: '1',
+  //   weekdays: '2, 4, 6',
+  // };
 
   const formikClazz = useFormik({
     initialValues: {
@@ -238,7 +238,7 @@ function ClassManage() {
       year: editClazz ? editClazz.year : selectedYear,
       subjectId: editClazz ? editClazz.subjectId : '1',
       subjectName: editClazz ? editClazz.subjectName : '',
-      instructorId: editClazz ? editClazz.instructorId : '1',
+      instructorId: editClazz ? editClazz.instructorId : '0',
       shiftId: editClazz ? editClazz.shiftId : '1',
       roomId: editClazz ? editClazz.roomId : '1',
       weekdays: editClazz ? editClazz.weekdays : '2, 4, 6',
@@ -285,8 +285,8 @@ function ClassManage() {
                 toast.error(response.data.message)
               if (response.statusCode === 200) {
                 toast.success("Cập nhật lớp học thành công")
-                setEditClazz(defaultValues)
                 resetForm();
+                setEditClazz(null);
                 setIsReLoadTable(!isReLoadTable);
               }
             }
@@ -403,7 +403,7 @@ function ClassManage() {
           {selectedClazz && (
             <Modal isOpen={true} onClose={closeModal} className="">
               <h2 className="text-xl font-bold ps-10">
-                 {selectedClazz.code}
+                {selectedClazz.code}
               </h2>
               <div>
                 <div className="w-[700px] h-[400px] border-t border-t-gray-500 m-5 py-2">
@@ -451,6 +451,7 @@ function ClassManage() {
             setIsEditDisabled={setIsEditDisabled}
             years={years}
             instructorValue={instructorValue}
+            setInstructorValue={setInstructorValue}
             subjectValue={subjectValue}
           />
           <ModalConfirm

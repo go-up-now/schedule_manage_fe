@@ -19,7 +19,7 @@ function Table({
   showSelectBox = false,
   optionsValue = [],
   showSelectBoxes = false,
-  numberSelectBox = [{}],
+  numberSelectBox,
   showBtnStart = false,
   btnStart = [],
   showBtnEnd = false,
@@ -143,7 +143,7 @@ function Table({
             {showSelectBoxes && (
               /* <div className="md:w-full w-full flex my-2 mx-2 justify-evenly"> */
               <div className="md:w-full w-full flex my-2 mx-2 justify-evenly">
-                {numberSelectBox.map((selectBox, index) => (
+                {numberSelectBox?.map((selectBox, index) => (
                   <SelectBox
                     key={index}
                     options={selectBox.options}

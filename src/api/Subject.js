@@ -11,3 +11,21 @@ export const getAllSubject = () => {
       throw error;
     });
 };
+
+export const getAllSubjectBySpecializationIdAPI = (specializationId) => {
+  return axiosInstance.get('/api/subjects/getAllSubjectBySpecializationId', {
+    params: {
+      specializationId: specializationId
+    }
+  });
+};
+
+export const getAllByEducationProgramId = (educationProgramId) => {
+  return axiosInstance.get('/api/subjects',
+    {
+      params: {
+        educationProgramId: educationProgramId
+      }
+    }
+  );
+};
