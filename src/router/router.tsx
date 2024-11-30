@@ -37,6 +37,7 @@ import SemesterManage from "../admin/semester-manage/SemesterManage";
 import InstructorManage from "../admin/instructor-manage/InstructorManage.tsx";
 import EventManage from "../admin/event-manage/EventManage.tsx";
 import EducationProgramManage from "../admin/education-program-manage/EducationProgramManage.tsx";
+import SubjectManage from "../admin/subject-manage/SubjectManage.tsx";
 
 const role = getUserScope();
 
@@ -285,6 +286,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
             <EducationProgramManage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/quan-ly-mon-hoc",
+        element: (
+          <ProtectedRoute allowedRoles={[ROLE.ADMIN]}>
+            <SubjectManage />
           </ProtectedRoute>
         ),
       },

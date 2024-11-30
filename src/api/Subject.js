@@ -29,3 +29,37 @@ export const getAllByEducationProgramId = (educationProgramId) => {
     }
   );
 };
+
+export const createSubjectAPI = (formDate) => {
+  return axiosInstance.post('/api/subjects', formDate);
+};
+
+export const updateSubjectAPI = (formDate, subjectId) => {
+  return axiosInstance.put('/api/subjects', formDate,
+    {
+      params: {
+        subjectId: subjectId
+      }
+    }
+  );
+};
+
+export const deleteSubjectAPI = (subjectId) => {
+  return axiosInstance.delete('/api/subjects',
+    {
+      params: {
+        subjectId: subjectId
+      }
+    }
+  );
+};
+
+export const importExcelSubjectAPI = (formData) => {
+  return axiosInstance.post(`/api/subjects/excel/upload`, formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+};

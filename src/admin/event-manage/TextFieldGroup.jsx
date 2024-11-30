@@ -56,7 +56,6 @@ function TextFieldGroup({
           disabled
           value={props.place}
         />
-
         <TextArea
           label="Nội dung sự kiện:"
           placeholder="Nội dung sự kiện"

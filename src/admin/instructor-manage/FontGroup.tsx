@@ -26,7 +26,7 @@ export const instructorValidationSchema = Yup.object().shape({
   id: Yup.number().required(),
   specializationId: Yup.string()
     .required("Vui lòng chọn bộ môn"),
-  code: Yup.string().required('Vui lòng nhập mã giảng viên viên'),
+  code: Yup.string().required('Vui lòng nhập mã giảng viên'),
   lastName: Yup.string().required("Vui lòng nhập họ giảng viên"),
   firstName: Yup.string().required("Vui lòng nhập tên giảng viên"),
   schoolEmail: Yup.string().required("Vui lòng nhập email giảng viên")
