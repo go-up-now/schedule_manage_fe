@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import DragDrop, { listExam } from "../../component/DragDrop";
@@ -7,29 +7,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleLeft, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import { getAllStudentbyClazzId } from "../../api/Student.js";
 
 function ExamArrange() {
   const location = useLocation();
-  const { item } = location.state || {};
+  const { item, studentList } = location.state || {};
   const navigate = useNavigate();
-
+  console.log("studentListCallAPI at EXAM");
+  console.log(studentList);
   const numberBoard = Array.from({ length: 3 }, (_, index) => index + 1);
-
-  const students = [
-    { id: 1, code: "ps27456", name: "Lieu Vinh Phat", condition: true },
-    { id: 2, code: "ps27430", name: "Ngo Thi Duc Nhu", condition: true },
-    { id: 3, code: "ps27619", name: "Nguyen Trung Hieu", condition: false },
-    { id: 4, code: "ps27519", name: "Nguyen Tien Hoc", condition: false },
-    { id: 5, code: "ps27601", name: "Nguyen Xuan Truong", condition: true },
-    { id: 6, code: "ps27090", name: "Nguyen Huu Nghia", condition: false },
-  ];
 
   const handleStudentListClick = useCallback(
     (item) => {
       navigate(
         `/danh-sach-sinh-vien/${encodeURIComponent(
-          item.clazz
-        )}/${encodeURIComponent(item.subjectCode)}`,
+          item.subject_code
+        )}/${encodeURIComponent(item.clazz_code)}`,
         { state: { item } }
       );
     },
@@ -41,10 +34,7 @@ function ExamArrange() {
       id: 1,
       name: (
         <>
-          <FontAwesomeIcon
-            icon={faCircleLeft}
-            className="text-white mr-1 font-medium text-lg"
-          />
+          <FontAwesomeIcon icon={faCircleLeft} className="mr-2" />
           Trở về
         </>
       ),
@@ -56,27 +46,78 @@ function ExamArrange() {
     console.log("danh sach thi cua idClazz: " + item.id + "|" + listExam);
   };
 
+  // call api
+
+  // const students = [
+  //   {
+  //     studentId: 1,
+  //     studentName: "Nguyễn Trung Hiếu",
+  //     avatar: "student1.png",
+  //     studentCode: "PS27619",
+  //     studentEmail: "hieuntps27619@fpt.edu.vn",
+  //     condition: true,
+  //   },
+  //   {
+  //     studentId: 2,
+  //     studentEmail: "nhuntdps27430@fpt.edu.vn",
+  //     studentCode: "PS27430",
+  //     studentName: "Ngô Thị Đức Nhu",
+  //     condition: true,
+  //     avatar: "student2.png",
+  //   },
+  //   {
+  //     studentName: "Liêu Vinh Phát",
+  //     condition: true,
+  //     studentId: 3,
+  //     studentCode: "PS27456",
+  //     studentEmail: "phatlvps27456@fpt.edu.vn",
+  //     avatar: "student3.png",
+  //   },
+  //   {
+  //     studentId: 4,
+  //     studentName: "Nguyễn Tiến Học",
+  //     condition: true,
+  //     studentEmail: "hocntps27837@fpt.edu.vn",
+  //     avatar: "student4.png",
+  //     studentCode: "PS27837",
+  //   },
+  //   {
+  //     studentName: "Nguyễn Hưũ Nghĩa",
+  //     studentCode: "PS27127",
+  //     studentId: 5,
+  //     avatar: "student5.png",
+  //     condition: true,
+  //     studentEmail: "nghianhps27127@fpt.edu.vn",
+  //   },
+  //   {
+  //     studentName: "Nguyễn Hoàng Lệ Băng",
+  //     avatar: "student7.png",
+  //     condition: true,
+  //     studentCode: "PS27457",
+  //     studentId: 7,
+  //     studentEmail: "bangnhlps27457@fpt.edu.vn",
+  //   },
+  //   {
+  //     studentEmail: "bichnhnps27838@fpt.edu.vn",
+  //     studentId: 8,
+  //     studentName: "Nguyễn Hoàng Ngọc Bích",
+  //     studentCode: "PS27838",
+  //     condition: true,
+  //     avatar: "student8.png",
+  //   },
+  // ];
+
   return (
     <Container>
-      <TitleHeader title={`Xếp đợt thi lớp ${item.clazz}`} />
-      <div className="min-h-[600px]">
-        {/* <div className="border rounded-md h-10 ">
-        {item ? (
-          <div className="h-full px-4 flex items-center justify-between font-medium text-lg text-blue-700">
-            <p>Phòng: {item.room}</p>
-            <p>Lớp: {item.clazz}</p>
-            <p>Mã môn: {item.code}</p>
-            <p>Tên môn: {item.name}</p>
-          </div>
-        ) : (
-          <p>No item data available</p>
-        )}
-      </div> */}
-
-        <div className="h-[500px]">
+      <TitleHeader
+        title={`XẾP DANH SÁCH ĐỢT THI ${item.clazz_code} - MÔN ${item.subject_name}`}
+        titleClassName="uppercase text-[1.25rem] font-medium"
+      />
+      <div className="min-h-[800px]">
+        <div className="h-[700px]">
           <DragDrop
             numberBoard={numberBoard}
-            initialStudents={students}
+            initialStudents={studentList}
             showOptions={true}
             showSearchItem={true}
             showRandomBtn={true}
@@ -85,14 +126,14 @@ function ExamArrange() {
           />
         </div>
 
-        <div className="flex md:mt-10 mt-36 justify-center">
+        <div className="flex md:mt-10 mt-36 justify-end">
           <Button
             label={
               <>
                 <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" /> Lưu
               </>
             }
-            className="w-full md:w-1/2 bg-blue-400 h-10 text-white flex justify-center font-medium"
+            className="w-full md:w-[150px] mr-0 md:mr-[60px] bg-blue-400 h-10 p-1 text-white flex justify-center font-medium"
             onClick={saveList}
           />
         </div>

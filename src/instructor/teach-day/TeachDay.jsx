@@ -10,7 +10,8 @@ import { addDays, format } from "date-fns";
 import { teach } from "./Teachingdays";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-import { cancelSchedule } from "../../api/Schedule.js";
+import { cancelSchedule, getScheduleById } from "../../api/Schedule.js";
+import { toast } from "react-toastify";
 
 function TeachDay() {
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ function TeachDay() {
       nameSelectValue: 7,
       onChange: handleDayChange,
       value: selectedDay,
-      className: "mr-1 w-full pt-4 md:pt-4",
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
     },
   ];
 
@@ -106,23 +107,52 @@ function TeachDay() {
   //console.log("Grouped By Date:", groupedByDate);
 
   // Hàm huỷ lịch dạy
-  const handleCancelSchedule = (clazz) => {
-    const request = {
-      id: clazz.scheculeId,
-      clazzId: clazz.clazzId,
-      date: clazz.date,
-      status: false,
-    };
-    console.log("Request data:", request);
-    console.log("Class data:", clazz);
+  // const handleCancelSchedule = (clazz) => {
+  //   const [schedule, setSchedule] = useState(null);
 
-    cancelSchedule(clazz.scheculeId, request)
-      .then((response) => {
-        console.log("Lịch dạy đã được huỷ thành công:", response);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi huỷ lịch dạy:", error);
-      });
+  //   useEffect(() => {
+  //     const fetchSchedule = async () => {
+  //       const data = await getScheduleById(clazz.scheculeId);
+  //       setSchedule(data);
+  //     };
+  //     fetchSchedule();
+  //   }, [clazz.scheculeId]);
+
+  //   const request = {
+  //     schedule,
+  //   };
+  //   console.log("Request data:", request);
+  //   console.log("Class data:", clazz);
+
+  //   cancelSchedule(clazz.scheculeId, request)
+  //     .then((response) => {
+  //       console.log("Lịch dạy đã được huỷ thành công:", response);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi huỷ lịch dạy:", error);
+  //     });
+  // };
+
+  // Update the handleCancelSchedule function
+  const handleCancelSchedule = async (clazz) => {
+    try {
+      // Fetch schedule details based on the class scheduleId
+      const scheduleData = await getScheduleById(clazz.scheculeId);
+      console.log("Schedule Data:", scheduleData); // Log fetched schedule data
+
+      // Call the cancelSchedule API with the correct data
+      const response = await cancelSchedule(clazz.scheculeId, scheduleData);
+      console.log("Lịch dạy đã được huỷ thành công:", response);
+
+      // Success toast
+      toast.success("HUỶ THÀNH CÔNG");
+    } catch (error) {
+      console.error("Lỗi khi huỷ lịch dạy:", error);
+      // Show error toast
+      const scheduleData = await getScheduleById(clazz.scheculeId);
+      console.log("Schedule Data:", scheduleData);
+      toast.error("HUỶ THẤT BẠI");
+    }
   };
 
   // Render the class information for each Ca

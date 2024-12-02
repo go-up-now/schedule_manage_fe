@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-
+import TextFieldGroup from "./TextFieldGroup.jsx";
+import { getAllStudentbyClazzId } from "../../api/Student.js";
 function StudentList() {
   const location = useLocation();
   const { item } = location.state || {};
@@ -104,18 +105,45 @@ function StudentList() {
     },
   ];
 
+  const [studentList, setStudentList] = useState([]);
+  // Fetch student list on component mount
+  useEffect(() => {
+    if (item.clazz_id) {
+      getAllStudentbyClazzId(item.clazz_id)
+        .then((data) => {
+          const updatedStudents = data.map((student) => ({
+            ...student,
+            condition: true,
+          }));
+
+          const filteredStudents = updatedStudents.filter(
+            (student) => student.condition === true
+          );
+
+          setStudentList(filteredStudents);
+        })
+        .catch((error) => {
+          console.error("Error fetching student list:", error);
+        });
+    }
+  }, [item.clazz_id]);
+
+  console.log("studentListCallAPI");
+  console.log(studentList);
+
+  // handleExamClick function
   const handleExamClick = useCallback(
     (item) => {
       navigate(
-        `/xep-dot-thi/${encodeURIComponent(item.clazz)}/${encodeURIComponent(
-          item.subjectCode
-        )}`,
+        `/xep-dot-thi/${encodeURIComponent(
+          item.subject_code
+        )}/${encodeURIComponent(item.clazz_code)}`,
         {
-          state: { item },
+          state: { item, studentList }, // Pass both item and studentList in the state
         }
       );
     },
-    [navigate]
+    [navigate, studentList] // Include studentList in the dependency array
   );
 
   const btnEnd = [
@@ -131,13 +159,13 @@ function StudentList() {
     },
   ];
 
-  const [className, setClassName] = useState("w-7/12 h-[600px]");
+  const [className, setClassName] = useState("w-7/12 h-[620px]");
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 985) {
-        setClassName("w-full h-[550px]");
+        setClassName("w-[95%] h-[95%] overflow-auto relative");
       } else {
-        setClassName("w-7/12 h-[550px]");
+        setClassName("w-7/12 h-[620px]");
       }
     };
     window.addEventListener("resize", handleResize);
@@ -148,11 +176,23 @@ function StudentList() {
     };
   }, [className]);
 
+  const handleFieldChange = (field, value) => {
+    setSelectedStudent((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  // CALL API
+
   return (
     <Container>
-      <TitleHeader title={`Danh sách học sinh lớp ${item.clazz}`} />
+      <TitleHeader
+        title={`DANH SÁCH SINH VIÊN ${item.clazz_code} - MÔN ${item.subject_name}`}
+        titleClassName="uppercase text-[1.25rem] font-medium"
+      />
 
-      <div className="min-h-[600px]">
+      <div className="min-h-[800px]">
         {/* <div className="border rounded-md mb-2 h-10 ">
           {item ? (
             <div className="h-full px-4 flex items-center justify-between font-medium text-lg text-blue-700">
@@ -170,6 +210,7 @@ function StudentList() {
           showOptions={true}
           showSearch={true}
           showBtnEnd={true}
+          showSelectBox={true}
           btnEnd={btnEnd}
           headers={headers}
           renderRow={renderRow}
@@ -178,40 +219,17 @@ function StudentList() {
           showTurnPage={false}
         />
         {selectedStudent && (
-          <Modal isOpen={true} onClose={closeModal} className={`${className}`}>
-            <h2 className="text-xl font-bold">
-              {selectedStudent.name} - {selectedStudent.code}
-            </h2>
+          <Modal
+            isOpen={true}
+            onClose={closeModal}
+            className={`${className}`}
+            label={`${selectedStudent.name} - ${selectedStudent.code}`}
+          >
             <div>
-              <div className="w-full flex flex-col flex-wrap h-[380px] border-t border-t-gray-500 mt-5 py-5`">
-                {headers.slice(2, -2).map((header, index) => (
-                  <div key={index} className="my-1 p-1">
-                    <TextField
-                      sideField={true}
-                      label={header}
-                      value={
-                        selectedStudent[`lab${index + 1}`] ||
-                        selectedStudent[`asm${index + 1}`] ||
-                        selectedStudent[header.toLowerCase().replace(/\s/g, "")]
-                      }
-                      placeholder={`Enter ${header.toLowerCase()}`}
-                      className={"p-1"}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center justify-between px-2 border-t border-t-black pt-6">
-                <TextField
-                  sideField={true}
-                  label="ASM Final:"
-                  value={selectedStudent.asmFinal}
-                  className="flex-1 items-center mr-10"
-                />
-                <Button
-                  label="LƯU"
-                  className="flex-1 items-center justify-center p-2"
-                ></Button>
-              </div>
+              <TextFieldGroup
+                thisStudent={selectedStudent}
+                onFieldChange={handleFieldChange}
+              />
             </div>
           </Modal>
         )}
