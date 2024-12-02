@@ -172,6 +172,8 @@ function CheckAttendance() {
           DefaultTable={true}
           showOptions={true}
           showSearch={true}
+          searchClass="pr-20"
+          showSelectBox={true}
           headers={headers}
           renderRow={renderRow}
           data={studentList}
@@ -187,7 +189,7 @@ function CheckAttendance() {
                     <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" /> Lưu
                   </>
                 }
-                className="w-full md:w-2/12 p-2 text-white font-medium text-lg justify-center items-center mt-6"
+                className="w-full md:w-[150px] mr-0 md:mr-[60px] bg-blue-400 h-10 p-1 text-white flex justify-center font-medium mt-4"
                 onClick={handleMarkAttendance}
               />
             </>
@@ -201,7 +203,7 @@ function CheckAttendance() {
                     Cập nhật
                   </>
                 }
-                className="w-full md:w-2/12 p-2 text-white font-medium text-lg justify-center items-center mt-6"
+                className="w-full md:w-[150px] mr-0 md:mr-[60px] bg-blue-400 h-10 p-1 text-white flex justify-center font-medium mt-4"
                 onClick={handleUpdateAttendance}
               />
             </>

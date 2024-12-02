@@ -54,7 +54,7 @@ function OffedReplace() {
               <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đặt lại
             </>
           }
-          className="w-full md:w-3/6 flex items-center justify-center p-3 text-white"
+          className="w-[150px] h-[40px] flex items-center justify-center text-white"
           onClick={() => handleStudentListClick(item)}
         />
       </div>
@@ -176,13 +176,15 @@ function OffedReplace() {
 
   return (
     <Container>
-      <TitleHeader title="Danh sách ngày đã nghỉ" />
+      <TitleHeader title="DANH SÁCH NGÀY ĐÃ NGHỈ" />
       <div className="min-h-[600px]">
         {desktop && (
           <Table
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
+            searchClass="pr-20"
+            showSelectBox={true}
             headers={headers}
             renderRow={renderRow}
             data={offdays}

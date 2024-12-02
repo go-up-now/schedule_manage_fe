@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import { getClazzesByInstructor } from "../../api/clazzs.js";
 
 function TeachManage() {
   const navigate = useNavigate();
@@ -20,17 +21,23 @@ function TeachManage() {
   const [desktop, setDesktop] = useState(true);
   const [mobile, setMobile] = useState(false);
 
-  const headers = ["Clazz", "Mã Môn", "Tên Môn", ""];
+  const headers = ["Ca", "Phòng", "Lớp", "Mã Môn", "Tên Môn", ""];
 
   const renderRow = (item) => [
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.clazz}
+    <td key={`item-shift-${item.id}`} className="px-6 py-4">
+      Ca {item.shift}
     </td>,
-    <td key={`item-subjectCode-${item.id}`} className="px-6 py-4">
-      {item.subjectCode}
+    <td key={`item-room_name-${item.id}`} className="px-6 py-4">
+      {item.room_name}
     </td>,
-    <td key={`item-subjectName-${item.id}`} className="px-6 py-4">
-      {item.subjectName}
+    <td key={`item-clazz_code-${item.id}`} className="px-6 py-4">
+      {item.clazz_code}
+    </td>,
+    <td key={`item-subject_code-${item.id}`} className="px-6 py-4">
+      {item.subject_code}
+    </td>,
+    <td key={`item-subject_name-${item.id}`} className="px-6 py-4">
+      {item.subject_name}
     </td>,
     <td key={`item-option-${item.id}`} className="px-6 py-4">
       <div className="flex justify-center w-full">
@@ -41,7 +48,7 @@ function TeachManage() {
               sách
             </>
           }
-          className="w-full md:w-2/4 flex items-center justify-center p-3 text-white"
+          className="w-[150px] h-[40px] flex items-center justify-center text-white"
           onClick={() => handleStudentListClick(item)}
         />
       </div>
@@ -52,8 +59,8 @@ function TeachManage() {
     (item) => {
       navigate(
         `/danh-sach-sinh-vien/${encodeURIComponent(
-          item.clazz
-        )}/${encodeURIComponent(item.subjectCode)}`,
+          item.subject_code
+        )}/${encodeURIComponent(item.clazz_code)}`,
         { state: { item } }
       );
     },
@@ -62,7 +69,7 @@ function TeachManage() {
 
   // Call API
   const [selectedYear, setSelectedYear] = useState(2024);
-  const [selectedSemester, setSelectedSemester] = useState(1);
+  const [selectedSemester, setSelectedSemester] = useState("Spring");
   const [selectedBlock, setSelectedBlock] = useState(1);
   const [clazzTeaching, setClazzTeaching] = useState([]);
 
@@ -77,17 +84,17 @@ function TeachManage() {
   };
 
   // Fetch students whenever course or major is selected
-  // useEffect(() => {
-  //   if (selectedCourse && selectedMajor) {
-  //     getAllStudentbyCourseAndMajor(selectedCourse, selectedMajor)
-  //       .then((data) => {
-  //         setStudents(data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching students:", error);
-  //       });
-  //   }
-  // }, [selectedCourse, selectedMajor]);
+  useEffect(() => {
+    if (selectedBlock && selectedSemester && selectedYear) {
+      getClazzesByInstructor(selectedBlock, selectedSemester, selectedYear)
+        .then((data) => {
+          setClazzTeaching(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching students:", error);
+        });
+    }
+  }, [selectedBlock, selectedSemester, selectedYear]);
 
   const selectBoxs = [
     {
@@ -98,37 +105,42 @@ function TeachManage() {
       nameSelect: "2024",
       onChange: handleYearChange,
       value: selectedYear,
-      className: "mr-1 w-full pt-4 md:pt-4",
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
     },
     {
-      options: [{ value: 2, label: "Học kỳ II" }],
-      nameSelect: "Học kỳ I",
+      options: [
+        { value: "Summer", label: "Summer" },
+        { value: "Fall", label: "Fall" },
+        { value: "Winter", label: "Winter" },
+      ],
+      nameSelect: "Spring",
       onChange: handleSemesterChange,
       value: selectedSemester,
-      className: "mr-1 w-full pt-4 md:pt-4",
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
     },
     {
       options: [{ value: 2, label: "Block II" }],
       nameSelect: "Block I",
       onChange: handleBlockChange,
       value: selectedBlock,
-      className: "mr-1 w-full pt-4 md:pt-4",
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
     },
   ];
 
   return (
     <Container>
       <TitleHeader title="Danh sách lớp phụ trách" />
-      <div className="max-h-[600px]">
+      <div className="min-h-[800px]">
         <Table
           DefaultTable={true}
           showOptions={true}
           showSearch={true}
           showSelectBoxes={true}
+          searchClass="pr-20"
           numberSelectBox={selectBoxs}
           headers={headers}
           renderRow={renderRow}
-          data={clazz}
+          data={clazzTeaching}
           maxRow={10}
         />
       </div>

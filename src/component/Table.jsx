@@ -16,10 +16,11 @@ function Table({
   showTurnPage = true,
   showOptions = false,
   showSearch = false,
+  searchClass = "",
   showSelectBox = false,
   optionsValue = [],
   showSelectBoxes = false,
-  numberSelectBox,
+  numberSelectBox = [{}],
   showBtnStart = false,
   btnStart = [],
   showBtnEnd = false,
@@ -126,7 +127,7 @@ function Table({
               </div>
             )}
             {showSelectBox && (
-              <div className="md:w-1/4 w-full my-2 mx-2">
+              <div className="md:w-6/12 w-full my-2 mx-2">
                 {optionsValue.map((selectBox, index) => (
                   <SelectBox
                     key={index}
@@ -142,8 +143,8 @@ function Table({
             )}
             {showSelectBoxes && (
               /* <div className="md:w-full w-full flex my-2 mx-2 justify-evenly"> */
-              <div className="md:w-full w-full flex my-2 mx-2 justify-evenly">
-                {numberSelectBox?.map((selectBox, index) => (
+              <div className="md:w-6/12 w-full flex my-2 md:mr-2 mr-0 justify-start">
+                {numberSelectBox.map((selectBox, index) => (
                   <SelectBox
                     key={index}
                     options={selectBox.options}
@@ -158,7 +159,7 @@ function Table({
               </div>
             )}
             {showSearch && (
-              <div className="w-full my-2 mx-2">
+              <div className={`md:w-4/12 w-full my-2 mx-2 ${searchClass}`}>
                 <div className="relative">
                   <div className="absolute top-3 left-0 flex items-center pl-3.5 pointer-events-none z-20">
                     <FontAwesomeIcon
@@ -170,7 +171,7 @@ function Table({
 
                 <input
                   id="search"
-                  className="border text-gray-900 text-sm rounded-lg w-full pl-10 p-2.5 focus:outline-none"
+                  className={`border text-gray-900 text-sm rounded-lg w-full pl-10 p-2.5 focus:outline-none `}
                   name="search"
                   aria-label="Search Bar"
                   placeholder="Tìm kiếm..."
@@ -179,13 +180,13 @@ function Table({
               </div>
             )}
             {showBtnEnd && (
-              <div className="md:w-1/4 w-full my-2 mx-2 flex">
+              <div className="md:w-2/12 w-full my-2 mx-2 flex justify-center">
                 {btnEnd.map((button, index) => (
                   <Button
                     key={index}
                     label={button.name}
                     onClick={button.onClick}
-                    className={`border rounded-md transition-all p-1 m-1 flex-1 h-10 bg-blue-500 text-white justify-center`}
+                    className={`w-[150px] h-[40px] border rounded-md transition-all bg-blue-500 text-white justify-center`}
                   />
                 ))}
               </div>
@@ -241,8 +242,9 @@ function Table({
             {getPageNumbers().map((page, index) => (
               <button
                 key={index}
-                className={`mx-0 px-4 py-2 font-bold ${currentPage === page ? "bg-blue-50" : ""
-                  } rounded`}
+                className={`mx-0 px-4 py-2 font-bold ${
+                  currentPage === page ? "bg-blue-50" : ""
+                } rounded`}
                 onClick={() => setCurrentPage(page)}
               >
                 {page + 1}
