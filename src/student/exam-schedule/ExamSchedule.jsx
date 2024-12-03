@@ -26,7 +26,7 @@ function ExamSchedule() {
       ],
       onChange: handleDayChange,
       value: selectedDay,
-      className: "mr-1 w-full pt-4 md:pt-4",
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
       nameSelect: "Chọn thời gian",
       nameSelectValue: 7,
     },
@@ -36,7 +36,7 @@ function ExamSchedule() {
     const fetchExamSchedule = async () => {
       try {
         const { startTime, endTime } = calculateDates(selectedDay);
-        const response = await getExamSchedule(startTime, endTime );
+        const response = await getExamSchedule(startTime, endTime);
         if (response && response.data) {
           setExamScheduleData(response.data);
         }
@@ -94,7 +94,7 @@ function ExamSchedule() {
       {`${item.startTime} - ${item.endTime}`}
     </td>,
   ];
-  
+
   const renderRow1 = (item) => [
     <td key={`item-examDate-${item.id}`} className="px-6 py-4">
       {item.examDate}
@@ -112,7 +112,6 @@ function ExamSchedule() {
       {item.shiftId}
     </td>,
   ];
-  
 
   const [desktop, setDesktop] = useState(true);
   const [mobile, setMobile] = useState(false);
@@ -137,7 +136,7 @@ function ExamSchedule() {
 
   return (
     <Container>
-      <TitleHeader title={'LỊCH THI'}/>
+      <TitleHeader title={"LỊCH THI"} />
       <div className="py-4">
         {desktop && (
           <>

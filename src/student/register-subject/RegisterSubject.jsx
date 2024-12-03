@@ -14,10 +14,10 @@ function RegisterSubject() {
 
   return (
     <Container>
-    <TitleHeader title={'ĐĂNH KÝ MÔN HỌC'}/>
-    <div className="py-4">
-      <Tabs tabs={tabsSubject} />
-    </div>
+      <TitleHeader title={"ĐĂNH KÝ MÔN HỌC"} />
+      <div className="">
+        <Tabs tabs={tabsSubject} />
+      </div>
     </Container>
   );
 }

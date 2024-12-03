@@ -38,6 +38,7 @@ import InstructorManage from "../admin/instructor-manage/InstructorManage.tsx";
 import EventManage from "../admin/event-manage/EventManage.tsx";
 import EducationProgramManage from "../admin/education-program-manage/EducationProgramManage.tsx";
 import SubjectManage from "../admin/subject-manage/SubjectManage.tsx";
+import MarkedBoard from "../student/marked-board/MarkedBoard.jsx";
 
 const role = getUserScope();
 
@@ -157,7 +158,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/doi-lich-hoc",
+        path: "/doi-lich-hoc/:codeSubject",
         element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <ChangeSchedule />
@@ -172,12 +173,19 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-
       {
         path: "/lich-su-hoc-tap",
         element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
             <StudyHistory />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/bang-diem",
+        element: (
+          <ProtectedRoute allowedRoles={[ROLE.STUDENT]}>
+            <MarkedBoard />
           </ProtectedRoute>
         ),
       },

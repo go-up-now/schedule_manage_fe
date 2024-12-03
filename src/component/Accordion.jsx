@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import Button from "./Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 
 const AccordionItem = ({ title, content, isOpen, onClick }) => (
-  <div className="w-full flex flex-col items-center ">
+  <div className="w-full flex flex-col items-center">
     <div className="w-full p-4 bg-gray-50 my-1 flex" onClick={onClick}>
       <h3 className="mr-4 font-medium text-xl">{title}</h3>
       <span>{isOpen ? "-" : "+"}</span>
     </div>
     {isOpen && (
-      <div className="accordion-content w-11/12 px-4 py-3 ">{content}</div>
+      <div className="accordion-content w-11/12 px-4 py-3">{content}</div>
     )}
   </div>
 );
@@ -35,33 +37,34 @@ const Accordion = ({ items, maxRow }) => {
 
   return (
     <div className="w-full">
-      {items.map((item, index) => (
+      {currentItems.map((item, index) => (
         <AccordionItem
-          key={index}
+          key={startIndex + index}
           title={item.title}
           content={item.content}
-          isOpen={openIndex === index}
-          onClick={() => handleClick(index)}
+          isOpen={openIndex === startIndex + index}
+          onClick={() => handleClick(startIndex + index)}
         />
       ))}
 
-      <div className="flex justify-between mt-4 items-center">
+      <div className="flex justify-center mt-4 items-center">
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          className="p-2 w-3/12 text-white text-center bg-blue-400 rounded-md"
+          className="w-[150px] h-[40px] border rounded-md transition-all bg-blue-500 text-white flex items-center justify-center"
         >
-          Previous
+          <FontAwesomeIcon icon={faAnglesLeft} className="mr-2" />
+          Back
         </button>
-        <span className="flex-2">
-          {isNaN(currentPage) ? 1 : currentPage} of {totalPages}
+        <span className="flex-2 mx-4">
+          {currentPage} / {totalPages}
         </span>
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className="p-2 w-3/12 text-white text-center bg-blue-400 rounded-md"
+          className="w-[150px] h-[40px] border rounded-md transition-all bg-blue-500 text-white flex items-center justify-center"
         >
-          Next
+          Next <FontAwesomeIcon icon={faAnglesRight} className="ml-2" />
         </button>
       </div>
     </div>

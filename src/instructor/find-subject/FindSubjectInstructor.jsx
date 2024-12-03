@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Button from "../../component/Button";
-import MiniMenu from "../../component/MiniMenu";
 import Table from "../../component/Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo, faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../../component/Modal";
 import TextField from "../../component/TextField";
 import TextArea from "../../component/TextArea";

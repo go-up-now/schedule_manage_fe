@@ -42,7 +42,7 @@ function StudySchedule() {
       ],
       onChange: handleDayChange,
       value: selectedDay,
-      className: "mr-1 w-full pt-4 md:pt-4",
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
       nameSelect: "Chọn thời gian",
       nameSelectValue: 7,
     },
@@ -111,7 +111,6 @@ function StudySchedule() {
     </td>,
   ];
 
-
   const renderRow1 = (item) => [
     <td key={`item-date-${item.id}`} className="px-6 py-4">
       {item.studyDate}
@@ -132,7 +131,7 @@ function StudySchedule() {
 
   return (
     <Container>
-    <TitleHeader title={"LỊCH HỌC"}/>
+      <TitleHeader title={"LỊCH HỌC"} />
       <div className="py-4">
         {desktop && (
           <Table
@@ -142,7 +141,7 @@ function StudySchedule() {
             optionsValue={numberSelectBox}
             headers={headers}
             renderRow={renderRow}
-            data={scheduleData} 
+            data={scheduleData}
             maxRow={5}
           />
         )}
@@ -154,7 +153,7 @@ function StudySchedule() {
             optionsValue={numberSelectBox}
             headers={header1s}
             renderRow={renderRow1}
-            data={scheduleData} 
+            data={scheduleData}
             maxRow={5}
           />
         )}

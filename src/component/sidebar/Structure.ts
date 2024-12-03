@@ -140,15 +140,7 @@ const sidebarStructure = [
         role: [ROLE.STUDENT],
       },
       {
-        id: "course-registration",
-        title: "Đổi lịch học",
-        name: "study.change-schedule",
-        link: "/doi-lich-hoc",
-        icon: "dot",
-        role: [ROLE.STUDENT],
-      },
-      {
-        id: "exam-schedule",
+        id: "current-subjects",
         title: "Môn học hiện tại",
         name: "study.current-subject",
         link: "/mon-hoc-hien-tai",
