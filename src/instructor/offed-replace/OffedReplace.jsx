@@ -1,17 +1,16 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { clazz } from "./Teachingdays";
+import React, { useState, useEffect } from "react";
 import Table from "../../component/Table";
 import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { getScheduleStatusFalse } from "../../api/Schedule.js";
 import { format } from "date-fns";
+import Modal from "../../component/Modal.jsx";
+import FieldGroup from "./FieldGroup.jsx";
 
 function OffedReplace() {
-  const navigate = useNavigate();
   //Biến responsive
   const [desktop, setDesktop] = useState(true);
   const [mobile, setMobile] = useState(false);
@@ -49,17 +48,33 @@ function OffedReplace() {
     >
       <div className="flex justify-center w-full">
         <Button
+          onClick={() => {
+            openModal(item);
+            console.log(item);
+          }}
           label={
             <>
-              <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đặt lại
+              <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
+              Đặt lịch
             </>
           }
-          className="w-[150px] h-[40px] flex items-center justify-center text-white"
-          onClick={() => handleStudentListClick(item)}
+          className="w-full md:w-[150px] flex items-center justify-center p-3 text-white "
         />
       </div>
     </td>,
   ];
+
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  const openModal = (day) => setSelectedDay(day);
+  const closeModal = () => setSelectedDay(null);
+
+  const handleFieldChange = (field, value) => {
+    setSelectedDay((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const header1s = ["Clazz", "Tên Môn", "Ngày", ""];
 
@@ -76,29 +91,21 @@ function OffedReplace() {
     <td key={`item-option-${item.id}`} className="px-6 py-4">
       <div className="flex justify-center w-full">
         <Button
+          onClick={() => {
+            openModal(item);
+            console.log(item);
+          }}
           label={
             <>
-              <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đặt lại
+              <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
+              Đặt lịch
             </>
           }
-          className="w-full md:w-1/3 flex items-center justify-center p-3 text-white"
-          onClick={() => handleStudentListClick(item)}
+          className="w-full md:w-[150px] flex items-center justify-center p-3 text-white "
         />
       </div>
     </td>,
   ];
-
-  const handleStudentListClick = useCallback(
-    (item) => {
-      navigate(
-        `/instructor/student-list/${encodeURIComponent(
-          item.code
-        )}/${encodeURIComponent(item.subject.code)}`,
-        { state: { item } }
-      );
-    },
-    [navigate]
-  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -117,62 +124,6 @@ function OffedReplace() {
       window.removeEventListener("resize", handleResize);
     };
   }, [desktop, mobile]);
-
-  // Call API
-  const [selectedYear, setSelectedYear] = useState(2024);
-  const [selectedSemester, setSelectedSemester] = useState(1);
-  const [selectedBlock, setSelectedBlock] = useState(1);
-  const [clazzTeaching, setClazzTeaching] = useState([]);
-
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
-  };
-  const handleSemesterChange = (event) => {
-    setSelectedSemester(event.target.value);
-  };
-  const handleBlockChange = (event) => {
-    setSelectedBlock(event.target.value);
-  };
-
-  // Fetch students whenever course or major is selected
-  // useEffect(() => {
-  //   if (selectedCourse && selectedMajor) {
-  //     getAllStudentbyCourseAndMajor(selectedCourse, selectedMajor)
-  //       .then((data) => {
-  //         setStudents(data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching students:", error);
-  //       });
-  //   }
-  // }, [selectedCourse, selectedMajor]);
-
-  const selectBoxs = [
-    {
-      options: [
-        { value: 2023, label: "2023" },
-        { value: 2022, label: "2022" },
-      ],
-      nameSelect: "2024",
-      onChange: handleYearChange,
-      value: selectedYear,
-      className: "mr-1 w-full pt-4 md:pt-4",
-    },
-    {
-      options: [{ value: 2, label: "Học kỳ II" }],
-      nameSelect: "Học kỳ I",
-      onChange: handleSemesterChange,
-      value: selectedSemester,
-      className: "mr-1 w-full pt-4 md:pt-4",
-    },
-    {
-      options: [{ value: 2, label: "Block II" }],
-      nameSelect: "Block I",
-      onChange: handleBlockChange,
-      value: selectedBlock,
-      className: "mr-1 w-full pt-4 md:pt-4",
-    },
-  ];
 
   return (
     <Container>
@@ -203,6 +154,25 @@ function OffedReplace() {
           />
         )}
       </div>
+      {selectedDay && (
+        <Modal
+          className={"md:w-[50%]"}
+          isOpen={true}
+          onClose={closeModal}
+          label={`Đặt lịch bù ngày: ${
+            selectedDay.date
+              ? format(new Date(selectedDay.date), "dd-MM-yyyy")
+              : ""
+          } `}
+        >
+          <div className=" mt-1 pt-2 pb-4 h-10/12 md:h-auto">
+            <FieldGroup
+              thisDay={selectedDay}
+              onFieldChange={handleFieldChange}
+            />
+          </div>
+        </Modal>
+      )}
     </Container>
   );
 }

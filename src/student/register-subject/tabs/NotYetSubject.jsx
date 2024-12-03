@@ -111,11 +111,22 @@ function NotYetSubject() {
     </td>,
   ];
 
-  const numberSelectBox = [
+  const [selectedMajor, setSelectedMajor] = useState(null);
+
+  const handleMajorChange = (event) => {
+    setSelectedMajor(event.target.value);
+  };
+
+  const selectBoxs = [
     {
-      name: "Ngành",
-      title: "Ngành",
-      options: [{ value: "CNTT", label: "Công nghệ thông tin" }],
+      options: [
+        { value: 1, label: "Công nghệ thông tin" },
+        { value: 2, label: "Lập trình web" },
+      ],
+      nameSelect: "Bộ môn",
+      onChange: handleMajorChange,
+      value: selectedMajor,
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
     },
   ];
 
@@ -149,8 +160,8 @@ function NotYetSubject() {
             showOptions={true}
             showSearch={true}
             searchClass="pr-20"
-            showSelectBox={true}
-            optionsValue={numberSelectBox}
+            showSelectBoxes={true}
+            numberSelectBox={selectBoxs}
             headers={headers}
             renderRow={renderRow}
             data={getclazz}
@@ -164,8 +175,8 @@ function NotYetSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            showSelectBox={true}
-            optionsValue={numberSelectBox}
+            showSelectBoxes={true}
+            numberSelectBox={selectBoxs}
             headers={header1s}
             renderRow={renderRow1}
             data={getclazz}
