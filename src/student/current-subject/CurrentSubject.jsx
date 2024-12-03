@@ -4,7 +4,7 @@ import Modal from "../../component/Modal";
 import Button from "../../component/Button";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Container from "../../component/Container.tsx";
@@ -53,9 +53,11 @@ function CurrentSubject() {
     },
   ];
 
-  const handlePost = (subjects) => {
-    navigate("/student/change-schedule", { state: { subjects } });
-  };
+  const handlePost = useCallback((item) => {
+    navigate(`/doi-lich-hoc/${encodeURIComponent(item.code)}`, {
+      state: { item }, // Pass both item and studentList in the state
+    });
+  });
 
   const renderRow = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
@@ -112,43 +114,43 @@ function CurrentSubject() {
 
   return (
     <Container>
-      <TitleHeader title={'MÔN HỌC HIỆN TẠI'}/>
-    <div className="py-4">
-      <Table
-        advanced={false}
-        showSelectBox={false}
-        headers={headers}
-        renderRow={renderRow}
-        data={subjects}
-        maxRow={5}
-      />
+      <TitleHeader title={"MÔN HỌC HIỆN TẠI"} />
+      <div className="py-4">
+        <Table
+          advanced={false}
+          showSelectBox={false}
+          headers={headers}
+          renderRow={renderRow}
+          data={subjects}
+          maxRow={5}
+        />
 
-      <Modal isOpen={isModalOpen} onClose={handleModalClose} label="X">
-        <h2 className="text-center font-medium text-xl">Xác nhận hủy môn</h2>
-        <div className="h-28 p-2">
-          <FontAwesomeIcon
-            icon={faTriangleExclamation}
-            className="h-full w-full text-[#FFD43B]"
-          />
-        </div>
-        <p>
-          Bạn có chắc chắn muốn hủy môn:{" "}
-          <strong className="text-sm">{selectedSubject?.name}</strong>?
-        </p>
-        <div className="flex justify-center font-xs font-semibold mt-4">
-          <Button
-            label="Hủy"
-            onClick={handleModalClose}
-            className="mr-2 bg-gray-300 hover:bg-gray-400"
-          />
-          <Button
-            label="Xác nhận"
-            onClick={handleConfirmUnregistration}
-            className="bg-red-500 text-white hover:bg-red-600"
-          />
-        </div>
-      </Modal>
-    </div>
+        <Modal isOpen={isModalOpen} onClose={handleModalClose} label="X">
+          <h2 className="text-center font-medium text-xl">Xác nhận hủy môn</h2>
+          <div className="h-28 p-2">
+            <FontAwesomeIcon
+              icon={faTriangleExclamation}
+              className="h-full w-full text-[#FFD43B]"
+            />
+          </div>
+          <p>
+            Bạn có chắc chắn muốn hủy môn:{" "}
+            <strong className="text-sm">{selectedSubject?.name}</strong>?
+          </p>
+          <div className="flex justify-center font-xs font-semibold mt-4">
+            <Button
+              label="Hủy"
+              onClick={handleModalClose}
+              className="mr-2 bg-gray-300 hover:bg-gray-400"
+            />
+            <Button
+              label="Xác nhận"
+              onClick={handleConfirmUnregistration}
+              className="bg-red-500 text-white hover:bg-red-600"
+            />
+          </div>
+        </Modal>
+      </div>
     </Container>
   );
 }

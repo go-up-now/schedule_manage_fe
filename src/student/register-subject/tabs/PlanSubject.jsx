@@ -135,7 +135,6 @@ function PlanSubject() {
   }, [mobile, desktop]);
 
   return (
-    <Container>
     <div className="">
       {desktop && (
         <>
@@ -144,6 +143,7 @@ function PlanSubject() {
             showOptions={true}
             showSearch={true}
             showSelectBox={true}
+            searchClass="pr-20"
             optionsValue={numberSelectBox}
             headers={headers}
             renderRow={renderRow}
@@ -168,7 +168,6 @@ function PlanSubject() {
         </>
       )}
     </div>
-    </Container>
   );
 }
 export default PlanSubject;

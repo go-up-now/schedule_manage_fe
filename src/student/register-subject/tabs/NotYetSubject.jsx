@@ -148,6 +148,7 @@ function NotYetSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
+            searchClass="pr-20"
             showSelectBox={true}
             optionsValue={numberSelectBox}
             headers={headers}
