@@ -10,6 +10,8 @@ import {
 import BarCharts from "./BarCharts";
 import PieChartTeacher from "./PieChartTeacher";
 import LineChart from "./LineChart";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 
 function Statistic() {
   const boxInfos = [
@@ -69,67 +71,70 @@ function Statistic() {
   }, [flexCol, flexWrap, desktop, mobile]);
 
   return (
-    <div className="w-full">
-      <div className={`p-2 ${flexCol}`}>
-        {desktop && (
-          <div className="flex justify-between">
-            {boxInfos.map((box, index) => (
-              <div
-                key={index}
-                style={{ width: `calc(100% / ${boxInfos.length})` }}
-                className={`flex-1 p-4`}
-              >
-                <div className="border rounded-md">
-                  <div className="flex items-center p-6 justify-between my-2">
+    <Container>
+      <TitleHeader title="THỐNG KÊ" />
+      <div className="w-full">
+        <div className={`p-2 ${flexCol}`}>
+          {desktop && (
+            <div className="flex justify-between">
+              {boxInfos.map((box, index) => (
+                <div
+                  key={index}
+                  style={{ width: `calc(100% / ${boxInfos.length})` }}
+                  className={`flex-1 p-4`}
+                >
+                  <div className="border rounded-md">
+                    <div className="flex items-center p-6 justify-between my-2">
+                      <FontAwesomeIcon
+                        className="w-14 h-14"
+                        icon={box.icon}
+                        size="xl"
+                      />
+                      <span className="text-lg font-medium">{box.value}</span>
+                    </div>
+                    <div className="font-medium flex justify-center p-2 my-2">
+                      {box.name}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {mobile && (
+            <div className="">
+              {boxInfos.map((box, index) => (
+                <div key={index} className={`mb-1`}>
+                  <div className="border rounded-md w-full flex items-center justify-between p-2">
                     <FontAwesomeIcon
-                      className="w-14 h-14"
+                      className="w-12 h-12"
                       icon={box.icon}
                       size="xl"
                     />
                     <span className="text-lg font-medium">{box.value}</span>
-                  </div>
-                  <div className="font-medium flex justify-center p-2 my-2">
                     {box.name}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-        {mobile && (
-          <div className="">
-            {boxInfos.map((box, index) => (
-              <div key={index} className={`mb-1`}>
-                <div className="border rounded-md w-full flex items-center justify-between p-2">
-                  <FontAwesomeIcon
-                    className="w-12 h-12"
-                    icon={box.icon}
-                    size="xl"
-                  />
-                  <span className="text-lg font-medium">{box.value}</span>
-                  {box.name}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className={`flex h-full items-end ${flexCol}`}>
-        <LineChart className="flex-1 h-full items-end" />
-
-        <div className="flex-col flex-1">
-          <div className="p-2">
-            <div className="">
-              <PieChartTeacher className="w-2/6" />
+              ))}
             </div>
-            <div>
-              <BarCharts className="" />
+          )}
+        </div>
+
+        <div className={`flex h-full items-end ${flexCol}`}>
+          <LineChart className="flex-1 h-full items-end" />
+
+          <div className="flex-col flex-1">
+            <div className="p-2">
+              <div className="">
+                <PieChartTeacher className="w-2/6" />
+              </div>
+              <div>
+                <BarCharts className="" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
 export default Statistic;

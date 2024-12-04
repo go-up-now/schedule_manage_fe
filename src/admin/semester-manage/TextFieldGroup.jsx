@@ -9,7 +9,10 @@ function TextFieldGroup({
   firstPartEnd,
   secondPartStart,
   secondPartEnd,
-  block, semester, year, isActive
+  block,
+  semester,
+  year,
+  isActive,
 }) {
   const formatted1 = format(createDateStart, "yyyy-MM-dd");
   const formatted2 = format(createDateEnd, "yyyy-MM-dd");
@@ -21,7 +24,7 @@ function TextFieldGroup({
   const formatted8 = format(secondPartEnd, "yyyy-MM-dd");
 
   return (
-    <div className="flex">
+    <div className="flex ">
       <div className="w-2/4">
         <TextField
           onField={true}
@@ -66,8 +69,7 @@ function TextFieldGroup({
           disabled
         />
       </div>
-      <div className="w-2/4">
-
+      <div className="w-2/4 mb-2">
         <TextField
           onField={true}
           label="Bắt đầu GĐ2:"

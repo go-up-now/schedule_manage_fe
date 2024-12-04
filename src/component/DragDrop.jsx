@@ -287,7 +287,7 @@ function DragDrop({
       {showOptions && (
         <div className="flex flex-col md:flex-row items-center justify-between my-2">
           {showOtherBtn && (
-            <div className="md:w-6/12 w-full flex my-2 md:mr-2 mr-0 justify-start">
+            <div className="md:w-4/12 w-full flex my-2 md:mr-2 mr-0 justify-start">
               {otherBtns.map((button, index) => (
                 <button
                   key={index}
@@ -322,7 +322,7 @@ function DragDrop({
             </div>
           )}
           {showRandomBtn && (
-            <div className="md:w-2/12 w-full my-2 mx-2 flex justify-center">
+            <div className="md:w-4/12 w-full my-2 mx-2 flex justify-end">
               <button
                 onClick={shuffleStudents}
                 disabled={disableShuffle}

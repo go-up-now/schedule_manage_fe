@@ -1,13 +1,31 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAnglesLeft,
+  faAnglesRight,
+  faPlus,
+  faMinus,
+} from "@fortawesome/free-solid-svg-icons";
 
-const AccordionItem = ({ title, content, isOpen, onClick }) => (
+const AccordionItem = ({ title, content, isOpen, onClick, spanDiv = true }) => (
   <div className="w-full flex flex-col items-center">
-    <div className="w-full p-4 bg-gray-50 my-1 flex" onClick={onClick}>
-      <h3 className="mr-4 font-medium text-xl">{title}</h3>
-      <span>{isOpen ? "-" : "+"}</span>
+    <div
+      className="w-full p-4 bg-gray-50 my-1 flex items-center"
+      onClick={onClick}
+    >
+      <div className="w-11/12">
+        <h3>{title}</h3>
+      </div>
+      <div className={`w-1/12 flex justify-center items-center `}>
+        <span>
+          {isOpen ? (
+            <FontAwesomeIcon icon={faMinus} />
+          ) : (
+            <FontAwesomeIcon icon={faPlus} />
+          )}
+        </span>
+      </div>
     </div>
     {isOpen && (
       <div className="accordion-content w-11/12 px-4 py-3">{content}</div>
@@ -44,6 +62,7 @@ const Accordion = ({ items, maxRow }) => {
           content={item.content}
           isOpen={openIndex === startIndex + index}
           onClick={() => handleClick(startIndex + index)}
+          spanDiv={item.spanDiv}
         />
       ))}
 

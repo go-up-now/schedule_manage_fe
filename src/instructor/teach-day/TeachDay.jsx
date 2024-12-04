@@ -7,7 +7,7 @@ import Accordion from "../../component/Accordion";
 import Button from "../../component/Button";
 import { getTeacherSchedule } from "../../api/Teacher";
 import { addDays, format } from "date-fns";
-import { teach } from "./Teachingdays";
+
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { cancelSchedule, getScheduleById } from "../../api/Schedule.js";
@@ -146,6 +146,10 @@ function TeachDay() {
 
       // Success toast
       toast.success("HUỶ THÀNH CÔNG");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Lỗi khi huỷ lịch dạy:", error);
       // Show error toast

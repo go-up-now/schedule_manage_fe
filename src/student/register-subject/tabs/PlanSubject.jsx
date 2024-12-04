@@ -153,9 +153,9 @@ function PlanSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            searchClass="pr-20"
             showSelectBoxes={true}
             numberSelectBox={selectBoxs}
+            showBtnEnd={true}
             headers={headers}
             renderRow={renderRow}
             data={subjects}

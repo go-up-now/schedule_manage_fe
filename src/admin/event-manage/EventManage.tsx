@@ -6,22 +6,32 @@ import Button2 from "../../component/Button2.tsx";
 import Modal from "../../component/Modal.jsx";
 import Modal2 from "../../component/Modal2.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faFileImport, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretDown,
+  faFileImport,
+  faCircleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup.tsx";
 import TextFieldGroup from "./TextFieldGroup.jsx";
 import { areaOption } from "./DataSelect.js";
-import { getAllEventByAreaAPI, createEventAPI, updateEventAPI, deleteEventAPI, importExcelEventAPI } from '../../api/Event.js';
-import Container from '../../component/Container.tsx'
-import TitleHeader from '../../component/TitleHeader.tsx'
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import { eventValidationSchema } from './FontGroup.tsx';
+import {
+  getAllEventByAreaAPI,
+  createEventAPI,
+  updateEventAPI,
+  deleteEventAPI,
+  importExcelEventAPI,
+} from "../../api/Event.js";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { eventValidationSchema } from "./FontGroup.tsx";
 import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
 import UploadExcelModal from "../../utils/UpLoadExcel.tsx";
-import { getAllAreaAPI } from '../../api/Area.js';
+import { getAllAreaAPI } from "../../api/Area.js";
 import Spinner from "../../component/Spinner.tsx";
-
+import { format } from "date-fns";
 interface Event {
   id: number;
   name: string;
@@ -40,7 +50,13 @@ function EventManage() {
   const [editEvent, setEditEvent] = useState<Event>();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { isConfirmOpen, openConfirm, closeConfirm, confirmAction, confirmQuestion } = useConfirm();
+  const {
+    isConfirmOpen,
+    openConfirm,
+    closeConfirm,
+    confirmAction,
+    confirmQuestion,
+  } = useConfirm();
   const [isModalOpenConfirm, setIsModalConfirmOpen] = useState(false);
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const [isEvent, setIsEvent] = useState<Event | null>(null);
@@ -48,7 +64,7 @@ function EventManage() {
   const [area, setArea] = useState([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   // Call API
-  const [selectedArea, setSelectedArea] = useState('1');
+  const [selectedArea, setSelectedArea] = useState("1");
   const [events, setEvents] = useState<Event[]>([]);
 
   const handleEditClick = useCallback((Event) => {
@@ -58,32 +74,30 @@ function EventManage() {
 
   // const openModal = (Event) => setSelectedEvent(Event);
   const openModal = (item, id) => {
-    if (id === 'chi-tiet') {
+    if (id === "chi-tiet") {
       setSelectedEvent(item);
-    }
-    else if (id === 'excel') {
+    } else if (id === "excel") {
       setIsModalOpenExcel(true);
-    }
-    else if (id === 'delete') {
+    } else if (id === "delete") {
       setIsEvent(item);
       setIsModalConfirmOpen(true);
     }
-  }
+  };
   const closeModal = () => {
-    setSelectedEvent('');
+    setSelectedEvent("");
     setIsModalOpenExcel(false);
     setIsModalConfirmOpen(false);
-  }
+  };
 
   const renderRow = (item: Event) => [
     <td key={`item-name-${item.id}`} className=" border-b">
-      {item.name}
+      <p className="truncate w-[300px]">{item.name}</p>
     </td>,
     <td key={`item-date-${item.id}`} className=" border-b">
-      {item.date}
+      {format(item.date, "dd-MM-yyyy")}
     </td>,
     <td key={`item-place-${item.id}`} className=" border-b">
-      {item.place}
+      <p className="truncate w-[300px]">{item.place}</p>
     </td>,
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
@@ -93,7 +107,7 @@ function EventManage() {
           menuItems={[
             {
               text: "Chi tiết",
-              onClick: () => openModal(item, 'chi-tiet'),
+              onClick: () => openModal(item, "chi-tiet"),
             },
             {
               text: "Sửa đổi",
@@ -101,7 +115,7 @@ function EventManage() {
             },
             {
               text: "Xóa",
-              onClick: () => openModal(item, 'delete'),
+              onClick: () => openModal(item, "delete"),
             },
           ]}
         />
@@ -133,56 +147,55 @@ function EventManage() {
       onChange: handleAreaChange,
       value: selectedArea,
       className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
-    }
+    },
   ];
 
   const defaultValues = {
     id: 0,
-    name: '',
-    date: '',
-    place: '',
-    content: '',
-    image: '',
-    adminId: '',
-    areaId: '1'
+    name: "",
+    date: "",
+    place: "",
+    content: "",
+    image: "",
+    adminId: "",
+    areaId: "1",
   };
 
   const formikEvent = useFormik({
     initialValues: {
       id: editEvent ? editEvent.id : 0,
-      name: editEvent ? editEvent.name : '',
-      date: editEvent ? editEvent.date : '',
-      place: editEvent ? editEvent.place : '',
-      content: editEvent ? editEvent.content : '',
-      image: editEvent ? editEvent.image : '',
-      adminId: editEvent ? editEvent.adminId : '',
-      areaId: editEvent ? editEvent.areaId : '1',
+      name: editEvent ? editEvent.name : "",
+      date: editEvent ? editEvent.date : "",
+      place: editEvent ? editEvent.place : "",
+      content: editEvent ? editEvent.content : "",
+      image: editEvent ? editEvent.image : "",
+      adminId: editEvent ? editEvent.adminId : "",
+      areaId: editEvent ? editEvent.areaId : "1",
     },
     enableReinitialize: true,
     validationSchema: eventValidationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-
       // Tạo FormData
       const formData = new FormData();
 
       // // Chuyển đổi `event` thành chuỗi JSON và thêm vào formData
       const eventJson = JSON.stringify({
         ...values,
-        image: '',
+        image: "",
       });
-      formData.append('event', new Blob([eventJson], { type: 'application/json' }));
+      formData.append(
+        "event",
+        new Blob([eventJson], { type: "application/json" })
+      );
 
       // Thêm file ảnh vào FormData nếu có
       if (values.image) {
-        if (typeof values.image === 'string') {
-          formData.append('image', "");
-        }
-        else
-          formData.append('image', values.image);
-      }
-      else {
-        formData.append('image', "");
+        if (typeof values.image === "string") {
+          formData.append("image", "");
+        } else formData.append("image", values.image);
+      } else {
+        formData.append("image", "");
       }
 
       const action = async () => {
@@ -191,10 +204,9 @@ function EventManage() {
           try {
             const response = await createEventAPI(formData);
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message)
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Thêm mới sự kiện thành công")
+                toast.success("Thêm mới sự kiện thành công");
                 resetForm();
                 setIsReLoadTable(!isReLoadTable);
                 setImagePreview(null);
@@ -202,7 +214,7 @@ function EventManage() {
             }
           } catch (error) {
             console.log("lỗi:", error);
-            toast.error(error.data.message)
+            toast.error(error.data.message);
           }
           setLoading(false); // Kết thúc loading
         } else {
@@ -210,11 +222,10 @@ function EventManage() {
           try {
             const response = await updateEventAPI(formData, values.id);
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message)
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Cập nhật sự kiện thành công")
-                setEditEvent(defaultValues)
+                toast.success("Cập nhật sự kiện thành công");
+                setEditEvent(defaultValues);
                 resetForm();
                 setIsReLoadTable(!isReLoadTable);
                 setImagePreview(null);
@@ -222,7 +233,7 @@ function EventManage() {
             }
           } catch (error) {
             console.log("lỗi:", error);
-            toast.error(error.data.message)
+            toast.error(error.data.message);
           }
           setLoading(false); // Kết thúc loading
         }
@@ -230,8 +241,9 @@ function EventManage() {
 
         // setIsReLoadTable(!isReLoadTable);
       };
-      values.id === 0 ? openConfirm(action, "Bạn có chắc muốn thêm sự kiện này?")
-        : openConfirm(action, `Bạn có chắc muốn cập nhật sự kiện này?`)
+      values.id === 0
+        ? openConfirm(action, "Bạn có chắc muốn thêm sự kiện này?")
+        : openConfirm(action, `Bạn có chắc muốn cập nhật sự kiện này?`);
     },
   });
 
@@ -243,23 +255,22 @@ function EventManage() {
         let response = await deleteEventAPI(isEvent.id);
         if (response && response) {
           if (response.statusCode === 200) {
-            toast.success("Xóa sự kiện thành công")
+            toast.success("Xóa sự kiện thành công");
             setIsReLoadTable(!isReLoadTable);
           }
-        }
-        else {
-          toast.error("Xóa sự kiện không thành công")
+        } else {
+          toast.error("Xóa sự kiện không thành công");
         }
         closeModal();
       } catch (error) {
-        toast.error("Xóa sự kiện không thành công")
+        toast.error("Xóa sự kiện không thành công");
       }
       setLoading(false); // Kết thúc loading
     }
-  }
+  };
 
   // Excel
-  const extractedData = events.map(item => ({
+  const extractedData = events.map((item) => ({
     name: item.name,
     date: item.date,
     place: item.place,
@@ -270,21 +281,23 @@ function EventManage() {
   // Excel template
   const dataTemplate = [
     {
-      STT: '1',
-      name: 'Sự kiện 8/3',
-      date: '2025-03-08',
-      place: 'Tòa nhà QTSC9 (toà T), đường Tô Ký, phường Tân Chánh Hiệp, quận 12, TP HCM.',
-      content: 'Tổ chức sự kiện mừng ngày quốc tế phụ nữ 8/3',
-      area: ' TP Hồ Chí Minh',
+      STT: "1",
+      name: "Sự kiện 8/3",
+      date: "2025-03-08",
+      place:
+        "Tòa nhà QTSC9 (toà T), đường Tô Ký, phường Tân Chánh Hiệp, quận 12, TP HCM.",
+      content: "Tổ chức sự kiện mừng ngày quốc tế phụ nữ 8/3",
+      area: " TP Hồ Chí Minh",
     },
     {
-      STT: '2',
-      name: 'Sự kiện quốc tế thiếu nhi 1/5',
-      date: '2025-05-01',
-      place: 'Toà nhà FPT Polytechnic, đường số 22, phường Thường Thạnh, quận Cái Răng, TP Cần Thơ',
-      content: 'Tổ chức sự kiện mừng ngày quốc tế thiếu nhi 1/5',
-      area: ' Cần Thơ',
-    }
+      STT: "2",
+      name: "Sự kiện quốc tế thiếu nhi 1/5",
+      date: "2025-05-01",
+      place:
+        "Toà nhà FPT Polytechnic, đường số 22, phường Thường Thạnh, quận Cái Răng, TP Cần Thơ",
+      content: "Tổ chức sự kiện mừng ngày quốc tế thiếu nhi 1/5",
+      area: " Cần Thơ",
+    },
   ];
 
   // call api
@@ -303,11 +316,11 @@ function EventManage() {
     } catch (error) {
       console.log("lỗi:", error);
     }
-  }
+  };
 
   useEffect(() => {
     callAPI();
-  }, [])
+  }, []);
 
   return (
     <Container>
@@ -324,14 +337,21 @@ function EventManage() {
             renderRow={renderRow}
             data={events} // Pass the fetched events data
             maxRow={10}
+            cbWidth="w-8/12"
           />
           {selectedEvent && (
-            <Modal isOpen={true} onClose={closeModal} className="py-12">
-              <h2 className="text-xl font-bold">
-                Sự kiện số: {+ ' ' + selectedEvent.id + ' - Thời gian: '}{selectedEvent.date}
-              </h2>
+            <Modal
+              isOpen={true}
+              onClose={closeModal}
+              label={
+                <>
+                  Sự kiện số: {+" " + selectedEvent.id + " - Thời gian: "}
+                  {format(selectedEvent.date, "dd-MM-yyyy")}
+                </>
+              }
+            >
               <div>
-                <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
+                <div className="w-[700px] py-2">
                   <TextFieldGroup
                     name={selectedEvent.name}
                     date={selectedEvent.date}
@@ -356,7 +376,7 @@ function EventManage() {
                   Nhập/Xuất Excel
                 </>
               }
-              onClick={() => openModal('', 'excel')}
+              onClick={() => openModal("", "excel")}
             ></Button>
           </div>
           <FontGroup
@@ -389,7 +409,7 @@ function EventManage() {
               dataTemplate={dataTemplate}
               exportFileName="Danh sách sự kiện"
               exportFileNamePattern="Danh sách sự kiện mẫu để import"
-              sheetName='DSSK'
+              sheetName="DSSK"
               importExcelAPI={importExcelEventAPI}
               isReLoadTable={isReLoadTable}
               setIsReLoadTable={setIsReLoadTable}
@@ -400,16 +420,34 @@ function EventManage() {
         />
 
         {/* Xóa sự kiện */}
-        <Modal2 id={"denyConfirmModal"}
+        <Modal2
+          id={"denyConfirmModal"}
           width="max-w-xl"
           title={`Bạn muốn xóa sự kiện này?`}
           content={<></>}
-          iconPopup={<FontAwesomeIcon icon={faCircleExclamation} className="text-yellow-600 w-24 h-24" />}
+          iconPopup={
+            <FontAwesomeIcon
+              icon={faCircleExclamation}
+              className="text-yellow-600 w-24 h-24"
+            />
+          }
           positionButton="center"
-          buttonCancel={<Button2 onClick={closeModal} hiddenParent="demoDate" variant="btn-secondary" type="button" size="text-sm px-6 py-3">Hủy</Button2>}
+          buttonCancel={
+            <Button2
+              onClick={closeModal}
+              hiddenParent="demoDate"
+              variant="btn-secondary"
+              type="button"
+              size="text-sm px-6 py-3"
+            >
+              Hủy
+            </Button2>
+          }
           buttonConfirm={
             <Button2
-              variant="btn-primary" type="button" size="text-sm px-6 py-3"
+              variant="btn-primary"
+              type="button"
+              size="text-sm px-6 py-3"
               onClick={handleDelete}
             >
               {loading ? (
@@ -417,17 +455,14 @@ function EventManage() {
                   <Spinner className="text-white" />
                 </>
               ) : (
-                <>
-                  Xác Nhận
-                </>
+                <>Xác Nhận</>
               )}
             </Button2>
           }
           isOpen={isModalOpenConfirm}
           onClose={closeModal}
           type="message"
-        >
-        </Modal2>
+        ></Modal2>
       </div>
     </Container>
   );
