@@ -25,6 +25,7 @@ function Table({
   btnStart = [],
   showBtnEnd = false,
   btnEnd = [],
+  cbWidth = "w-4/12",
 }) {
   const [filteredData, setFilteredData] = useState(data);
   const [currentPage, setCurrentPage] = useState(0);
@@ -127,7 +128,7 @@ function Table({
               </div>
             )}
             {showSelectBox && (
-              <div className="md:w-6/12 w-full my-2 mx-2">
+              <div className={`md:${cbWidth} w-full my-2 mx-2`}>
                 {optionsValue.map((selectBox, index) => (
                   <SelectBox
                     key={index}
@@ -143,7 +144,9 @@ function Table({
             )}
             {showSelectBoxes && (
               /* <div className="md:w-full w-full flex my-2 mx-2 justify-evenly"> */
-              <div className="md:w-6/12 w-full flex my-2 md:mr-2 mr-0 justify-start">
+              <div
+                className={`md:${cbWidth} w-full flex my-2 md:mr-2 mr-0 justify-start`}
+              >
                 {numberSelectBox.map((selectBox, index) => (
                   <SelectBox
                     key={index}
@@ -180,7 +183,7 @@ function Table({
               </div>
             )}
             {showBtnEnd && (
-              <div className="md:w-2/12 w-full my-2 mx-2 flex justify-center">
+              <div className="md:w-4/12 w-full my-2 mx-2 flex justify-end">
                 {btnEnd.map((button, index) => (
                   <Button
                     key={index}

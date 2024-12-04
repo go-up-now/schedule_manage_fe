@@ -9,7 +9,8 @@ import FontGroup from "./FontGroup";
 import TextFieldGroup from "./TextFieldGroup";
 import { major, semester, block, year } from "./DataSelect";
 import { getAllExambyBlockSemesterYearMajorID } from "../../api/examSchedule";
-
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
 function TestdayManage() {
   const headers = ["Mã môn", "Mã lớp", "Ca", "Phòng", ""];
   const [selectedExam, setSelectedExam] = useState(null);
@@ -127,56 +128,60 @@ function TestdayManage() {
   ];
 
   return (
-    <div className={`flex flex-col md:flex-row min-h-svh`}>
-      <div className="p-2 flex-1">
-        <Table
-          DefaultTable={true}
-          showOptions={true}
-          showSearch={true}
-          showSelectBoxes={true}
-          numberSelectBox={selectBoxs}
-          headers={headers}
-          renderRow={renderRow}
-          data={exams} // Pass the fetched exam data
-          maxRow={10}
-        />
-        {selectedExam && (
-          <Modal isOpen={true} onClose={closeModal} className="">
-            <h2 className="text-xl font-bold">
-              {selectedExam.name} - {selectedExam.code}
-            </h2>
-            <div>
-              <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
-                <TextFieldGroup
-                // major={selectedExam.major}
-                // email={selectedExam.email}
-                // perEmail={selectedExam.perEmail}
-                // clazz={selectedExam.clazz}
-                // phone={selectedExam.phone}
-                // address={selectedExam.address}
-                // credit={selectedExam.credit}
-                // ownCredit={selectedExam.ownCredit}
-                />
-              </div>
-            </div>
-          </Modal>
-        )}
-      </div>
-      <div className={`p-2 w-full md:w-[300px]`}>
-        <div className="px-2 pt-4 mb-5">
-          <Button
-            className="w-full p-2 text-white justify-center"
-            label={
-              <>
-                <FontAwesomeIcon icon={faFileImport} className="mr-2" />
-                Import excel
-              </>
-            }
+    <Container>
+      <TitleHeader title="QUẢN LÝ LỊCH THI" />
+      <div className={`flex flex-col md:flex-row min-h-svh`}>
+        <div className="p-2 flex-1">
+          <Table
+            DefaultTable={true}
+            showOptions={true}
+            showSearch={true}
+            showSelectBoxes={true}
+            numberSelectBox={selectBoxs}
+            headers={headers}
+            renderRow={renderRow}
+            data={exams} // Pass the fetched exam data
+            maxRow={10}
+            cbWidth="w-8/12"
           />
+          {selectedExam && (
+            <Modal isOpen={true} onClose={closeModal} className="">
+              <h2 className="text-xl font-bold">
+                {selectedExam.name} - {selectedExam.code}
+              </h2>
+              <div>
+                <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
+                  <TextFieldGroup
+                  // major={selectedExam.major}
+                  // email={selectedExam.email}
+                  // perEmail={selectedExam.perEmail}
+                  // clazz={selectedExam.clazz}
+                  // phone={selectedExam.phone}
+                  // address={selectedExam.address}
+                  // credit={selectedExam.credit}
+                  // ownCredit={selectedExam.ownCredit}
+                  />
+                </div>
+              </div>
+            </Modal>
+          )}
         </div>
-        <FontGroup exam={editExam} isEditDisabled={isEditDisabled} />
+        <div className={`p-2 w-full md:w-[300px]`}>
+          <div className="px-2 pt-4 mb-5">
+            <Button
+              className="w-full p-2 text-white justify-center"
+              label={
+                <>
+                  <FontAwesomeIcon icon={faFileImport} className="mr-2" />
+                  Import excel
+                </>
+              }
+            />
+          </div>
+          <FontGroup exam={editExam} isEditDisabled={isEditDisabled} />
+        </div>
       </div>
-    </div>
+    </Container>
   );
 }
 export default TestdayManage;

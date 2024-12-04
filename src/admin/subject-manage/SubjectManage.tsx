@@ -6,20 +6,30 @@ import Button2 from "../../component/Button2.tsx";
 import Modal from "../../component/Modal.jsx";
 import Modal2 from "../../component/Modal2.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faFileImport, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretDown,
+  faFileImport,
+  faCircleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup.tsx";
 import TextFieldGroup from "./TextFieldGroup.jsx";
 import { specializationOption } from "./DataSelect.js";
-import { getAllSubjectBySpecializationIdAPI, createSubjectAPI, updateSubjectAPI, deleteSubjectAPI, importExcelSubjectAPI } from '../../api/Subject.js';
-import Container from '../../component/Container.tsx'
-import TitleHeader from '../../component/TitleHeader.tsx'
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import { subjectValidationSchema } from './FontGroup.tsx';
+import {
+  getAllSubjectBySpecializationIdAPI,
+  createSubjectAPI,
+  updateSubjectAPI,
+  deleteSubjectAPI,
+  importExcelSubjectAPI,
+} from "../../api/Subject.js";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { subjectValidationSchema } from "./FontGroup.tsx";
 import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
 import UploadExcelModal from "../../utils/UpLoadExcel.tsx";
-import { getAllSpecializationsAPI } from '../../api/Specialization.js';
+import { getAllSpecializationsAPI } from "../../api/Specialization.js";
 
 interface Subject {
   id: number;
@@ -43,14 +53,20 @@ function SubjectManage() {
   const [editSubject, setEditSubject] = useState<Subject>();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { isConfirmOpen, openConfirm, closeConfirm, confirmAction, confirmQuestion } = useConfirm();
+  const {
+    isConfirmOpen,
+    openConfirm,
+    closeConfirm,
+    confirmAction,
+    confirmQuestion,
+  } = useConfirm();
   const [isModalOpenConfirm, setIsModalConfirmOpen] = useState(false);
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const [isSubject, setIsSubject] = useState<Subject | null>(null);
   const [isReLoadTable, setIsReLoadTable] = useState(false);
   const [specialization, setSpecialization] = useState([]);
   // Call API
-  const [selectedSpecialization, setSelectedSpecialization] = useState('1');
+  const [selectedSpecialization, setSelectedSpecialization] = useState("1");
   const [subjects, setSubjects] = useState<Subject[]>([]);
 
   const handleEditClick = useCallback((subject) => {
@@ -60,22 +76,20 @@ function SubjectManage() {
 
   // const openModal = (Subject) => setSelectedSubject(Subject);
   const openModal = (item, id) => {
-    if (id === 'chi-tiet') {
+    if (id === "chi-tiet") {
       setSelectedSubject(item);
-    }
-    else if (id === 'excel') {
+    } else if (id === "excel") {
       setIsModalOpenExcel(true);
-    }
-    else if (id === 'delete') {
+    } else if (id === "delete") {
       setIsSubject(item);
       setIsModalConfirmOpen(true);
     }
-  }
+  };
   const closeModal = () => {
-    setSelectedSubject('');
+    setSelectedSubject("");
     setIsModalOpenExcel(false);
     setIsModalConfirmOpen(false);
-  }
+  };
 
   const renderRow = (item: Subject) => [
     <td key={`item-code-${item.id}`} className=" border-b">
@@ -98,7 +112,7 @@ function SubjectManage() {
           menuItems={[
             {
               text: "Chi tiết",
-              onClick: () => openModal(item, 'chi-tiet'),
+              onClick: () => openModal(item, "chi-tiet"),
             },
             {
               text: "Sửa đổi",
@@ -106,7 +120,7 @@ function SubjectManage() {
             },
             {
               text: "Xóa",
-              onClick: () => openModal(item, 'delete'),
+              onClick: () => openModal(item, "delete"),
             },
           ]}
         />
@@ -138,66 +152,65 @@ function SubjectManage() {
       onChange: handleSpecializationChange,
       value: selectedSpecialization,
       className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
-    }
+    },
   ];
 
   const formikSubject = useFormik({
     initialValues: {
       id: editSubject ? editSubject.id : 0,
-      code: editSubject ? editSubject.code : '',
-      name: editSubject ? editSubject.name : '',
-      credits: editSubject ? editSubject.credits : '',
-      total_hours: editSubject ? editSubject.total_hours : '',
-      mission: editSubject ? editSubject.mission : '',
-      note: editSubject ? editSubject.note : '',
-      requiredId: editSubject ? editSubject.requiredId : '0',
-      description: editSubject ? editSubject.description : '',
-      specializationId: editSubject ? editSubject.specializationId : '1',
+      code: editSubject ? editSubject.code : "",
+      name: editSubject ? editSubject.name : "",
+      credits: editSubject ? editSubject.credits : "",
+      total_hours: editSubject ? editSubject.total_hours : "",
+      mission: editSubject ? editSubject.mission : "",
+      note: editSubject ? editSubject.note : "",
+      requiredId: editSubject ? editSubject.requiredId : "0",
+      description: editSubject ? editSubject.description : "",
+      specializationId: editSubject ? editSubject.specializationId : "1",
     },
     enableReinitialize: true,
     validationSchema: subjectValidationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-
       const formattedSubject = { ...values };
-      console.log("check", formattedSubject)
+      console.log("check", formattedSubject);
       const action = async () => {
-
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading
           try {
             const response = await createSubjectAPI(formattedSubject);
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message)
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Thêm mới môn học thành công")
+                toast.success("Thêm mới môn học thành công");
                 resetForm();
                 setIsReLoadTable(!isReLoadTable);
               }
             }
           } catch (error) {
             console.log("lỗi:", error);
-            toast.error(error.data.message)
+            toast.error(error.data.message);
           }
           setLoading(false); // Kết thúc loading
         } else {
           setLoading(true); // Bắt đầu loading
           try {
-            const response = await updateSubjectAPI(formattedSubject, values.id);
+            const response = await updateSubjectAPI(
+              formattedSubject,
+              values.id
+            );
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message)
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Cập nhật môn học thành công")
+                toast.success("Cập nhật môn học thành công");
                 resetForm();
-                setEditSubject(null)
+                setEditSubject(null);
                 setIsReLoadTable(!isReLoadTable);
               }
             }
           } catch (error) {
             console.log("lỗi:", error);
-            toast.error(error.data.message)
+            toast.error(error.data.message);
           }
           setLoading(false); // Kết thúc loading
         }
@@ -205,8 +218,12 @@ function SubjectManage() {
 
         // setIsReLoadTable(!isReLoadTable);
       };
-      values.id === 0 ? openConfirm(action, `Bạn có chắc muốn thêm môn học ${values?.code}?`)
-        : openConfirm(action, `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`)
+      values.id === 0
+        ? openConfirm(action, `Bạn có chắc muốn thêm môn học ${values?.code}?`)
+        : openConfirm(
+            action,
+            `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`
+          );
     },
   });
 
@@ -217,22 +234,21 @@ function SubjectManage() {
         let response = await deleteSubjectAPI(isSubject.id);
         if (response) {
           if (response.statusCode === 200) {
-            toast.success("Xóa môn học thành công")
+            toast.success("Xóa môn học thành công");
             setIsReLoadTable(!isReLoadTable);
           }
-        }
-        else {
-          toast.error("Xóa môn học không thành công")
+        } else {
+          toast.error("Xóa môn học không thành công");
         }
       } catch (error) {
-        toast.error("Xóa môn học không thành công")
+        toast.error("Xóa môn học không thành công");
       }
       closeModal();
     }
-  }
+  };
 
   // Excel
-  const extractedData = subjects.map(item => ({
+  const extractedData = subjects.map((item) => ({
     code: item.code,
     name: item.name,
     credits: item.credits,
@@ -247,13 +263,13 @@ function SubjectManage() {
   // Excel template
   const dataTemplate = [
     {
-      STT: '1',
-      code: 'GAME303',
-      name: 'Lập trình game',
+      STT: "1",
+      code: "GAME303",
+      name: "Lập trình game",
       credits: 3,
       total_hours: 80,
-      specialization: 'Công nghệ thông tin',
-      requiredCode: 'PDP201',
+      specialization: "Công nghệ thông tin",
+      requiredCode: "PDP201",
       mission: `Nhiệm vụ:
                 1. Hoàn thành tất cả các bài tập, nhiệm vụ giảng viên đã giao.
                 2. Không được phép vắng quá 30% tổng số buổi học.`,
@@ -262,16 +278,16 @@ function SubjectManage() {
             Điều kiện qua môn:
             - Điểm trung bình >=5
             - Các cột điểm không được bỏ trống`,
-      description: 'Lập trình game là môn học rất tuyệt vời',
+      description: "Lập trình game là môn học rất tuyệt vời",
     },
     {
-      STT: '2',
-      code: 'MOBILE502',
-      name: 'Lập trình mobile',
+      STT: "2",
+      code: "MOBILE502",
+      name: "Lập trình mobile",
       credits: 4,
       total_hours: 88,
-      specialization: 'Công nghệ thông tin',
-      requiredCode: '',
+      specialization: "Công nghệ thông tin",
+      requiredCode: "",
       mission: `Nhiệm vụ:
                 1. Hoàn thành tất cả các bài tập, nhiệm vụ giảng viên đã giao.
                 2. Không được phép vắng quá 30% tổng số buổi học.`,
@@ -280,8 +296,8 @@ function SubjectManage() {
             Điều kiện qua môn:
             - Điểm trung bình >=5
             - Các cột điểm không được bỏ trống`,
-      description: 'Lập trình mobile là môn học rất tuyệt vời',
-    }
+      description: "Lập trình mobile là môn học rất tuyệt vời",
+    },
   ];
 
   // call api
@@ -300,11 +316,11 @@ function SubjectManage() {
     } catch (error) {
       console.log("lỗi:", error);
     }
-  }
+  };
 
   useEffect(() => {
     callAPI();
-  }, [])
+  }, []);
 
   return (
     <Container>
@@ -321,14 +337,21 @@ function SubjectManage() {
             renderRow={renderRow}
             data={subjects} // Pass the fetched Subjects data
             maxRow={10}
+            cbWidth="w-8/12"
           />
           {selectedSubject && (
-            <Modal isOpen={true} onClose={closeModal} className="py-12">
-              <h2 className="text-xl font-bold">
-                {selectedSubject.code + ' - '}{selectedSubject.name}
-              </h2>
+            <Modal
+              isOpen={true}
+              onClose={closeModal}
+              label={
+                <>
+                  {selectedSubject.code + " - "}
+                  {selectedSubject.name}
+                </>
+              }
+            >
               <div>
-                <div className="w-[900px] h-[420px] border-t border-t-gray-500 mt-5 py-2">
+                <div className="w-[900px] py-2">
                   <TextFieldGroup
                     name={selectedSubject.name}
                     credits={selectedSubject.credits}
@@ -357,7 +380,7 @@ function SubjectManage() {
                   Nhập/Xuất Excel
                 </>
               }
-              onClick={() => openModal('', 'excel')}
+              onClick={() => openModal("", "excel")}
             ></Button>
           </div>
           <FontGroup
@@ -388,7 +411,7 @@ function SubjectManage() {
               dataTemplate={dataTemplate}
               exportFileName="Danh sách môn học"
               exportFileNamePattern="Danh sách môn học mẫu để import"
-              sheetName='DSMH'
+              sheetName="DSMH"
               importExcelAPI={importExcelSubjectAPI}
               isReLoadTable={isReLoadTable}
               setIsReLoadTable={setIsReLoadTable}
@@ -399,16 +422,34 @@ function SubjectManage() {
         />
 
         {/* Xóa môn học */}
-        <Modal2 id={"denyConfirmModal"}
+        <Modal2
+          id={"denyConfirmModal"}
           width="max-w-xl"
           title={`Bạn muốn xóa môn học ${isSubject?.code}?`}
           content={<></>}
-          iconPopup={<FontAwesomeIcon icon={faCircleExclamation} className="text-yellow-600 w-24 h-24" />}
+          iconPopup={
+            <FontAwesomeIcon
+              icon={faCircleExclamation}
+              className="text-yellow-600 w-24 h-24"
+            />
+          }
           positionButton="center"
-          buttonCancel={<Button2 onClick={closeModal} hiddenParent="demoDate" variant="btn-secondary" type="button" size="text-sm px-6 py-3">Hủy</Button2>}
+          buttonCancel={
+            <Button2
+              onClick={closeModal}
+              hiddenParent="demoDate"
+              variant="btn-secondary"
+              type="button"
+              size="text-sm px-6 py-3"
+            >
+              Hủy
+            </Button2>
+          }
           buttonConfirm={
             <Button2
-              variant="btn-primary" type="button" size="text-sm px-6 py-3"
+              variant="btn-primary"
+              type="button"
+              size="text-sm px-6 py-3"
               onClick={handleDelete}
             >
               Xác Nhận
@@ -417,8 +458,7 @@ function SubjectManage() {
           isOpen={isModalOpenConfirm}
           onClose={closeModal}
           type="message"
-        >
-        </Modal2>
+        ></Modal2>
       </div>
     </Container>
   );

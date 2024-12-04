@@ -1,25 +1,15 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { clazz } from "./Teachingdays";
 import Table from "../../component/Table";
-import MiniMenu from "../../component/MiniMenu";
-import Accordion from "../../component/Accordion";
 import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleInfo,
-  faClipboardList,
-  faEllipsis,
-} from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { getClazzesByInstructor } from "../../api/clazzs.js";
 
 function TeachManage() {
   const navigate = useNavigate();
-  //Biến responsive
-  const [desktop, setDesktop] = useState(true);
-  const [mobile, setMobile] = useState(false);
 
   const headers = ["Ca", "Phòng", "Lớp", "Mã Môn", "Tên Môn", ""];
 
@@ -105,7 +95,7 @@ function TeachManage() {
       nameSelect: "2024",
       onChange: handleYearChange,
       value: selectedYear,
-      className: "mr-1 w-[200px] pt-4 md:pt-4",
+      className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
     },
     {
       options: [
@@ -116,14 +106,14 @@ function TeachManage() {
       nameSelect: "Spring",
       onChange: handleSemesterChange,
       value: selectedSemester,
-      className: "mr-1 w-[200px] pt-4 md:pt-4",
+      className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
     },
     {
       options: [{ value: 2, label: "Block II" }],
       nameSelect: "Block I",
       onChange: handleBlockChange,
       value: selectedBlock,
-      className: "mr-1 w-[200px] pt-4 md:pt-4",
+      className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
     },
   ];
 
@@ -136,8 +126,8 @@ function TeachManage() {
           showOptions={true}
           showSearch={true}
           showSelectBoxes={true}
-          searchClass="pr-20"
           numberSelectBox={selectBoxs}
+          showBtnEnd={true}
           headers={headers}
           renderRow={renderRow}
           data={clazzTeaching}

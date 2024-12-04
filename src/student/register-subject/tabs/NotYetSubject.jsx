@@ -23,7 +23,7 @@ function NotYetSubject() {
   ];
 
   const header1s = ["Mã môn", "Môn", "Lớp", "Ca", "Thứ", " "];
-
+  // call api khi chưa chọn bộ môn
   useEffect(() => {
     const fetchClazzByStudent = async () => {
       try {
@@ -159,9 +159,9 @@ function NotYetSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            searchClass="pr-20"
             showSelectBoxes={true}
             numberSelectBox={selectBoxs}
+            showBtnEnd={true}
             headers={headers}
             renderRow={renderRow}
             data={getclazz}

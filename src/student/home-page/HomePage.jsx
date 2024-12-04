@@ -47,7 +47,7 @@ function HomePage() {
   return (
     <Container>
       <TitleHeader title="SỰ KIỆN" />
-      <div className="p-1">
+      <div className="min-h-[700px]">
         {eventInfo.map((event) => (
           <div key={event.id} className={`w-1/2 md:w-1/4 p-4 inline-block`}>
             <button

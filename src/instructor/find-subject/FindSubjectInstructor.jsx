@@ -6,7 +6,11 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../../component/Modal";
 import TextField from "../../component/TextField";
 import TextArea from "../../component/TextArea";
-import { getAllSubject } from "../../api/Subject";
+import {
+  getAllSubject,
+  getAllSubjectBySpecializationIdAPI,
+} from "../../api/Subject";
+import { getAllSpecializationsAPI } from "../../api/Specialization.js";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 
@@ -15,53 +19,11 @@ function FindSubjectInstructor() {
     "Mã môn học",
     "Tên môn học",
     "Số tín chỉ",
+    "",
     "Giờ học",
     "Môn học trước",
     "",
   ];
-
-  // const subjects = [
-  //   {
-  //     id: 1,
-  //     code: "SOF301",
-  //     name: "Java1",
-  //     credit: 3,
-  //     hour: 90,
-  //     mission: "",
-  //     preview: "",
-  //     note: "",
-  //   },
-  //   {
-  //     id: 2,
-  //     code: "SOF302",
-  //     name: "Java2",
-  //     credit: 3,
-  //     hour: 90,
-  //     mission: "",
-  //     preview: "",
-  //     note: "",
-  //   },
-  //   {
-  //     id: 3,
-  //     code: "SOF303",
-  //     name: "Java3",
-  //     credit: 3,
-  //     hour: 90,
-  //     mission: "",
-  //     preview: "",
-  //     note: "",
-  //   },
-  //   {
-  //     id: 4,
-  //     code: "SOF304",
-  //     name: "Java4",
-  //     credit: 3,
-  //     hour: 90,
-  //     mission: "",
-  //     preview: "",
-  //     note: "",
-  //   },
-  // ];
 
   const renderRow = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
@@ -73,6 +35,7 @@ function FindSubjectInstructor() {
     <td key={`item-shift-${item.id}`} className="px-6 py-4">
       {item.credits}
     </td>,
+    <td key={`item-nan-${item.id}`} className="px-6 py-4"></td>,
     <td key={`item-date-${item.id}`} className="px-6 py-4">
       {item.total_hours}
     </td>,
@@ -82,10 +45,7 @@ function FindSubjectInstructor() {
     <td key={`item-menu-${item.id}`} className="px-6 py-4 ">
       <div className="flex justify-center w-full">
         <Button
-          onClick={() => {
-            openModal(item);
-            console.log(item);
-          }}
+          onClick={() => openModal(item)}
           label={
             <>
               <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
@@ -110,29 +70,92 @@ function FindSubjectInstructor() {
     }));
   };
 
-  // call API
-  const [subject, setSubject] = useState([]);
+  // GET API ALL SPECIALIZATION
+  const [cbSpecialization, setCbSpecialization] = useState([]);
   useEffect(() => {
-    getAllSubject()
+    getAllSpecializationsAPI()
       .then((response) => {
-        setSubject(response);
+        console.log("API response:", response);
+        if (Array.isArray(response)) {
+          setCbSpecialization(response);
+        } else {
+          console.error("API response is not an array:", response);
+        }
       })
       .catch((error) => {
-        console.error("Failed to fetch all subject:", error);
+        console.error("Failed to fetch all specializations:", error);
       });
   }, []);
+
+  const [selected, setSelected] = useState(null);
+  const handleChange = (event) => {
+    setSelected(event.target.value);
+  };
+
+  const optioncb = Array.isArray(cbSpecialization)
+    ? cbSpecialization.map((specialization) => ({
+        value: specialization.id,
+        label: specialization.name,
+      }))
+    : [];
+
+  const selectBoxs = [
+    {
+      options: optioncb,
+      nameSelect: "Bộ môn",
+      onChange: handleChange,
+      value: selected,
+      className: "mr-1 w-[200px] pt-4 md:pt-4",
+    },
+  ];
+
+  const [subject, setSubject] = useState([]);
+  const [listNull, setListNull] = useState(true);
+
+  // GET API ALL SUBJECT BY SPECIALIZATION ID
+  useEffect(() => {
+    if (selected) {
+      getAllSubjectBySpecializationIdAPI(selected)
+        .then((response) => {
+          if (response && response.data && response.data.length > 0) {
+            setSubject(response.data);
+            setListNull(false);
+          } else {
+            setSubject([]);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch subjects:", error);
+          setListNull(true);
+        });
+    }
+  }, [selected]);
+
+  // GET API ALL SUBJECT
+  useEffect(() => {
+    if (listNull) {
+      getAllSubject()
+        .then((response) => {
+          setSubject(response);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch all subjects:", error);
+        });
+    }
+  }, [listNull]);
 
   return (
     <Container>
       <TitleHeader title="DANH SÁCH MÔN" />
-      <div className="min-h-[600px]">
+      <div className="min-h-[700px]">
         <Table
           selectBoxName="date-range-filter"
           DefaultTable={true}
           showOptions={true}
           showSearch={true}
-          searchClass="pr-20"
-          showSelectBox={true}
+          showSelectBoxes={true}
+          numberSelectBox={selectBoxs}
+          showBtnEnd={true}
           headers={headers}
           renderRow={renderRow}
           data={subject}
@@ -216,4 +239,5 @@ function FindSubjectInstructor() {
     </Container>
   );
 }
+
 export default FindSubjectInstructor;

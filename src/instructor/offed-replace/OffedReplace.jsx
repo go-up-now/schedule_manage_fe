@@ -134,8 +134,8 @@ function OffedReplace() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            searchClass="pr-20"
             showSelectBox={true}
+            showBtnEnd={true}
             headers={headers}
             renderRow={renderRow}
             data={offdays}
