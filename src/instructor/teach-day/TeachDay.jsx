@@ -6,12 +6,13 @@ import MiniMenu from "../../component/MiniMenu";
 import Accordion from "../../component/Accordion";
 import Button from "../../component/Button";
 import { getTeacherSchedule } from "../../api/Teacher";
-import { addDays, format } from "date-fns";
+import { addDays, format, parseISO } from "date-fns";
 
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { cancelSchedule, getScheduleById } from "../../api/Schedule.js";
 import { toast } from "react-toastify";
+import { getRetakeSchedule } from "../../api/RetakeSchedule.js";
 
 function TeachDay() {
   const navigate = useNavigate();
@@ -52,7 +53,17 @@ function TeachDay() {
 
   // State management
   const [selectedDay, setSelectedDay] = useState(7); // Default to 7 days
-  const [teachDays, setTeachDays] = useState([]);
+  const [teach, setTeach] = useState([]);
+  const [retake, setRetake] = useState([]);
+
+  const updatedTeach = teach.map((item) => ({
+    ...item,
+    retakescheduleId: null,
+  }));
+  const teachDays = [...updatedTeach, ...retake];
+
+  //const [teachDays, setTeachDays] = useState([]);
+
   const [today] = useState(new Date()); // Today's date
   // Log the current date to verify it's correct
   //console.log("Current Date:", today);
@@ -70,7 +81,23 @@ function TeachDay() {
 
       getTeacherSchedule(formattedToday, formattedSelectedDate)
         .then((data) => {
-          setTeachDays(data);
+          setTeach(data);
+          //console.log("Fetched Teach Days:", data);
+        })
+        .catch((error) => {
+          console.error("Error fetching teach days:", error);
+        });
+    }
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (selectedDay) {
+      const selectedDate = addDays(today, selectedDay);
+      const formattedSelectedDate = format(selectedDate, "yyyy-MM-dd");
+
+      getRetakeSchedule(formattedToday, formattedSelectedDate)
+        .then((data) => {
+          setRetake(data);
           //console.log("Fetched Teach Days:", data);
         })
         .catch((error) => {
@@ -104,35 +131,6 @@ function TeachDay() {
     return acc;
   }, {});
 
-  //console.log("Grouped By Date:", groupedByDate);
-
-  // Hàm huỷ lịch dạy
-  // const handleCancelSchedule = (clazz) => {
-  //   const [schedule, setSchedule] = useState(null);
-
-  //   useEffect(() => {
-  //     const fetchSchedule = async () => {
-  //       const data = await getScheduleById(clazz.scheculeId);
-  //       setSchedule(data);
-  //     };
-  //     fetchSchedule();
-  //   }, [clazz.scheculeId]);
-
-  //   const request = {
-  //     schedule,
-  //   };
-  //   console.log("Request data:", request);
-  //   console.log("Class data:", clazz);
-
-  //   cancelSchedule(clazz.scheculeId, request)
-  //     .then((response) => {
-  //       console.log("Lịch dạy đã được huỷ thành công:", response);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Lỗi khi huỷ lịch dạy:", error);
-  //     });
-  // };
-
   // Update the handleCancelSchedule function
   const handleCancelSchedule = async (clazz) => {
     try {
@@ -158,14 +156,14 @@ function TeachDay() {
       toast.error("HUỶ THẤT BẠI");
     }
   };
-
+  console.log(teachDays);
   // Render the class information for each Ca
   const renderShiftId = (clazz) => {
     //console.log("Rendering Class:", clazz); // Log each class
     return clazz ? (
       <div className="w-24 h-22 flex flex-col items-start p-2 rounded-md shadow-inner border relative">
         <div className="w-full text-left">
-          <h3 className="text-[0.9rem] font-medium py-1">{clazz.room}</h3>
+          <h3 className="text-[0.9rem] font-medium py-1">{clazz.roomName}</h3>
           <h3 className="text-[0.8rem]">{clazz.code}</h3>
           <h3 className="text-[0.8rem] truncate">{clazz.subjectName}</h3>
           <h3 className="text-[0.8rem]">{clazz.subjectCode}</h3>
@@ -182,6 +180,7 @@ function TeachDay() {
               },
               {
                 text: "Huỷ lịch dạy",
+                disabled: clazz.retakescheduleId != null,
                 onClick: () => handleCancelSchedule(clazz),
               },
             ]}
@@ -216,10 +215,18 @@ function TeachDay() {
     ];
   };
 
-  const tableData = Object.entries(groupedByDate).map(([date, classes]) => ({
-    date,
-    classes,
-  }));
+  // const tableData = Object.entries(groupedByDate).map(([date, classes]) => ({
+  //   date,
+  //   classes,
+  // }));
+
+  // Chuyển đổi và sắp xếp các ngày trong tableData
+  const tableData = Object.entries(groupedByDate)
+    .map(([date, classes]) => ({
+      date,
+      classes,
+    }))
+    .sort((a, b) => parseISO(a.date) - parseISO(b.date)); // Sắp xếp theo ngày tăng dần
 
   //console.log("Table Data:", tableData);
   const thatDate = format(today, "dd-MM-yyyy");

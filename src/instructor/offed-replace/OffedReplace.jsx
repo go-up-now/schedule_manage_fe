@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Table from "../../component/Table";
 import Button from "../../component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { getScheduleStatusFalse } from "../../api/Schedule.js";
@@ -54,11 +54,21 @@ function OffedReplace() {
           }}
           label={
             <>
-              <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-              Đặt lịch
+              {item.isRetake == true ? (
+                <>
+                  <FontAwesomeIcon icon={faSquareCheck} className="mr-4" /> Đã
+                  đặt
+                </>
+              ) : (
+                <>
+                  {<FontAwesomeIcon icon={faCircleInfo} className="mr-2" />}
+                  Chưa bù
+                </>
+              )}
             </>
           }
           className="w-full md:w-[150px] flex items-center justify-center p-3 text-white "
+          disabled={item.isRetake}
         />
       </div>
     </td>,
@@ -102,6 +112,7 @@ function OffedReplace() {
             </>
           }
           className="w-full md:w-[150px] flex items-center justify-center p-3 text-white "
+          disabled={item.isRetake}
         />
       </div>
     </td>,
@@ -159,11 +170,7 @@ function OffedReplace() {
           className={"md:w-[50%]"}
           isOpen={true}
           onClose={closeModal}
-          label={`Đặt lịch bù ngày: ${
-            selectedDay.date
-              ? format(new Date(selectedDay.date), "dd-MM-yyyy")
-              : ""
-          } `}
+          label={`Đặt lịch bù lớp: ${selectedDay.clazzCode} `}
         >
           <div className=" mt-1 pt-2 pb-4 h-10/12 md:h-auto">
             <FieldGroup

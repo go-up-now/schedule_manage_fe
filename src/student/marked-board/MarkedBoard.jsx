@@ -3,21 +3,58 @@ import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { getAllStudyResult } from "../../api/StudyResult.js";
 import Accordion from "../../component/Accordion.jsx";
-import Button from "../../component/Button.jsx";
 import MarkedTable from "./MarksTable.jsx";
 import "./style.css";
+
 function MarkedBoard() {
-  //call api
+  // Call API
   const [studyResult, setStudyResult] = useState([]);
+  const [averageMark, setAverageMark] = useState(0);
+  const [credit, setCredits] = useState(0);
+  console.log(studyResult);
+
   useEffect(() => {
     getAllStudyResult()
       .then((data) => {
-        setStudyResult(data);
+        // Lọc ra các đối tượng có mark_average khác null
+        const validResults = data.filter((item) => item.mark_average !== null);
+
+        // Tính tổng và trung bình của các giá trị total_weighted_score hợp lệ
+        const total = validResults.reduce(
+          (sum, item) => sum + item.total_weighted_score,
+          0
+        );
+        const average =
+          validResults.length > 0 ? total / validResults.length : 0;
+        setAverageMark(Math.round(average * 10) / 10);
+
+        // Tính tổng tín chỉ cho các kết quả hợp lệ
+        const totalCredits = validResults.reduce(
+          (sum, item) => sum + item.credits,
+          0
+        );
+        setCredits(totalCredits);
+
+        // Logic sắp xếp
+        const semesterOrder = ["Spring", "Summer", "Fall"];
+        const sortedData = validResults.sort((a, b) => {
+          if (a.year !== b.year) {
+            return a.year - b.year; // Sắp xếp theo năm trước
+          } else {
+            return (
+              semesterOrder.indexOf(a.semester) -
+              semesterOrder.indexOf(b.semester)
+            ); // Sau đó theo thứ tự học kỳ
+          }
+        });
+
+        setStudyResult(sortedData);
       })
       .catch((error) => {
         console.error("Error fetching exam:", error);
       });
   }, []);
+
   console.log(studyResult);
 
   return (
@@ -40,9 +77,9 @@ function MarkedBoard() {
                     <tr>
                       <td>{item.subject_code}</td>
                       <td>{item.subject_name}</td>
-                      <td>{Math.round(item.marked_avg * 10) / 10}</td>
+                      <td>{Math.round(item.mark_average * 10) / 10}</td>
                       <td>
-                        {item.marked_avg < 5 ? (
+                        {item.mark_average < 5 ? (
                           <p className="text-red-500 font-bold">Failed</p>
                         ) : (
                           <p className="text-green-500 font-bold">Passed</p>
@@ -64,9 +101,9 @@ function MarkedBoard() {
                     <p className="font-medium text-sm">Điểm Trung Bình</p>
                   </div>
                   <div className="w-6/12 flex items-center border-b border-l border-r">
-                    <div className="w-full  text-center">
+                    <div className="w-full text-center">
                       <p className="font-medium text-sm">
-                        {Math.round(item.marked_avg * 10) / 10}
+                        {Math.round(item.mark_average * 10) / 10}
                       </p>
                     </div>
                   </div>
@@ -80,4 +117,5 @@ function MarkedBoard() {
     </>
   );
 }
+
 export default MarkedBoard;

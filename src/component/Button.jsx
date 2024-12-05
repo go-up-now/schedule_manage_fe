@@ -2,12 +2,20 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Button = ({ className = "", label, onClick, disabled = false, hidden = '' }) => {
+const Button = ({
+  className = "",
+  label,
+  onClick,
+  disabled = false,
+  hidden = "",
+}) => {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`rounded flex items-center bg-blue-500 text-black ${className} ${hidden}`}
+      className={`rounded flex items-center bg-blue-500 text-black ${className} ${hidden} ${
+        disabled ? "bg-gray-400 text-white" : ""
+      }`}
     >
       {label}
     </button>
