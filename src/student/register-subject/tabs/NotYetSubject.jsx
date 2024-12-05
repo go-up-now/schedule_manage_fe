@@ -22,7 +22,7 @@ function NotYetSubject() {
     " ",
   ];
 
-  const header1s = ["Mã môn", "Môn", "Lớp", "Ca", "Thứ", " "];
+  const header1s = ["Môn", "Lớp", "Ca", "Thứ", "Còn lại", " "];
   // call api khi chưa chọn bộ môn
   useEffect(() => {
     const fetchClazzByStudent = async () => {
@@ -87,9 +87,6 @@ function NotYetSubject() {
   ];
 
   const renderRow1 = (item) => [
-    <td key={`subject-code-${item.id}`} className="px-6 py-4">
-      {item.subjectCode}
-    </td>,
     <td key={`subject-name-${item.id}`} className="px-4 py-4">
       {item.subject_name}
     </td>,
@@ -102,6 +99,9 @@ function NotYetSubject() {
     <td key={`study-day-${item.id}`} className="px-4 py-4">
       {item.study_day}
     </td>,
+    <td key={`item-available-${item.id}`} className="px-6 py-4">
+      {item.quantity - item.amout}
+    </td>,
     <td key={`action-${item.id}`} className="px-6 py-4">
       <Button
         label="Đăng ký"
@@ -109,25 +109,6 @@ function NotYetSubject() {
         className="bg-white font-bold text-blue-600 hover:bg-white hover:text-blue-700"
       />
     </td>,
-  ];
-
-  const [selectedMajor, setSelectedMajor] = useState(null);
-
-  const handleMajorChange = (event) => {
-    setSelectedMajor(event.target.value);
-  };
-
-  const selectBoxs = [
-    {
-      options: [
-        { value: 1, label: "Công nghệ thông tin" },
-        { value: 2, label: "Lập trình web" },
-      ],
-      nameSelect: "Bộ môn",
-      onChange: handleMajorChange,
-      value: selectedMajor,
-      className: "mr-1 w-[200px] pt-4 md:pt-4",
-    },
   ];
 
   const [desktop, setDesktop] = useState(true);
@@ -159,8 +140,7 @@ function NotYetSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            showSelectBoxes={true}
-            numberSelectBox={selectBoxs}
+            showSelectBox={true}
             showBtnEnd={true}
             headers={headers}
             renderRow={renderRow}
@@ -175,8 +155,7 @@ function NotYetSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            showSelectBoxes={true}
-            numberSelectBox={selectBoxs}
+            showSelectBox={true}
             headers={header1s}
             renderRow={renderRow1}
             data={getclazz}

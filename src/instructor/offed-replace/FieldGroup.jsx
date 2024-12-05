@@ -1,55 +1,142 @@
 import TextField from "../../component/TextField";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SelectBox from "../../component/SelectBox";
 import Button from "../../component/Button";
+import { getAllShiftAvailableAPI } from "../../api/Shift.js";
+import { format } from "date-fns";
+import { getAllRoomAvailableAPI } from "../../api/rooms.js";
+import { createRetakeScheduleAPI } from "../../api/RetakeSchedule.js";
+import { toast } from "react-toastify";
 
 function FieldGroup({ thisDay, onFieldChange }) {
   const handleChange = (field) => (event) => {
     onFieldChange(field, event.target.value);
   };
-  const [selectedShift, setSelectedShift] = useState(1);
-  const options = [
-    { value: 1, label: "Ca 1" },
-    { value: 2, label: "Ca 2" },
-    { value: 3, label: "Ca 3" },
-    { value: 4, label: "Ca 4" },
-    { value: 5, label: "Ca 5" },
-    { value: 6, label: "Ca 6" },
-  ];
 
-  const optionRooms = [
-    { value: 1, label: "T101" },
-    { value: 2, label: "T102" },
-    { value: 3, label: "T103" },
-    { value: 4, label: "T104" },
-    { value: 5, label: "T105" },
-    { value: 6, label: "T106" },
-  ];
+  console.log(thisDay);
+  // GET API ALL Shift
+  const [cbShift, setCbShift] = useState([]);
+
+  const clazzId = thisDay.clazzId;
+  const date = format(new Date(thisDay.date), "yyyy-MM-dd");
+
+  useEffect(() => {
+    if (clazzId && date) {
+      getAllShiftAvailableAPI(clazzId, date)
+        .then((response) => {
+          console.log("API response:", response);
+          if (Array.isArray(response)) {
+            setCbShift(response);
+          } else {
+            console.error("API response is not an array:", response);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch all shifts:", error);
+        });
+    }
+  }, [clazzId, date]);
+
+  const [selectedShift, setSelectedShift] = useState(null);
+  const handleChangeShift = (event) => {
+    setSelectedShift(event.target.value);
+  };
+
+  const optioncb = Array.isArray(cbShift)
+    ? cbShift.map((shift) => ({
+        value: shift.id,
+        label: "Ca " + shift.id,
+      }))
+    : [];
+
+  const [cbRoom, setCbRoom] = useState([]);
+  const [buildingId, setBuildingId] = useState(1);
+
+  useEffect(() => {
+    if (buildingId && date) {
+      getAllRoomAvailableAPI(buildingId, date)
+        .then((response) => {
+          console.log("API response:", response);
+          if (Array.isArray(response)) {
+            setCbRoom(response);
+          } else {
+            console.error("API response is not an array:", response);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch all rooms:", error);
+        });
+    }
+  }, [buildingId, date]);
+
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const handleChangeRoom = (event) => {
+    setSelectedRoom(event.target.value);
+  };
+
+  const optionRoom = Array.isArray(cbRoom)
+    ? cbRoom.map((room) => ({
+        value: room.roomName,
+        label: room.roomName,
+      }))
+    : [];
+
+  const formData = {
+    date: date,
+    scheduleId: thisDay.scheduleId,
+    shiftId: selectedShift,
+    roomName: selectedRoom,
+  };
+  console.log("Form Data:", formData);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await createRetakeScheduleAPI(formData);
+      toast.success("ĐẶT LỊCH THÀNH CÔNG!");
+      console.log("Response:", response);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      toast.error("ĐẶT LỊCH THẤT BẠI");
+      if (error.response) {
+        console.error("Response error data:", error.response.data);
+        console.error("Response error status:", error.response.status);
+        console.error("Response error headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("Request error:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
+    }
+  };
+
   return (
     <>
-      <div className="w-full flex md:flex-row flex-col  mt-1">
+      <div className="w-full flex md:flex-row flex-col mt-1">
         <div className="flex-1">
           <TextField
             onField={true}
             label="Lớp"
             value={thisDay.clazzCode}
-            className=" pt-4 px-4"
+            className="pt-4 px-4"
             disabled={true}
           />
           <TextField
             type="date"
             onField={true}
             label="Ngày"
-            value={thisDay.date}
-            className=" pt-4 px-4"
+            value={date}
+            className="pt-4 px-4"
             onChange={handleChange("date")}
           />
           <SelectBox
-            options={options}
+            options={optioncb}
             name={"Ca"}
             nameSelect={"Chọn Ca"}
-            onChange={handleChange("shiftId")}
-            value={thisDay.shiftId}
+            onChange={handleChangeShift}
+            value={selectedShift}
             className={"mt-8 px-4"}
           />
         </div>
@@ -58,20 +145,20 @@ function FieldGroup({ thisDay, onFieldChange }) {
             onField={true}
             label="Môn"
             value={thisDay.subjectName}
-            className=" pt-4 px-4"
+            className="pt-4 px-4"
             disabled={true}
           />
           <SelectBox
-            options={optionRooms}
+            options={optionRoom}
             name={"Phòng"}
             nameSelect={"Chọn Phòng"}
-            onChange={handleChange("roomName")}
-            value={thisDay.roomName}
+            onChange={handleChangeRoom}
+            value={selectedRoom}
             className={"mt-9 px-4"}
           />
-          <div className=" pb-2 px-4 h-[80px] flex items-end text-red-500">
-            <p>Số lượng sinh viên không thể tham dự: </p>
-            <span className="ml-4 font-medium ">40</span>
+          <div className="pb-2 px-4 h-[80px] flex items-end text-red-500">
+            <p>Số lượng sinh viên không thể tham dự:</p>
+            <span className="ml-4 font-medium">40</span>
           </div>
         </div>
       </div>
@@ -79,6 +166,8 @@ function FieldGroup({ thisDay, onFieldChange }) {
         <Button
           label={"Đặt lịch"}
           className="w-full md:w-[150px] h-10 p-1 text-white justify-center"
+          onClick={handleSubmit}
+          disabled={thisDay.isRetake}
         />
       </div>
     </>

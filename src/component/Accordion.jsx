@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const AccordionItem = ({ title, content, isOpen, onClick, spanDiv = true }) => (
-  <div className="w-full flex flex-col items-center">
+  <div className="w-full flex flex-col items-center hover:cursor-pointer">
     <div
       className="w-full p-4 bg-gray-50 my-1 flex items-center"
       onClick={onClick}

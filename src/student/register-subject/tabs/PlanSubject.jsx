@@ -153,8 +153,7 @@ function PlanSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            showSelectBoxes={true}
-            numberSelectBox={selectBoxs}
+            showSelectBox={true}
             showBtnEnd={true}
             headers={headers}
             renderRow={renderRow}
@@ -170,8 +169,7 @@ function PlanSubject() {
             showOptions={true}
             showSearch={true}
             searchClass="pr-20"
-            showSelectBoxes={true}
-            numberSelectBox={selectBoxs}
+            showSelectBox={true}
             headers={header1s}
             renderRow={renderRow1}
             data={subjects}
