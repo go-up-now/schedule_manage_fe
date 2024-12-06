@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 function CheckAttendance() {
   const location = useLocation();
   const { item } = location.state || {};
-
+  console.log(item);
   const headers = ["Mã sinh viên", "Tên sinh viên", "Avatar", "Điểm danh"];
   const baseUrl =
     "https://res.cloudinary.com/dc06mgef2/image/upload/v1731903390/";
@@ -31,8 +31,8 @@ function CheckAttendance() {
 
   // get danh sách khi đã có dữ liệu attenced
   useEffect(() => {
-    if (item && item.clazzId && item.scheculeId) {
-      getAttendanceByClazzId(item.clazzId, item.scheculeId)
+    if (item && item.clazzId && item.scheduleId) {
+      getAttendanceByClazzId(item.clazzId, item.scheduleId)
         .then((data) => {
           if (data && data.length > 0) {
             const initializedData = data.map((student) => ({
@@ -62,6 +62,7 @@ function CheckAttendance() {
             isPresent: false,
           }));
           setStudentList(initializedData);
+          console.log(studentList);
         })
         .catch((error) => {
           console.error("Error fetching students:", error);
@@ -81,6 +82,7 @@ function CheckAttendance() {
     );
   };
 
+  console.log(studentList);
   // Table row rendering function
   const renderRow = (item) => [
     <td key={`item-code-${item.studentId}`} className="p-2 text-lg font-medium">
@@ -165,7 +167,7 @@ function CheckAttendance() {
   return (
     <Container>
       <TitleHeader
-        title={`Danh sách lớp id:${item.clazzId} - ${item.code} -${item.scheculeId}`}
+        title={`Danh sách lớp id:${item.clazzId} - ${item.code} -${item.scheduleId}`}
       />
       <div className="min-h-[600px]">
         <Table
