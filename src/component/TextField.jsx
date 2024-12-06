@@ -17,6 +17,7 @@ const TextField = ({
   className1 = "",
   min, // Add min prop
   max, // Add max prop
+  required = true,
 }) => {
   return (
     <div className={`${className}`}>
@@ -40,6 +41,7 @@ const TextField = ({
               type={type}
               id={id}
               name={name}
+              required={required}
               value={value}
               onChange={onChange}
               placeholder={placeholder}

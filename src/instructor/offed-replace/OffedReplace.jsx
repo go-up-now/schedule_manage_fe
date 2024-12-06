@@ -27,7 +27,7 @@ function OffedReplace() {
       });
   }, []);
 
-  const headers = ["Clazz", "Mã Môn", "Tên Môn", "Ngày", ""];
+  const headers = ["Lớp", "Mã Môn", "Tên Môn", "Ngày", ""];
 
   const renderRow = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
@@ -86,7 +86,7 @@ function OffedReplace() {
     }));
   };
 
-  const header1s = ["Clazz", "Tên Môn", "Ngày", ""];
+  const header1s = ["Lớp", "Tên Môn", "Ngày", ""];
 
   const renderRow1 = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
