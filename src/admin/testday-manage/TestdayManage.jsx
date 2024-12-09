@@ -7,23 +7,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faFileImport } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup";
 import TextFieldGroup from "./TextFieldGroup";
-import { major, semester, block, year } from "./DataSelect";
-import { getAllExambyBlockSemesterYearMajorID } from "../../api/examSchedule";
+import { getAllExambyBlockSemesterYearSpecialization } from "../../api/examSchedule";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import { getAllYearAPI } from "../../api/years.js";
+import { getAllBlocksAPI } from "../../api/Block.js";
+import { getAllSemesterAPI } from "../../api/Semester.js";
+import { getAllSpecializationsAPI } from "../../api/Specialization.js";
+
 function TestdayManage() {
-  const headers = ["Mã môn", "Mã lớp", "Ca", "Phòng", ""];
-  const [selectedExam, setSelectedExam] = useState(null);
-  const [editExam, setEditExam] = useState(null);
+  const headers = ["Mã môn", "Mã lớp", "Ngày", "Đợt", "Trạng thái", ""];
+
+  const [selectedExamSchedule, setSelectedExamSchedule] = useState(null);
+  const [editExamSchedule, setEditExamSchedule] = useState(null);
   const [isEditDisabled, setIsEditDisabled] = useState(false);
 
   const handleEditClick = useCallback((exam) => {
-    setEditExam(exam);
+    setEditExamSchedule(exam);
     setIsEditDisabled(true);
   }, []);
 
-  const openModal = (exam) => setSelectedExam(exam);
-  const closeModal = () => setSelectedExam(null);
+  const openModal = (exam) => setSelectedExamSchedule(exam);
+  const closeModal = () => setSelectedExamSchedule(null);
 
   const renderRow = (item) => [
     <td key={`item-subject_code-${item.id}`} className="border-b">
@@ -59,8 +64,9 @@ function TestdayManage() {
   ];
 
   // API Call
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedMajor, setSelectedMajor] = useState(null);
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
   const [selectedBlock, setSelectedBlock] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(null);
   const [exams, setExams] = useState([]);
@@ -68,8 +74,8 @@ function TestdayManage() {
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
   };
-  const handleMajorChange = (event) => {
-    setSelectedMajor(event.target.value);
+  const handleSpecializationChange = (event) => {
+    setSelectedSpecialization(event.target.value);
   };
   const handleBlockChange = (event) => {
     setSelectedBlock(event.target.value);
@@ -79,12 +85,17 @@ function TestdayManage() {
   };
 
   useEffect(() => {
-    if (selectedYear && selectedMajor && selectedBlock && selectedSemester) {
-      getAllExambyBlockSemesterYearMajorID(
+    if (
+      selectedYear &&
+      selectedSpecialization &&
+      selectedBlock &&
+      selectedSemester
+    ) {
+      getAllExambyBlockSemesterYearSpecialization(
         selectedBlock,
         selectedSemester,
         selectedYear,
-        selectedMajor // Ensure this parameter matches "specializationId" in the API call
+        selectedSpecialization // Ensure this parameter matches "specializationId" in the API call
       )
         .then((data) => {
           console.log("Fetched Exams: ", data); // Log the fetched data
@@ -94,36 +105,102 @@ function TestdayManage() {
           console.error("Error fetching exam schedules:", error);
         });
     }
-  }, [selectedYear, selectedMajor, selectedBlock, selectedSemester]);
+  }, [selectedYear, selectedSpecialization, selectedBlock, selectedSemester]);
+  console.log(exams);
+  // GET API VALUE CB BLOCK
+  const [blocks, setBlocks] = useState([]);
+  useEffect(() => {
+    const fetchBlocks = async () => {
+      const data = await getAllBlocksAPI();
+      const formattedBlocks = data.map((block) => ({
+        value: block.block,
+        label: block.block,
+      })); // Format data with value and label
+      setBlocks(formattedBlocks);
+    };
+
+    fetchBlocks(); // Call the API function
+  }, []);
+
+  // GET API VALUE CB SEMESTER
+  const [semesters, setSemesters] = useState([]);
+  useEffect(() => {
+    const fetchSemesters = async () => {
+      const data = await getAllSemesterAPI();
+      const formattedSemesters = data.map((semester) => ({
+        value: semester.semester,
+        label: semester.semester,
+      })); // Format data with value and label
+      setSemesters(formattedSemesters);
+    };
+
+    fetchSemesters(); // Call the API function
+  }, []);
+
+  // GET API VALUE CB YEAR
+  const [years, setYears] = useState([]);
+  useEffect(() => {
+    const fetchYears = async () => {
+      try {
+        const response = await getAllYearAPI();
+        const formattedYears = response.data
+          .map((year) => ({
+            value: year.year,
+            label: year.year.toString(),
+          }))
+          .reverse();
+        setYears(formattedYears);
+      } catch (error) {
+        console.error("Failed to fetch years:", error);
+      }
+    };
+
+    fetchYears();
+  }, []);
+
+  //GET API VALUE CB SPECIALIZATION
+  const [specializations, setSpecializations] = useState([]);
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const data = await getAllSpecializationsAPI(); // Fetch the specializations
+      const formattedSpecializations = data.map((specialization) => ({
+        value: specialization.id,
+        label: specialization.name,
+      })); // Format data with value and label
+      setSpecializations(formattedSpecializations);
+    };
+
+    fetchSpecializations(); // Call the API function
+  }, []);
 
   const selectBoxs = [
     {
-      options: year,
-      nameSelect: "Năm",
-      onChange: handleYearChange,
-      value: selectedYear,
-      className: "mr-1 w-full pt-4 md:pt-4",
-    },
-    {
-      options: block,
+      options: blocks,
       nameSelect: "Block",
       onChange: handleBlockChange,
       value: selectedBlock,
-      className: "w-full mr-1 pt-4 md:pt-4",
+      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
     },
     {
-      options: semester,
+      options: semesters,
       nameSelect: "Học kỳ",
       onChange: handleSemesterChange,
       value: selectedSemester,
-      className: "w-full pt-4 md:pt-4",
+      className: "w-full mr-1 md:w-[150px] pt-4 md:pt-4",
     },
     {
-      options: major,
-      nameSelect: "Ngành",
-      onChange: handleMajorChange,
-      value: selectedMajor,
-      className: "w-full ml-1 pt-4 md:pt-4",
+      options: years,
+      nameSelect: "Năm",
+      onChange: handleYearChange,
+      value: selectedYear,
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+    },
+    {
+      options: specializations,
+      nameSelect: "Bộ môn",
+      onChange: handleSpecializationChange,
+      value: selectedSpecialization,
+      className: "w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];
 
@@ -144,10 +221,10 @@ function TestdayManage() {
             maxRow={10}
             cbWidth="w-8/12"
           />
-          {selectedExam && (
+          {selectedExamSchedule && (
             <Modal isOpen={true} onClose={closeModal} className="">
               <h2 className="text-xl font-bold">
-                {selectedExam.name} - {selectedExam.code}
+                {selectedExamSchedule.name} - {selectedExamSchedule.code}
               </h2>
               <div>
                 <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
@@ -178,7 +255,7 @@ function TestdayManage() {
               }
             />
           </div>
-          <FontGroup exam={editExam} isEditDisabled={isEditDisabled} />
+          <FontGroup exam={editExamSchedule} isEditDisabled={isEditDisabled} />
         </div>
       </div>
     </Container>

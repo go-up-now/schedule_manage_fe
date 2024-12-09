@@ -220,21 +220,21 @@ function ClassManage() {
       nameSelect: "Năm học",
       onChange: handleYearChange,
       value: selectedYear,
-      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
     },
     {
       options: semesters,
       nameSelect: "Học kỳ",
       onChange: handleSemesterChange,
       value: selectedSemester,
-      className: "w-full md:w-[200px] ml-1 mr-1 pt-4 md:pt-4",
+      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
     },
     {
       options: blocks,
       nameSelect: "Block",
       onChange: handleBlockChange,
       value: selectedBlock,
-      className: "w-full md:w-[200px] ml-1 pt-4 md:pt-4",
+      className: "w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];
 

@@ -3,12 +3,6 @@ export const major = [
   { value: 2, label: "Kinh tế" },
 ];
 
-export const educationProgramId = [
-  { value: 1, label: "Phát triển phần mềm" },
-  { value: 2, label: "Phát triển phần mềm java" },
-  { value: 3, label: "Phát triển phần mềm C#" },
-];
-
 export const course = [
   { value: "18.1", label: "18.1" },
   { value: "18.2", label: "18.2" },
@@ -16,6 +10,11 @@ export const course = [
 ];
 
 export const gender = [
-  { value: 'true', label: "Nam" },
-  { value: 'false', label: "Nữ" },
+  { value: "true", label: "Nam" },
+  { value: "false", label: "Nữ" },
+];
+export const educationProgramId = [
+  { value: 1, label: "Phát triển phần mềm" },
+  { value: 2, label: "Phát triển phần mềm java" },
+  { value: 3, label: "Phát triển phần mềm C#" },
 ];

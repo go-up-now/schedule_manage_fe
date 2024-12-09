@@ -90,3 +90,13 @@ export const getAllStudentbyClazzId = (clazzId) => {
       throw error;
     });
 };
+
+export const getAllCourse = () => {
+  return axiosInstance
+    .get("/api/students/course")
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Failed to fetch all specializations:", error);
+      throw error;
+    });
+};

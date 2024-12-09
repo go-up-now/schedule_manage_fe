@@ -89,6 +89,7 @@ function SemesterManage() {
             renderRow={renderRow}
             data={exams}
             maxRow={10}
+            cbWidth="w-8/12"
           />
           {selectedExam && (
             <Modal

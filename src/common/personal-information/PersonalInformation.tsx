@@ -76,7 +76,7 @@ function PersonalInformation() {
     setOpenInfo(false);
     setOpenWork(true);
   };
-
+  console.log(setUser);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 1000) {
@@ -118,10 +118,9 @@ function PersonalInformation() {
       let response = await updateImageAPI(userInfo.id, formData);
       if (response && response.statusCode == 200) {
         handleImageAPI();
-        toast.success(response.message)
-      }
-      else {
-        toast.error('Cập nhật hình đại diện không thành công')
+        toast.success(response.message);
+      } else {
+        toast.error("Cập nhật hình đại diện không thành công");
       }
     } catch (error) {
       toast.error(error.data.message);
@@ -252,14 +251,16 @@ function PersonalInformation() {
         <div className="flex-1 p-6">
           <div className="w-full flex px-1">
             <Button
-              className={`flex-1 bg-white rounded-none hover:bg-blue-100 text-[18px] justify-center font-medium mr-1 ${openInfo ? "border-b-2 border-black" : ""
-                }`}
+              className={`flex-1 bg-white rounded-none hover:bg-blue-100 text-[18px] justify-center font-medium mr-1 ${
+                openInfo ? "border-b-2 border-black" : ""
+              }`}
               label={"Thông tin cá nhân"}
               onClick={handleOpenInfo}
             />
             <Button
-              className={`flex-1 bg-white rounded-none hover:bg-blue-100 text-[18px] justify-center font-medium ${openWork ? "border-b-2 border-black" : ""
-                }`}
+              className={`flex-1 bg-white rounded-none hover:bg-blue-100 text-[18px] justify-center font-medium ${
+                openWork ? "border-b-2 border-black" : ""
+              }`}
               label={"Thông tin học tập"}
               onClick={handleOpenWork}
             />
@@ -397,8 +398,9 @@ function PersonalInformation() {
         buttonConfirm={
           !isHidden && (
             <Button
-              className={`flex-1 rounded-none hover:bg-blue-100 text-[18px] justify-center font-medium ${openWork ? "border-b-2 border-black" : ""
-                }`}
+              className={`flex-1 rounded-none hover:bg-blue-100 text-[18px] justify-center font-medium ${
+                openWork ? "border-b-2 border-black" : ""
+              }`}
               label={
                 loading ? (
                   <>

@@ -8,16 +8,16 @@ import { faCaretDown, faFileImport } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-import { dates } from "./dates";
 import TextFieldGroup from "./TextFieldGroup";
-
-import { major, course } from "./DataSelect";
-import { getAllStudentbyCourseAndMajor } from "../../api/Student";
+import { getAllYearAPI } from "../../api/years.js";
+import { getAllByBlockAndSemesterAndYear } from "../../api/Schedule.js";
+import { getAllBlocksAPI } from "../../api/Block.js";
+import { getAllSemesterAPI } from "../../api/Semester.js";
+import { format } from "date-fns";
 
 function ScheduleManage() {
-  //const headers = ["Mã lớp", "Mã môn", "Mã GV", "Ngày", "Ca", "Phòng", ""];
+  const headers = ["Mã lớp", "Mã Môn", "Ngày", "Trạng thái", ""];
 
-  const headers = ["Code", "Name", "Gender", ""];
   const [selectedExam, setSelectedExam] = useState(null);
   const [editExam, setEditExam] = useState(null);
   const [isEditDisabled, setIsEditDisabled] = useState(false);
@@ -31,14 +31,18 @@ function ScheduleManage() {
   const closeModal = () => setSelectedExam(null);
 
   const renderRow = (item) => [
-    <td key={`item-code-${item.id}`} className=" border-b">
-      {item.code}
+    <td key={`item-clazz_code-${item.id}`} className=" border-b">
+      {item.clazz_code}
     </td>,
-    <td key={`item-name-${item.id}`} className=" border-b">
-      {item.lastName} {item.firstName}
+    <td key={`item-subject_code-${item.id}`} className=" border-b">
+      {item.subject_code}
     </td>,
     <td key={`item-gender-${item.id}`} className=" border-b">
-      {item.gender ? "Nam" : "Nữ"}
+      {format(item.date_schedule, "dd-MM-yyyy")}
+    </td>,
+    <td key={`item-status-${item.id}`} className=" border-b">
+      {item.status}
+      <input type="checkbox" checked={item.status} />
     </td>,
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
@@ -60,53 +64,115 @@ function ScheduleManage() {
     </td>,
   ];
 
-  // Call API
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [selectedMajor, setSelectedMajor] = useState(null);
-  const [exams, setExams] = useState([]);
+  // Call API useState<Number>(2024)
 
-  const handleCourseChange = (event) => {
-    setSelectedCourse(event.target.value);
+  const [selectedBlock, setSelectedBlock] = useState(null);
+  const [selectedSemester, setSelectedSemester] = useState(null);
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  const [schedules, setSchedules] = useState([]);
+  console.log(schedules);
+  const handleBlockChange = (event) => {
+    setSelectedBlock(event.target.value);
   };
 
-  const handleMajorChange = (event) => {
-    setSelectedMajor(event.target.value);
+  const handleSemesterChange = (event) => {
+    setSelectedSemester(event.target.value);
+  };
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
   };
 
   // Fetch exam whenever course or major is selected
   useEffect(() => {
-    if (selectedCourse && selectedMajor) {
-      getAllStudentbyCourseAndMajor(selectedCourse, selectedMajor)
+    if (selectedBlock && selectedSemester && selectedYear) {
+      getAllByBlockAndSemesterAndYear(
+        selectedBlock,
+        selectedSemester,
+        selectedYear
+      )
         .then((data) => {
-          setExams(data);
+          setSchedules(data);
         })
         .catch((error) => {
-          console.error("Error fetching exam:", error);
+          console.error("Error fetching schedule:", error);
         });
     }
-  }, [selectedCourse, selectedMajor]);
+  }, [selectedBlock, selectedSemester, selectedYear]);
+
+  // GET API VALUE CB BLOCK
+  const [blocks, setBlocks] = useState([]);
+  useEffect(() => {
+    const fetchBlocks = async () => {
+      const data = await getAllBlocksAPI();
+      const formattedBlocks = data.map((block) => ({
+        value: block.block,
+        label: block.block,
+      })); // Format data with value and label
+      setBlocks(formattedBlocks);
+    };
+
+    fetchBlocks(); // Call the API function
+  }, []);
+
+  // GET API VALUE CB SEMESTER
+  const [semesters, setSemesters] = useState([]);
+  useEffect(() => {
+    const fetchSemesters = async () => {
+      const data = await getAllSemesterAPI();
+      const formattedSemesters = data.map((semester) => ({
+        value: semester.semester,
+        label: semester.semester,
+      })); // Format data with value and label
+      setSemesters(formattedSemesters);
+    };
+
+    fetchSemesters(); // Call the API function
+  }, []);
+
+  // GET API VALUE CB YEAR
+  const [years, setYears] = useState([]);
+  useEffect(() => {
+    const fetchYears = async () => {
+      try {
+        const response = await getAllYearAPI();
+        const formattedYears = response.data
+          .map((year) => ({
+            value: year.year,
+            label: year.year.toString(),
+          }))
+          .reverse();
+        setYears(formattedYears);
+      } catch (error) {
+        console.error("Failed to fetch years:", error);
+      }
+    };
+
+    fetchYears();
+  }, []);
 
   const selectBoxs = [
     {
-      options: course,
-      nameSelect: "Khoá",
-      onChange: handleCourseChange,
-      value: selectedCourse,
-      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      options: blocks,
+      nameSelect: "Block",
+      onChange: handleBlockChange,
+      value: selectedBlock,
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
     },
     {
-      options: major,
-      nameSelect: "Chuyên ngành",
-      onChange: handleMajorChange,
-      value: selectedMajor,
-      className: "w-full md:w-[200px] ml-1 mr-1 pt-4 md:pt-4",
+      options: semesters,
+      nameSelect: "Kỳ",
+      onChange: handleSemesterChange,
+      value: selectedSemester,
+      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
     },
     {
-      options: major,
-      nameSelect: "Chuyên ngành",
-      onChange: handleMajorChange,
-      value: selectedMajor,
-      className: "w-full md:w-[200px] ml-1 pt-4 md:pt-4",
+      options: years,
+      nameSelect: "Năm",
+      onChange: handleYearChange,
+      value: selectedYear,
+      className: "w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];
 
@@ -123,7 +189,7 @@ function ScheduleManage() {
             numberSelectBox={selectBoxs}
             headers={headers}
             renderRow={renderRow}
-            data={exams} // Pass the fetched exam data
+            data={schedules}
             maxRow={10}
             cbWidth="w-8/12"
           />

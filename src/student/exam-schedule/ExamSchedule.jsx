@@ -148,7 +148,7 @@ function ExamSchedule() {
               headers={headers}
               renderRow={renderRow}
               data={examSchedule}
-              maxRow={5}
+              maxRow={10}
             />
           </>
         )}
@@ -162,7 +162,7 @@ function ExamSchedule() {
               headers={header1s}
               renderRow={renderRow1}
               data={examSchedule}
-              maxRow={5}
+              maxRow={10}
             />
           </>
         )}
