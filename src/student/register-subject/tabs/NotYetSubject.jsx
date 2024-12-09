@@ -145,7 +145,7 @@ function NotYetSubject() {
             headers={headers}
             renderRow={renderRow}
             data={getclazz}
-            maxRow={5}
+            maxRow={10}
           />
         </>
       )}

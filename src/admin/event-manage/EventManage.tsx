@@ -146,7 +146,7 @@ function EventManage() {
       nameSelect: "Khu vực",
       onChange: handleAreaChange,
       value: selectedArea,
-      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];
 

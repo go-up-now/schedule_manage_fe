@@ -13,7 +13,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup.tsx";
 import TextFieldGroup from "./TextFieldGroup.jsx";
-import { major, course } from "./DataSelect.js";
 import {
   getAllStudentbyCourseAndMajor,
   createStudentAPI,
@@ -32,6 +31,8 @@ import UploadExcelModal from "../../utils/UpLoadExcel.tsx";
 import { useDispatch } from "react-redux";
 import { setCourse } from "../../reducers/courseSlice.tsx";
 import { setMajor } from "../../reducers/majorSlice.tsx";
+import { getAllSpecializationsAPI } from "../../api/Specialization.js";
+import { getAllCourse } from "../../api/Student.js";
 
 interface Student {
   id: number;
@@ -70,12 +71,40 @@ function StudentManage() {
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const [isStudent, setIsStudent] = useState<Student | null>(null);
   const [isReLoadTable, setIsReLoadTable] = useState(false);
+
+  const [specializations, setSpecializations] = useState([]);
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const data = await getAllSpecializationsAPI(); // Fetch the specializations
+      const formattedSpecializations = data.map((specialization) => ({
+        value: specialization.id,
+        label: specialization.name,
+      })); // Format data with value and label
+      setSpecializations(formattedSpecializations);
+    };
+
+    fetchSpecializations(); // Call the API function
+  }, []);
+
+  const [courses, setCourses] = useState([]);
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const data = await getAllCourse(); // Fetch the Courses
+      const formattedCourses = data.map((course) => ({
+        value: course.course,
+        label: course.course,
+      })); // Format data with value and label
+      setCourses(formattedCourses);
+    };
+
+    fetchCourses(); // Call the API function
+  }, []);
+
   // Call API
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedMajor, setSelectedMajor] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedMajor, setSelectedMajor] = useState(null);
   const [students, setStudents] = useState<Student[]>([]);
   const dispatch = useDispatch();
-
   const handleEditClick = useCallback((student) => {
     setEditStudent(student);
     setIsEditDisabled(true);
@@ -151,24 +180,24 @@ function StudentManage() {
   };
 
   // Tìm giá trị course lớn nhất trong options
-  const getMaxValue = () => {
-    return course
-      .reduce((max, option) => {
-        const currentValue = parseFloat(option.value); // Chuyển giá trị về kiểu số
-        return currentValue > max ? currentValue : max;
-      }, Number.MIN_VALUE)
-      .toString(); // Đổi lại thành chuỗi
-  };
+  // const getMaxValue = () => {
+  //   return course
+  //     .reduce((max, option) => {
+  //       const currentValue = parseFloat(option.value); // Chuyển giá trị về kiểu số
+  //       return currentValue > max ? currentValue : max;
+  //     }, Number.MIN_VALUE)
+  //     .toString(); // Đổi lại thành chuỗi
+  // };
 
-  useEffect(() => {
-    let courseMax = getMaxValue();
-    setSelectedCourse(courseMax); // Đặt giá trị lớn nhất làm mặc định
-    dispatch(
-      setCourse({
-        course: courseMax,
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   let courseMax = getMaxValue();
+  //   setSelectedCourse(courseMax); // Đặt giá trị lớn nhất làm mặc định
+  //   dispatch(
+  //     setCourse({
+  //       course: courseMax,
+  //     })
+  //   );
+  // }, []);
 
   // Fetch students whenever course or major is selected
   useEffect(() => {
@@ -182,21 +211,22 @@ function StudentManage() {
         });
     }
   }, [selectedCourse, selectedMajor, isReLoadTable]);
-
   const selectBoxs = [
     {
-      options: course,
+      options: courses,
       nameSelect: "Khoá",
       onChange: handleCourseChange,
       value: selectedCourse,
-      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      nameSelectValue: null,
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
     },
     {
-      options: major,
-      nameSelect: "Chuyên ngành",
+      options: specializations,
+      nameSelect: "Bộ môn",
       onChange: handleMajorChange,
       value: selectedMajor,
-      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      nameSelectValue: null,
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];
 
@@ -451,6 +481,8 @@ function StudentManage() {
             loading={loading}
             setEditStudent={setEditStudent}
             setIsEditDisabled={setIsEditDisabled}
+            specialization={specializations}
+            courses={courses}
           />
           <ModalConfirm
             isOpen={isConfirmOpen}

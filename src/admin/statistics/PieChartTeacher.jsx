@@ -2,12 +2,11 @@ import * as React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useDrawingArea } from "@mui/x-charts/hooks";
 import { styled } from "@mui/material/styles";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPercent } from "@fortawesome/free-solid-svg-icons";
 const data = [
-  { value: 5, label: "Đậu" },
-  { value: 10, label: "Rớt" },
-  { value: 15, label: "Học lại" },
-  { value: 20, label: "Thi Lại" },
+  { value: 60, label: "Học viên", color: "blue" },
+  { value: 40, label: "Giảng viên", color: "orange" },
 ];
 
 const size = {
@@ -20,6 +19,7 @@ const StyledText = styled("text")(({ theme }) => ({
   textAnchor: "middle",
   dominantBaseline: "central",
   fontSize: 20,
+  fontWeight: "bold",
 }));
 
 function PieCenterLabel({ children }) {
@@ -33,8 +33,8 @@ function PieCenterLabel({ children }) {
 
 export default function PieChartTeacher() {
   return (
-    <PieChart series={[{ data, innerRadius: 80 }]} {...size}>
-      <PieCenterLabel>Center label</PieCenterLabel>
+    <PieChart series={[{ data, innerRadius: 50 }]} {...size}>
+      <PieCenterLabel>%</PieCenterLabel>
     </PieChart>
   );
 }

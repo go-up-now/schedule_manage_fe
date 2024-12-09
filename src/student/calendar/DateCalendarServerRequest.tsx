@@ -7,20 +7,21 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { getRoleFromToken } from "../../api/DecodeToken";
 import {
   faStar,
-  faBook,
-  faCalendarPlus,
-  faClock,
-  faFloppyDisk,
-  faLocationDot,
+  faBookmark,
   faPenToSquare,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { toast } from "react-toastify";
 import Radio from "../../component/Radio";
-import { getNoteByDayAPI, createNoteAPI } from "../../api/Note.js";
+import {
+  getNoteByDayAPI,
+  createNoteAPI,
+  deleteNoteAPI,
+} from "../../api/Note.js";
+import { getStudentInfo } from "../../api/Student.js";
 import NoteForm from "./NoteForm.jsx";
 
 function ServerDay(
@@ -80,11 +81,6 @@ export default function DateCalendarServerRequest() {
     setValueYear(newValue.format("YYYY"));
   };
 
-  console.log(value);
-  console.log(valueDay);
-  console.log(valueMonth);
-  console.log(valueYear);
-
   //CALL API NOTE BY DAY,MONTH,YEAR
   const [notes, setNotes] = useState([]);
 
@@ -99,23 +95,41 @@ export default function DateCalendarServerRequest() {
         });
     }
   }, [valueDay, valueMonth, valueYear]);
-
   console.log(notes);
+  const [studentInfo, setStudentInfo] = useState([]);
 
-  // THAO TÁC edit delete
+  useEffect(() => {
+    getStudentInfo()
+      .then((response) => {
+        setStudentInfo(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch subjects:", error);
+      });
+  }, []);
+
+  // THAO TÁC CẬP NHẬT, XOÁ GHI CHÚ
   // Inside DateCalendarServerRequest component
 
   const [selectedNote, setSelectedNote] = useState(null);
+
   const handleEdit = (note) => {
     // Set the selected note for editing
     setSelectedNote(note);
   };
 
-  const handleDelete = (noteId) => {
-    // Implement your delete logic here (e.g., call an API to delete the note)
-    console.log("Deleting note with ID:", noteId);
+  const handleDelete = async (noteId) => {
+    try {
+      const response = await deleteNoteAPI(noteId); // Call delete API
+      toast.success("Ghi chú đã được xóa thành công!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      toast.error("Xóa ghi chú không thành công!");
+      console.error("Error deleting note:", error);
+    }
   };
-
   return (
     <div className={`flex flex-col md:flex-row justify-between `}>
       <div className="flex flex-col md:w-5/12 w-full">
@@ -139,18 +153,40 @@ export default function DateCalendarServerRequest() {
           </LocalizationProvider>
         </div>
         <div className="w-full px-4">
-          <div className="w-full max-h-[280px] mt-2 rounded-lg p-4 px-5 overflow-y-scroll no-scrollbar">
+          <div className="w-full max-h-[220px] mt-2 rounded-lg p-4 px-5 overflow-y-scroll no-scrollbar">
             {notes.map((note) => (
               <div className="w-full p-2 my-2 flex border rounded-lg shadow-sm">
                 <div className="w-11/12 px-2">
-                  <p className="font-medium">{note.name_note_type}</p>
+                  <p className="font-medium">
+                    {note.note_type_id == 2 ? (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faBookmark}
+                          className="mr-2"
+                          className="text-blue-500 ml-1 mr-1"
+                        />
+                      </>
+                    ) : note.note_type_id == 1 ? (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faStar}
+                          className="mr-2"
+                          className="text-[#Ffd700] mr-1"
+                        />
+                      </>
+                    ) : (
+                      " "
+                    )}{" "}
+                    {note.content_note}
+                  </p>
                   <ul>
-                    <li>{note.content_note}</li>
                     <li>
-                      Thời gian:
-                      {note.time_note}
+                      Thời gian: <span className="ml-1">{note.time_note}</span>
                     </li>
-                    <li>Địa điểm: {note.location_note}</li>
+                    <li>
+                      Địa điểm:{" "}
+                      <span className="ml-2">{note.location_note}</span>
+                    </li>
                   </ul>
                 </div>
                 <div className="w-2/12 flex items-center justify-end">
@@ -163,7 +199,7 @@ export default function DateCalendarServerRequest() {
                     <FontAwesomeIcon
                       icon={faTrashCan}
                       className="text-[#ff0000da] px-2 mt-2 cursor-pointer"
-                      onClick={() => handleDelete(note.id)}
+                      onClick={() => handleDelete(note.note_id)}
                     />
                   </div>
                 </div>
@@ -176,8 +212,8 @@ export default function DateCalendarServerRequest() {
         <NoteForm
           valueMonth={valueMonth}
           valueYear={valueYear}
-          selectedNote={selectedNote}
-          setSelectedNote={setSelectedNote}
+          user={studentInfo}
+          selectNotes={selectedNote}
         />
       </div>
     </div>

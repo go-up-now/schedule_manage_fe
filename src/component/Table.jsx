@@ -26,6 +26,7 @@ function Table({
   showBtnEnd = false,
   btnEnd = [],
   cbWidth = "w-4/12",
+  StickyHeader = false,
 }) {
   const [filteredData, setFilteredData] = useState(data);
   const [currentPage, setCurrentPage] = useState(0);
@@ -157,6 +158,7 @@ function Table({
                     value={selectBox.value}
                     className={selectBox.className}
                     optionNameSelect={selectBox.optionNameSelect}
+                    avaiableNameSelect={selectBox.avaiableNameSelect}
                   />
                 ))}
               </div>
@@ -199,8 +201,10 @@ function Table({
       </div>
 
       <table className={`w-full text-xs text-center rtl:text-left`}>
-        <thead className="border bg-blue-50">
-          <tr className="">
+        <thead
+          className={`border bg-blue-50 ${StickyHeader ? "sticky top-0" : ""}`}
+        >
+          <tr>
             <th key="STT" className="px-2 py-4">
               STT
             </th>
@@ -211,6 +215,7 @@ function Table({
             ))}
           </tr>
         </thead>
+
         <tbody className="">
           {currentData.map((item, index) => (
             <tr key={index} className="border">

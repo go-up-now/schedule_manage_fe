@@ -12,125 +12,117 @@ import PieChartTeacher from "./PieChartTeacher";
 import LineChart from "./LineChart";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-
+import Table from "../../component/Table.jsx";
+import BiaxialLineChart from "./BiaxialLineChart.jsx";
 function Statistic() {
-  const boxInfos = [
+  const statistics = [
     {
-      name: "Số lượng lớp đã mở",
-      icon: faSchool,
-      value: 5690,
+      year: 2024,
+      student: 12345,
+      instructor: 12345,
+      clazz: 123,
+      pass: 1234,
+      fail: 987,
     },
     {
-      name: "Số lượng giảng viên",
-      icon: faChalkboardUser,
-      value: 1250,
+      year: 2024,
+      student: 12345,
+      instructor: 12345,
+      clazz: 123,
+      pass: 1234,
+      fail: 987,
     },
     {
-      name: "Số lượng học viên",
-      icon: faPeopleGroup,
-      value: 76190,
+      year: 2024,
+      student: 12345,
+      instructor: 12345,
+      clazz: 123,
+      pass: 1234,
+      fail: 987,
     },
     {
-      name: "Học viên pass môn",
-      icon: faGraduationCap,
-      value: 66320,
+      year: 2024,
+      student: 12345,
+      instructor: 12345,
+      clazz: 123,
+      pass: 1234,
+      fail: 987,
     },
     {
-      name: "Học viên fail môn",
-      icon: faF,
-      value: 9870,
+      year: 2024,
+      student: 12345,
+      instructor: 12345,
+      clazz: 123,
+      pass: 1234,
+      fail: 987,
+    },
+    {
+      year: 2024,
+      student: 12345,
+      instructor: 12345,
+      clazz: 123,
+      pass: 1234,
+      fail: 987,
     },
   ];
 
-  const [flexCol, setFlexCol] = useState("");
-  const [flexWrap, setFlexWrap] = useState("w-full justify-between");
+  const headers = [
+    "Năm",
+    "Học viên",
+    "Giảng viên",
+    "Lớp",
+    "Pass môn",
+    "Fail môn",
+  ];
 
-  const [desktop, setDesktop] = useState(true);
-  const [mobile, setMobile] = useState(false);
+  const renderRow = (item) => [
+    <td key={`item-year-${item.id}`} className=" border-b">
+      {item.year}
+    </td>,
+    <td key={`item-student-${item.id}`} className=" border-b">
+      {item.student}
+    </td>,
+    <td key={`item-instructor-${item.id}`} className=" border-b">
+      {item.instructor}
+    </td>,
+    <td key={`item-clazz-${item.id}`} className=" border-b">
+      {item.clazz}
+    </td>,
+    <td key={`item-pass-${item.id}`} className=" border-b">
+      {item.pass}
+    </td>,
+    <td key={`item-fail-${item.id}`} className=" border-b">
+      {item.fail}
+    </td>,
+  ];
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 1024) {
-        setFlexCol("flex-col items-center");
-        setFlexWrap("w-full flex-col");
-        setDesktop(false);
-        setMobile(true);
-      } else {
-        setFlexCol("");
-        setFlexWrap("w-full justify-between");
-        setDesktop(true);
-        setMobile(false);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    // Kiểm tra kích thước màn hình khi component được mount
-    handleResize();
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [flexCol, flexWrap, desktop, mobile]);
+  const row = statistics.length;
 
   return (
     <Container>
       <TitleHeader title="THỐNG KÊ" />
-      <div className="w-full">
-        <div className={`p-2 ${flexCol}`}>
-          {desktop && (
-            <div className="flex justify-between">
-              {boxInfos.map((box, index) => (
-                <div
-                  key={index}
-                  style={{ width: `calc(100% / ${boxInfos.length})` }}
-                  className={`flex-1 p-4`}
-                >
-                  <div className="border rounded-md">
-                    <div className="flex items-center p-6 justify-between my-2">
-                      <FontAwesomeIcon
-                        className="w-14 h-14"
-                        icon={box.icon}
-                        size="xl"
-                      />
-                      <span className="text-lg font-medium">{box.value}</span>
-                    </div>
-                    <div className="font-medium flex justify-center p-2 my-2">
-                      {box.name}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          {mobile && (
-            <div className="">
-              {boxInfos.map((box, index) => (
-                <div key={index} className={`mb-1`}>
-                  <div className="border rounded-md w-full flex items-center justify-between p-2">
-                    <FontAwesomeIcon
-                      className="w-12 h-12"
-                      icon={box.icon}
-                      size="xl"
-                    />
-                    <span className="text-lg font-medium">{box.value}</span>
-                    {box.name}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+      <div className="w-full mt-2">
+        <div
+          className={`max-h-[245px] overflow-y-scroll no-scrollbar relative`}
+        >
+          <Table
+            DefaultTable={true}
+            headers={headers}
+            renderRow={renderRow}
+            showTurnPage={false}
+            data={statistics}
+            maxRow={row}
+            StickyHeader={true}
+          />
         </div>
 
-        <div className={`flex h-full items-end ${flexCol}`}>
-          <LineChart className="flex-1 h-full items-end" />
+        <div className={`flex mt-4`}>
+          <div className="w-7/12 h-full">
+            <BiaxialLineChart />
+          </div>
 
-          <div className="flex-col flex-1">
-            <div className="p-2">
-              <div className="">
-                <PieChartTeacher className="w-2/6" />
-              </div>
-              <div>
-                <BarCharts className="" />
-              </div>
-            </div>
+          <div className="w-5/12 flex items-center">
+            <PieChartTeacher />
           </div>
         </div>
       </div>

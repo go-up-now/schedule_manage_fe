@@ -66,8 +66,22 @@ function SubjectManage() {
   const [isReLoadTable, setIsReLoadTable] = useState(false);
   const [specialization, setSpecialization] = useState([]);
   // Call API
-  const [selectedSpecialization, setSelectedSpecialization] = useState("1");
+  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+
+  const [specializations, setSpecializations] = useState([]);
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const data = await getAllSpecializationsAPI(); // Fetch the specializations
+      const formattedSpecializations = data.map((specialization) => ({
+        value: specialization.id,
+        label: specialization.name,
+      })); // Format data with value and label
+      setSpecializations(formattedSpecializations);
+    };
+
+    fetchSpecializations(); // Call the API function
+  }, []);
 
   const handleEditClick = useCallback((subject) => {
     setEditSubject(subject);
@@ -147,11 +161,11 @@ function SubjectManage() {
 
   const selectBoxs = [
     {
-      options: specialization ? specialization : specializationOption,
+      options: specializations,
       nameSelect: "Bộ môn",
       onChange: handleSpecializationChange,
       value: selectedSpecialization,
-      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];
 
@@ -390,7 +404,7 @@ function SubjectManage() {
             loading={loading}
             setEditSubject={setEditSubject}
             setIsEditDisabled={setIsEditDisabled}
-            specialization={specialization}
+            specialization={specializations}
           />
           <ModalConfirm
             isOpen={isConfirmOpen}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SelectBox from "../../component/SelectBox";
 import TextField from "../../component/TextField";
 import Button from "../../component/Button";
-import { major, course, gender, educationProgramId } from "./DataSelect";
+import { gender, educationProgramId } from "./DataSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faPlus, faWrench } from "@fortawesome/free-solid-svg-icons";
 import * as Yup from "yup";
@@ -17,6 +17,7 @@ interface FontGroupProps {
   loading?: boolean;
   setEditStudent;
   setIsEditDisabled;
+  specialization;
 }
 
 // Xác thực sinh viên
@@ -55,17 +56,18 @@ const FontGroup: React.FC<FontGroupProps> = ({
   loading = false,
   setEditStudent,
   setIsEditDisabled,
+  specialization,
 }) => {
   const [areSelectBoxesDisabled, setAreSelectBoxesDisabled] = useState(false);
-
+  console.log(specialization);
   useEffect(() => {
     setAreSelectBoxesDisabled(isEditDisabled);
   }, [isEditDisabled]);
 
   const defaultValues = {
     id: 0,
-    majorId: "1",
-    course: "18.3",
+    majorId: "",
+    course: "",
     code: "",
     lastName: "",
     firstName: "",
@@ -91,7 +93,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
     <div className="px-2 pt-1 ">
       <div className="pt-2 mb-2">
         <SelectBox
-          options={major}
+          options={specialization}
           nameSelect="Chuyên Ngành"
           disable={areSelectBoxesDisabled}
           className1={`w-full ${
@@ -106,18 +108,15 @@ const FontGroup: React.FC<FontGroupProps> = ({
           <div className="text-red-500">{formik.errors.majorId as string}</div>
         )}
       </div>
-      <div className="pt-4 mb-2">
-        <SelectBox
-          options={course}
-          nameSelect="Khoá"
-          disable={areSelectBoxesDisabled}
+      <div className="mb-2">
+        <TextField
+          onField={true}
+          placeholder="Khoá"
           className1={`w-full ${
             formik.touched.course && formik.errors.course && "border-red-500"
           }`}
-          onChange={(value) =>
-            formik.setFieldValue("course", value.target.value)
-          }
-          value={formik.values.course || undefined}
+          disabled={areSelectBoxesDisabled}
+          {...formik.getFieldProps("course")}
         />
         {formik.errors.course && formik.touched.course && (
           <div className="text-red-500">{formik.errors.course as string}</div>

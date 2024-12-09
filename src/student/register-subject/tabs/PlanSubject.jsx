@@ -158,7 +158,7 @@ function PlanSubject() {
             headers={headers}
             renderRow={renderRow}
             data={subjects}
-            maxRow={5}
+            maxRow={10}
           />
         </>
       )}

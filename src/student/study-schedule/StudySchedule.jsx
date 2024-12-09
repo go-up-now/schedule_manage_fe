@@ -142,7 +142,7 @@ function StudySchedule() {
             headers={headers}
             renderRow={renderRow}
             data={scheduleData}
-            maxRow={5}
+            maxRow={10}
           />
         )}
         {mobile && (
@@ -154,7 +154,7 @@ function StudySchedule() {
             headers={header1s}
             renderRow={renderRow1}
             data={scheduleData}
-            maxRow={5}
+            maxRow={10}
           />
         )}
       </div>

@@ -73,8 +73,22 @@ function InstructorManage() {
   const [isInstructor, setIsInstructor] = useState<Instructor | null>(null);
   const [isReLoadTable, setIsReLoadTable] = useState(false);
   const [specialization, setSpecialization] = useState([]);
+
+  const [specializations, setSpecializations] = useState([]);
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const data = await getAllSpecializationsAPI(); // Fetch the specializations
+      const formattedSpecializations = data.map((specialization) => ({
+        value: specialization.id,
+        label: specialization.name,
+      })); // Format data with value and label
+      setSpecializations(formattedSpecializations);
+    };
+
+    fetchSpecializations(); // Call the API function
+  }, []);
   // Call API
-  const [selectedSpecialization, setSelectedSpecialization] = useState("1");
+  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
   const [instructors, setInstructors] = useState<Instructor[]>([]);
 
   const handleEditClick = useCallback((Instructor) => {
@@ -158,11 +172,11 @@ function InstructorManage() {
 
   const selectBoxs = [
     {
-      options: specialization ? specialization : specializationOption,
+      options: specializations,
       nameSelect: "Bộ môn",
       onChange: handleSpecializationChange,
       value: selectedSpecialization,
-      className: "mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];
 
@@ -414,7 +428,7 @@ function InstructorManage() {
             loading={loading}
             setEditInstructor={setEditInstructor}
             setIsEditDisabled={setIsEditDisabled}
-            specialization={specialization}
+            specialization={specializations}
           />
           <ModalConfirm
             isOpen={isConfirmOpen}

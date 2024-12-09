@@ -49,3 +49,21 @@ export const getScheduleStatusFalse = () => {
       throw error;
     });
 };
+
+export const getAllByBlockAndSemesterAndYear = (block, semester, year) => {
+  return axiosInstance
+    .get(`/api/schedules/getByBlockSemesterYear/admin`, {
+      params: {
+        block: block,
+        semester: semester,
+        year: year,
+      },
+    })
+    .then((response) => {
+      return response.data; // Return response data directly
+    })
+    .catch((error) => {
+      console.error(`Lỗi khi lấy ds sách lịch học:`, error);
+      throw error;
+    });
+};
