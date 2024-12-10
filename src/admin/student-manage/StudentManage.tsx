@@ -386,7 +386,7 @@ function StudentManage() {
       code: "PS14120", // Lấy mã chương trình học
       first_name: "Thanh",
       last_name: "Nguyễn Trung",
-      birthday: "02-02-2000",
+      birthday: new Date("02-02-2000"),
       gender: "Nam",
       address: "Ho Chi Minh City",
       email: "1@gmail.com",
@@ -395,7 +395,7 @@ function StudentManage() {
       course: "18.1",
       major: "Phát Triển Phầm Mềm",
       semester: "Spring",
-      year: "2024",
+      year: 2024,
       education_program: "Chương Trinh Đào Tạo: Phát Triển Phần Mềm",
     },
     {
@@ -403,7 +403,7 @@ function StudentManage() {
       code: "PS14121", // Lấy mã chương trình học
       first_name: "Thanh",
       last_name: "Phan Thị",
-      birthday: "02-02-2002",
+      birthday: new Date('02-02-2002'),
       gender: "Nữ",
       address: "Ho Chi Minh City",
       email: "2@gmail.com",
@@ -412,7 +412,7 @@ function StudentManage() {
       course: "18.3",
       major: "Phát Triển Phầm Mềm",
       semester: "Spring",
-      year: "2024",
+      year: 2024,
       education_program: "Chương Trinh Đào Tạo: Phát Triển Phần Mềm",
     },
   ];

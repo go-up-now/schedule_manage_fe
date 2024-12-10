@@ -178,7 +178,7 @@ function SubjectManage() {
       total_hours: editSubject ? editSubject.total_hours : "",
       mission: editSubject ? editSubject.mission : "",
       note: editSubject ? editSubject.note : "",
-      requiredId: editSubject ? editSubject.requiredId : "0",
+      requiredId: editSubject ? (editSubject.requiredId ? editSubject.requiredId : '0') : "0",
       description: editSubject ? editSubject.description : "",
       specializationId: editSubject ? editSubject.specializationId : "1",
     },
@@ -235,9 +235,9 @@ function SubjectManage() {
       values.id === 0
         ? openConfirm(action, `Bạn có chắc muốn thêm môn học ${values?.code}?`)
         : openConfirm(
-            action,
-            `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`
-          );
+          action,
+          `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`
+        );
     },
   });
 

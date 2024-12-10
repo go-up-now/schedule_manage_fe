@@ -4,7 +4,7 @@ import TextField from "../../component/TextField";
 import Button from "../../component/Button";
 import { yearOption, semesters } from "./DataSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile} from "@fortawesome/free-solid-svg-icons";
+import { faFile } from "@fortawesome/free-solid-svg-icons";
 import * as Yup from 'yup';
 import { FormikProps } from 'formik';
 import Spinner from "../../component/Spinner.tsx";
@@ -245,8 +245,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
         </div>
         <div className="w-1/3 flex justify-center">
           <Button
-            label="Môn học"
-            className="w-11/12 p-2 text-white justify-center"
+            label="Chọn môn"
+            className="w-12/12 p-1 text-white justify-center"
             disabled={loading}
             onClick={onClickAddSubject}
             hidden={isHidden}

@@ -245,7 +245,7 @@ function EducationProgramManage() {
         // setIsReLoadTable(!isReLoadTable);
       };
       values.id === 0 ? openConfirm(action, "Bạn có chắc muốn thêm chương trình đào tạo này?")
-        : openConfirm(action, `Bạn có chắc muốn cập nhật chương trình đào tạo ${editEducationProgram?.name}?`)
+        : openConfirm(action, `Bạn có chắc muốn cập nhật ${editEducationProgram?.name}?`)
     },
   });
 
