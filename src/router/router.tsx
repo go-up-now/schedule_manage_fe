@@ -33,7 +33,7 @@ import ClassManage from "../admin/class-manage/ClassManage.tsx";
 import TestdayManage from "../admin/testday-manage/TestdayManage";
 import StudentManage from "../admin/student-manage/StudentManage.tsx";
 import ScheduleManage from "../admin/schedule-manage/ScheduleManage";
-import SemesterManage from "../admin/semester-manage/SemesterManage";
+import SemesterManage from "../admin/semester-manage/SemesterManage.tsx";
 import InstructorManage from "../admin/instructor-manage/InstructorManage.tsx";
 import EventManage from "../admin/event-manage/EventManage.tsx";
 import EducationProgramManage from "../admin/education-program-manage/EducationProgramManage.tsx";

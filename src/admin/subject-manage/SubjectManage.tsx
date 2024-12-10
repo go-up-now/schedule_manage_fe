@@ -68,8 +68,8 @@ function SubjectManage() {
   // Call API
   const [selectedSpecialization, setSelectedSpecialization] = useState(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
-
   const [specializations, setSpecializations] = useState([]);
+
   useEffect(() => {
     const fetchSpecializations = async () => {
       const data = await getAllSpecializationsAPI(); // Fetch the specializations
@@ -99,6 +99,7 @@ function SubjectManage() {
       setIsModalConfirmOpen(true);
     }
   };
+  
   const closeModal = () => {
     setSelectedSubject("");
     setIsModalOpenExcel(false);
@@ -187,7 +188,6 @@ function SubjectManage() {
 
     onSubmit: async (values, { resetForm }) => {
       const formattedSubject = { ...values };
-      console.log("check", formattedSubject);
       const action = async () => {
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading

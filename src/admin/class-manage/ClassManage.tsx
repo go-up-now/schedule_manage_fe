@@ -279,8 +279,10 @@ function ClassManage() {
 
       // Tạo đối tượng mới với 'rest' và giá trị mới của 'x'
       let formattedClazz;
-      if (roomId == "") formattedClazz = { ...values, roomId: 0 };
-      else formattedClazz = { ...values };
+      if (roomId == "")
+        formattedClazz = { ...values, roomId: 0 };
+      else
+        formattedClazz = { ...values };
 
       const action = async () => {
         if (values.id === 0) {
