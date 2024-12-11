@@ -12,6 +12,7 @@ import { ROLE } from "../enum/Role.tsx";
 import HomePage from "../student/home-page/HomePage";
 import HomePageInstructor from "../instructor/home-page/HomePageInstructor";
 import EventDescription from "../common/event-description/EventDescription";
+import NotificationDetail from "..//common/notification/NotificationDetail.tsx";
 import PersonalInformation from "../common/personal-information/PersonalInformation.tsx";
 import StudySchedule from "../student/study-schedule/StudySchedule";
 import ExamSchedule from "../student/exam-schedule/ExamSchedule";
@@ -39,6 +40,7 @@ import EventManage from "../admin/event-manage/EventManage.tsx";
 import EducationProgramManage from "../admin/education-program-manage/EducationProgramManage.tsx";
 import SubjectManage from "../admin/subject-manage/SubjectManage.tsx";
 import MarkedBoard from "../student/marked-board/MarkedBoard.jsx";
+
 
 const role = getUserScope();
 
@@ -120,6 +122,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRoles={[ROLE.STUDENT, ROLE.INSTRUCTOR]}>
             <EventDescription />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/thong-bao/:nameNotification",
+        element: (
+          <ProtectedRoute allowedRoles={[ROLE.STUDENT, ROLE.INSTRUCTOR]}>
+            <NotificationDetail />
           </ProtectedRoute>
         ),
       },
