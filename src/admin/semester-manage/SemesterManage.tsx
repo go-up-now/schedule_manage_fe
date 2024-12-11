@@ -6,7 +6,13 @@ import Modal from "../../component/Modal.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faFileImport } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup.tsx";
-import { getAllSemesterProgressByAdmin, updateDefaultSemesterProgress, createSemesterProgressAPI, updateSemesterProgressAPI, importExcelSemesterProgressAPI } from "../../api/SemesterProgress.js";
+import {
+  getAllSemesterProgressByAdmin,
+  updateDefaultSemesterProgress,
+  createSemesterProgressAPI,
+  updateSemesterProgressAPI,
+  importExcelSemesterProgressAPI,
+} from "../../api/SemesterProgress.js";
 import { dates } from "./dates.js";
 import TextFieldGroup from "./TextFieldGroup.jsx";
 import CheckBox from "../../component/CheckBox.jsx";
@@ -43,12 +49,16 @@ interface SemesterProgress {
 
 function SemesterManage() {
   const headers = ["Block", "Semester", "Year", "Active", "Chi tiết"];
-  const [selectedSemesterProgress, setSelectedSemesterProgress] = useState<SemesterProgress | null>(null);
-  const [editSemesterProgress, setEditSemesterProgress] = useState<SemesterProgress>();
+  const [selectedSemesterProgress, setSelectedSemesterProgress] =
+    useState<SemesterProgress | null>(null);
+  const [editSemesterProgress, setEditSemesterProgress] =
+    useState<SemesterProgress>();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [isReLoadTable, setIsReLoadTable] = useState(false);
   // Call API
-  const [semesterProgresss, setSemesterProgresss] = useState<SemesterProgress[]>([]);
+  const [semesterProgresss, setSemesterProgresss] = useState<
+    SemesterProgress[]
+  >([]);
 
   const [loading, setLoading] = useState(false);
   const {
@@ -60,7 +70,8 @@ function SemesterManage() {
   } = useConfirm();
   const [isModalOpenConfirm, setIsModalConfirmOpen] = useState(false);
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
-  const [isSemesterProgress, setIsSemesterProgress] = useState<SemesterProgress | null>(null);
+  const [isSemesterProgress, setIsSemesterProgress] =
+    useState<SemesterProgress | null>(null);
   const [specialization, setSpecialization] = useState([]);
   // Call API
   const [selectedSpecialization, setSelectedSpecialization] = useState(null);
@@ -69,7 +80,7 @@ function SemesterManage() {
   const handleEditClick = useCallback((semesterProgress) => {
     setEditSemesterProgress(semesterProgress);
     setIsEditDisabled(true);
-    console.log("check", semesterProgress)
+    console.log("check", semesterProgress);
   }, []);
 
   // Đặt làm học kỳ mặc định
@@ -120,15 +131,18 @@ function SemesterManage() {
     <td key={`item-year-${item.id}`} className=" border-b">
       {item.year}
     </td>,
-    <td key={`item-active-${item.id}`}
-      className={`border-b font-bold ${item.isActive ? 'text-green-500' : 'text-red-500'}`}
+    <td
+      key={`item-active-${item.id}`}
+      className={`border-b font-bold ${
+        item.isActive ? "text-green-500" : "text-red-500"
+      }`}
     >
       {item.isActive ? "Đang hoạt động" : "Không hoạt động"}
     </td>,
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -165,14 +179,30 @@ function SemesterManage() {
       block: editSemesterProgress ? editSemesterProgress.block : "0",
       semester: editSemesterProgress ? editSemesterProgress.semester : "0",
       year: editSemesterProgress ? editSemesterProgress.year : "",
-      createDateStart: editSemesterProgress ? editSemesterProgress.createDateStart : "",
-      createDateEnd: editSemesterProgress ? editSemesterProgress.createDateEnd : "",
-      repaireDateStart: editSemesterProgress ? editSemesterProgress.repaireDateStart : "",
-      repaireDateEnd: editSemesterProgress ? editSemesterProgress.repaireDateEnd : "",
-      firstPartStart: editSemesterProgress ? editSemesterProgress.firstPartStart : "",
-      firstPartEnd: editSemesterProgress ? editSemesterProgress.firstPartEnd : "",
-      secondPartStart: editSemesterProgress ? editSemesterProgress.secondPartStart : "",
-      secondPartEnd: editSemesterProgress ? editSemesterProgress.secondPartEnd : "",
+      createDateStart: editSemesterProgress
+        ? editSemesterProgress.createDateStart
+        : "",
+      createDateEnd: editSemesterProgress
+        ? editSemesterProgress.createDateEnd
+        : "",
+      repaireDateStart: editSemesterProgress
+        ? editSemesterProgress.repaireDateStart
+        : "",
+      repaireDateEnd: editSemesterProgress
+        ? editSemesterProgress.repaireDateEnd
+        : "",
+      firstPartStart: editSemesterProgress
+        ? editSemesterProgress.firstPartStart
+        : "",
+      firstPartEnd: editSemesterProgress
+        ? editSemesterProgress.firstPartEnd
+        : "",
+      secondPartStart: editSemesterProgress
+        ? editSemesterProgress.secondPartStart
+        : "",
+      secondPartEnd: editSemesterProgress
+        ? editSemesterProgress.secondPartEnd
+        : "",
       isActive: editSemesterProgress ? editSemesterProgress.isActive : false,
     },
 
@@ -180,13 +210,15 @@ function SemesterManage() {
     validationSchema: semesterProgressValidationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-      console.log("submit")
+      console.log("submit");
       const formattedSemesterProgress = { ...values };
       const action = async () => {
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading
           try {
-            const response = await createSemesterProgressAPI(formattedSemesterProgress);
+            const response = await createSemesterProgressAPI(
+              formattedSemesterProgress
+            );
             if (response && response.data) {
               if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
@@ -208,8 +240,7 @@ function SemesterManage() {
               values.id
             );
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message);
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
                 toast.success("Cập nhật tiến trình thành công");
                 resetForm();
@@ -229,10 +260,7 @@ function SemesterManage() {
       };
       values.id === 0
         ? openConfirm(action, `Bạn có chắc muốn thêm tiến trình này?`)
-        : openConfirm(
-          action,
-          `Bạn có chắc muốn cập nhật tiến trình này?`
-        );
+        : openConfirm(action, `Bạn có chắc muốn cập nhật tiến trình này?`);
     },
   });
 
@@ -257,7 +285,7 @@ function SemesterManage() {
     {
       STT: "1",
       year: 2025,
-      semester: 'Spring',
+      semester: "Spring",
       block: 1,
       createDateStart: new Date("2025-01-03"),
       createDateEnd: new Date("2025-01-13"),
@@ -271,7 +299,7 @@ function SemesterManage() {
     {
       STT: "2",
       year: 2025,
-      semester: 'Summer',
+      semester: "Summer",
       block: 2,
       createDateStart: new Date("2025-05-03"),
       createDateEnd: new Date("2025-05-13"),
@@ -306,7 +334,8 @@ function SemesterManage() {
               onClose={closeModal}
               label={
                 <>
-                  Khóa {selectedSemesterProgress.block} - Kỳ {selectedSemesterProgress.semester} - Năm{" "}
+                  Khóa {selectedSemesterProgress.block} - Kỳ{" "}
+                  {selectedSemesterProgress.semester} - Năm{" "}
                   {selectedSemesterProgress.year}
                 </>
               }

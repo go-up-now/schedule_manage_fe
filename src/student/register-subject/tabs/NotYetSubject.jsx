@@ -45,6 +45,9 @@ function NotYetSubject() {
       const response = await registerClass(clazzId);
       toast.success("Đăng ký lớp học thành công!");
       console.log("Registration successful:", response);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       toast.error("Đăng ký lớp học không thành công!");
       console.error("Registration error:", error);

@@ -66,7 +66,7 @@ function SubjectManage() {
   const [isReLoadTable, setIsReLoadTable] = useState(false);
   const [specialization, setSpecialization] = useState([]);
   // Call API
-  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
+  const [selectedSpecialization, setSelectedSpecialization] = useState(1);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [specializations, setSpecializations] = useState([]);
 
@@ -99,7 +99,7 @@ function SubjectManage() {
       setIsModalConfirmOpen(true);
     }
   };
-  
+
   const closeModal = () => {
     setSelectedSubject("");
     setIsModalOpenExcel(false);
@@ -122,7 +122,7 @@ function SubjectManage() {
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -167,6 +167,7 @@ function SubjectManage() {
       onChange: handleSpecializationChange,
       value: selectedSpecialization,
       className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
   ];
 
@@ -179,7 +180,11 @@ function SubjectManage() {
       total_hours: editSubject ? editSubject.total_hours : "",
       mission: editSubject ? editSubject.mission : "",
       note: editSubject ? editSubject.note : "",
-      requiredId: editSubject ? (editSubject.requiredId ? editSubject.requiredId : '0') : "0",
+      requiredId: editSubject
+        ? editSubject.requiredId
+          ? editSubject.requiredId
+          : "0"
+        : "0",
       description: editSubject ? editSubject.description : "",
       specializationId: editSubject ? editSubject.specializationId : "1",
     },
@@ -235,9 +240,9 @@ function SubjectManage() {
       values.id === 0
         ? openConfirm(action, `Bạn có chắc muốn thêm môn học ${values?.code}?`)
         : openConfirm(
-          action,
-          `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`
-        );
+            action,
+            `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`
+          );
     },
   });
 

@@ -5,18 +5,21 @@ import Modal from "../../component/Modal.jsx";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup.tsx";
 import TextFieldGroup from "./TextFieldGroup.jsx";
-import { getAllEducationProgramAPI, createApplyForEducationAPI, updateApplyForEducationAPI } from '../../api/EducationProgram.js';
-import Container from '../../component/Container.tsx'
-import TitleHeader from '../../component/TitleHeader.tsx'
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import { iducationProgramValidationSchema } from './FontGroup.tsx';
+import {
+  getAllEducationProgramAPI,
+  createApplyForEducationAPI,
+  updateApplyForEducationAPI,
+} from "../../api/EducationProgram.js";
+import Container from "../../component/Container.tsx";
+import TitleHeader from "../../component/TitleHeader.tsx";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { iducationProgramValidationSchema } from "./FontGroup.tsx";
 import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
-import { getAllYearAPI } from '../../api/years.js';
-import { getAllByEducationProgramId } from '../../api/Subject.js';
+import { getAllYearAPI } from "../../api/years.js";
+import { getAllByEducationProgramId } from "../../api/Subject.js";
 import CheckboxGroup from "../../component/CheckBoxGroup.tsx";
-
 
 interface EducationProgram {
   id: number;
@@ -38,13 +41,26 @@ interface CheckboxItem {
 }
 
 function EducationProgramManage() {
-  const headers = ["Tên chương trình", "Năm triển khải", "Học kỳ triển khai", ""];
+  const headers = [
+    "Tên chương trình",
+    "Năm triển khải",
+    "Học kỳ triển khai",
+    "",
+  ];
 
-  const [selectedEducationProgram, setSelectedEducationProgram] = useState<EducationProgram>();
-  const [editEducationProgram, setEditEducationProgram] = useState<EducationProgram>();
+  const [selectedEducationProgram, setSelectedEducationProgram] =
+    useState<EducationProgram>();
+  const [editEducationProgram, setEditEducationProgram] =
+    useState<EducationProgram>();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { isConfirmOpen, openConfirm, closeConfirm, confirmAction, confirmQuestion } = useConfirm();
+  const {
+    isConfirmOpen,
+    openConfirm,
+    closeConfirm,
+    confirmAction,
+    confirmQuestion,
+  } = useConfirm();
   const [isModalOpenConfirm, setIsModalConfirmOpen] = useState(false);
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
   const [isReLoadTable, setIsReLoadTable] = useState(false);
@@ -54,27 +70,28 @@ function EducationProgramManage() {
   const [isModalSubject, setIsModalSubject] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CheckboxItem[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [privateMajorValue, setPrivateMajorValue] = useState('');
-  const [educationPrograms, setEducationPrograms] = useState<EducationProgram[]>([]);
-  const [isHidden, setIsHidden] = useState('hidden');
+  const [privateMajorValue, setPrivateMajorValue] = useState("");
+  const [educationPrograms, setEducationPrograms] = useState<
+    EducationProgram[]
+  >([]);
+  const [isHidden, setIsHidden] = useState("hidden");
 
   const handleEditClick = useCallback((educationProgram) => {
     setEditEducationProgram(educationProgram);
     setIsEditDisabled(true);
 
-    setPrivateMajorValue(educationProgram.privateMajorId)
+    setPrivateMajorValue(educationProgram.privateMajorId);
 
     getAllByEducationProgramId(educationProgram.id)
       .then((data) => {
         setSelectedItem(data.data);
         // Trích xuất các `id` và tạo Set
-        const idsSet = new Set(data.data.map(item => item.id));
+        const idsSet = new Set(data.data.map((item) => item.id));
         // Tạo option subject
-        const privateMajorItem = data.data?.map(privateMajor => (
-          {
-            id: `${privateMajor.id}`,
-            name: `${privateMajor.name}`,
-          }));
+        const privateMajorItem = data.data?.map((privateMajor) => ({
+          id: `${privateMajor.id}`,
+          name: `${privateMajor.name}`,
+        }));
         setSelectedItem(privateMajorItem);
       })
       .catch((error) => {
@@ -83,26 +100,25 @@ function EducationProgramManage() {
   }, []);
 
   const openModal = (item, id) => {
-    if (id === 'chi-tiet') {
+    if (id === "chi-tiet") {
       setSelectedEducationProgram(item);
-    }
-    else if (id === 'excel') {
+    } else if (id === "excel") {
       setIsModalOpenExcel(true);
     }
     // else if (id === 'delete') {
     //   setIsEducationProgram(item);
     //   setIsModalConfirmOpen(true);
     // }
-    else if (id === 'subject-modal') {
+    else if (id === "subject-modal") {
       setIsModalSubject(true);
     }
-  }
+  };
   const closeModal = () => {
-    setSelectedEducationProgram('');
+    setSelectedEducationProgram("");
     setIsModalOpenExcel(false);
     setIsModalConfirmOpen(false);
     setIsModalSubject(false);
-  }
+  };
 
   const renderRow = (item: EducationProgram) => [
     <td key={`item-name-${item.id}`} className=" border-b">
@@ -117,12 +133,12 @@ function EducationProgramManage() {
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
               text: "Chi tiết",
-              onClick: () => openModal(item, 'chi-tiet'),
+              onClick: () => openModal(item, "chi-tiet"),
             },
             {
               text: "Sửa đổi",
@@ -152,19 +168,20 @@ function EducationProgramManage() {
   useEffect(() => {
     if (selectedItem) {
       // Trích xuất các `id` và tạo Set
-      const idsSet = new Set(selectedItem.map(item => item.id));
+      const idsSet = new Set(selectedItem.map((item) => item.id));
       setSelected(idsSet);
     }
-  }, [selectedItem])
+  }, [selectedItem]);
 
   // Tạo môn học cho chương trình đào tạo
-  const items = listSubject.map(subject => (
-    {
-      id: `${subject.id}`,
-      label: `${subject.code + ' - ' + subject.name}`,
-    }));
+  const items = listSubject.map((subject) => ({
+    id: `${subject.id}`,
+    label: `${subject.code + " - " + subject.name}`,
+  }));
 
-  const handleCheckboxSubmit = (selectedItems: { id: string; name: string }[]) => {
+  const handleCheckboxSubmit = (
+    selectedItems: { id: string; name: string }[]
+  ) => {
     console.log("Selected Items:", selectedItems);
     setSelectedItem(selectedItems);
     setIsModalSubject(false);
@@ -173,70 +190,70 @@ function EducationProgramManage() {
   const formikEducationProgram = useFormik({
     initialValues: {
       id: editEducationProgram ? editEducationProgram.id : 0,
-      name: editEducationProgram ? editEducationProgram.name : '',
-      semester: editEducationProgram ? editEducationProgram.semester : 'Spring',
+      name: editEducationProgram ? editEducationProgram.name : "",
+      semester: editEducationProgram ? editEducationProgram.semester : "Spring",
       year: editEducationProgram ? editEducationProgram.year : selectedYear,
-      privateMajorId: editEducationProgram ? editEducationProgram.privateMajorId : '0',
+      privateMajorId: editEducationProgram
+        ? editEducationProgram.privateMajorId
+        : "0",
     },
     enableReinitialize: true,
     validationSchema: iducationProgramValidationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-
       const educationProgramDTO = { ...values };
       const ids = Array.from(selected);
 
       const formData = {
         ids,
-        educationProgramDTO
-      }
-      console.log("check", values)
+        educationProgramDTO,
+      };
+      console.log("check", values);
       const action = async () => {
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading
           try {
             const response = await createApplyForEducationAPI(formData);
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message)
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Thêm mới chương trình đào tạo thành công")
+                toast.success("Thêm mới chương trình đào tạo thành công");
                 resetForm();
                 setIsReLoadTable(!isReLoadTable);
                 setSelectedItem([]);
-                setIsHidden('hidden')
+                setIsHidden("hidden");
               }
-            }
-            else {
-              toast.error("Thêm mới chương trình đào tạo không thành công")
+            } else {
+              toast.error("Thêm mới chương trình đào tạo không thành công");
             }
           } catch (error) {
             console.log("lỗi:", error);
-            toast.error(error.data.message)
+            toast.error(error.data.message);
           }
           setLoading(false); // Kết thúc loading
         } else {
           setLoading(true); // Bắt đầu loading
           try {
-            const response = await updateApplyForEducationAPI(formData, values.id);
+            const response = await updateApplyForEducationAPI(
+              formData,
+              values.id
+            );
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message)
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Cập nhật chương trình đào tạo thành công")
+                toast.success("Cập nhật chương trình đào tạo thành công");
                 resetForm();
-                setEditEducationProgram(null)
+                setEditEducationProgram(null);
                 setIsReLoadTable(!isReLoadTable);
                 setSelectedItem([]);
-                setIsHidden('hidden')
+                setIsHidden("hidden");
               }
-            }
-            else {
-              toast.error("Cập nhật chương trình đào tạo không thành công")
+            } else {
+              toast.error("Cập nhật chương trình đào tạo không thành công");
             }
           } catch (error) {
             console.log("lỗi:", error);
-            toast.error(error.data.message)
+            toast.error(error.data.message);
           }
           setLoading(false); // Kết thúc loading
         }
@@ -244,8 +261,12 @@ function EducationProgramManage() {
 
         // setIsReLoadTable(!isReLoadTable);
       };
-      values.id === 0 ? openConfirm(action, "Bạn có chắc muốn thêm chương trình đào tạo này?")
-        : openConfirm(action, `Bạn có chắc muốn cập nhật ${editEducationProgram?.name}?`)
+      values.id === 0
+        ? openConfirm(action, "Bạn có chắc muốn thêm chương trình đào tạo này?")
+        : openConfirm(
+            action,
+            `Bạn có chắc muốn cập nhật ${editEducationProgram?.name}?`
+          );
     },
   });
 
@@ -266,12 +287,12 @@ function EducationProgramManage() {
     } catch (error) {
       console.log("lỗi:", error);
     }
-  }
+  };
 
   useEffect(() => {
     callAPI();
     setSelectedYear(new Date().getFullYear()); // Đặt năm hiện tại làm mặc định
-  }, [])
+  }, []);
 
   return (
     <Container>
@@ -291,12 +312,14 @@ function EducationProgramManage() {
             showSelectBox={true}
           />
           {selectedEducationProgram && (
-            <Modal isOpen={true} onClose={closeModal} className="py-12">
-              <h2 className="text-xl font-bold">
-                Chương trình đào tạo: {selectedEducationProgram.name}
-              </h2>
+            <Modal
+              isOpen={true}
+              onClose={closeModal}
+              className=""
+              label={<>{selectedEducationProgram.name}</>}
+            >
               <div>
-                <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
+                <div className="w-[500px] h-auto py-2">
                   <TextFieldGroup
                     name={selectedEducationProgram.name}
                     semester={selectedEducationProgram.semester}
@@ -331,7 +354,7 @@ function EducationProgramManage() {
           <FontGroup
             isEditDisabled={isEditDisabled}
             onClick={() => formikEducationProgram.submitForm()}
-            onClickAddSubject={() => openModal("", 'subject-modal')}
+            onClickAddSubject={() => openModal("", "subject-modal")}
             formik={formikEducationProgram}
             loading={loading}
             setEditEducationProgram={setEditEducationProgram}

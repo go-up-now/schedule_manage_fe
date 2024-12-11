@@ -139,6 +139,7 @@ function Table({
                     onChange={selectBox.onChange}
                     value={selectBox.value}
                     className={selectBox.className}
+                    disable={selectBox.disable}
                   />
                 ))}
               </div>
@@ -159,7 +160,7 @@ function Table({
                     className={selectBox.className}
                     optionNameSelect={selectBox.optionNameSelect}
                     avaiableNameSelect={selectBox.avaiableNameSelect}
-                    disable={selectBox.disabled}
+                    disable={selectBox.disable}
                   />
                 ))}
               </div>

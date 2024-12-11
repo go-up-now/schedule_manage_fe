@@ -1,11 +1,9 @@
 import TextField from "../../component/TextField";
 
-function TextFieldGroup({
-  ...props
-}) {
+function TextFieldGroup({ ...props }) {
   return (
     <div className="flex">
-      <div className="w-2/4">
+      <div className="w-full">
         <TextField
           onField={true}
           label="Tên chương trình:"
@@ -20,8 +18,6 @@ function TextFieldGroup({
           className="pt-4 px-4"
           disabled
         />
-      </div>
-      <div className="w-2/4">
         <TextField
           onField={true}
           label="Năm triển khải:"
@@ -30,6 +26,7 @@ function TextFieldGroup({
           disabled
         />
       </div>
+      <div className=""></div>
     </div>
   );
 }

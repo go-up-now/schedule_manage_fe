@@ -1,53 +1,52 @@
-import MiniMenu from "../../component/MiniMenu";
 import React, { useState, useEffect, useCallback } from "react";
+import MiniMenu from "../../component/MiniMenu";
 import Table from "../../component/Table";
 import Button from "../../component/Button";
 import Modal from "../../component/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faFileImport } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup";
+import TextFieldGroup from "./TextFieldGroup";
+import { getAllExambyBlockSemesterYearSpecialization } from "../../api/examSchedule";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-import TextFieldGroup from "./TextFieldGroup";
 import { getAllYearAPI } from "../../api/years.js";
-import { getAllByBlockAndSemesterAndYear } from "../../api/Schedule.js";
 import { getAllBlocksAPI } from "../../api/Block.js";
 import { getAllSemesterAPI } from "../../api/Semester.js";
-import { format } from "date-fns";
+import { getAllSpecializationsAPI } from "../../api/Specialization.js";
 
-function ScheduleManage() {
-  const headers = ["Mã lớp", "Mã Môn", "Ngày", "Trạng thái", ""];
+function TestdayManage() {
+  const headers = ["Mã môn", "Mã lớp", "Ngày", "Đợt", "Trạng thái", ""];
 
-  const [selectedExam, setSelectedExam] = useState(null);
-  const [editExam, setEditExam] = useState(null);
+  const [selectedExamSchedule, setSelectedExamSchedule] = useState(null);
+  const [editExamSchedule, setEditExamSchedule] = useState(null);
   const [isEditDisabled, setIsEditDisabled] = useState(false);
 
   const handleEditClick = useCallback((exam) => {
-    setEditExam(exam);
+    setEditExamSchedule(exam);
     setIsEditDisabled(true);
   }, []);
 
-  const openModal = (exam) => setSelectedExam(exam);
-  const closeModal = () => setSelectedExam(null);
+  const openModal = (exam) => setSelectedExamSchedule(exam);
+  const closeModal = () => setSelectedExamSchedule(null);
 
   const renderRow = (item) => [
-    <td key={`item-clazz_code-${item.id}`} className=" border-b">
-      {item.clazz_code}
-    </td>,
-    <td key={`item-subject_code-${item.id}`} className=" border-b">
+    <td key={`item-subject_code-${item.id}`} className="border-b">
       {item.subject_code}
     </td>,
-    <td key={`item-gender-${item.id}`} className=" border-b">
-      {format(item.date_schedule, "dd-MM-yyyy")}
+    <td key={`item-instructor_code-${item.id}`} className="border-b">
+      {item.instructor_code}
     </td>,
-    <td key={`item-status-${item.id}`} className=" border-b">
-      {item.status}
-      <input type="checkbox" checked={item.status} />
+    <td key={`item-shift_id-${item.id}`} className="border-b">
+      {item.shift_id}
+    </td>,
+    <td key={`item-room_name-${item.id}`} className="border-b">
+      {item.room_name}
     </td>,
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-2xl p-4"
+          className="text-[10px] p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -64,43 +63,50 @@ function ScheduleManage() {
     </td>,
   ];
 
-  // Call API useState<Number>(2024)
-
-  const [selectedBlock, setSelectedBlock] = useState(1);
-  const [selectedSemester, setSelectedSemester] = useState("Spring");
+  // API Call
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedSpecialization, setSelectedSpecialization] = useState(1);
+  const [selectedBlock, setSelectedBlock] = useState(1);
+  const [selectedSemester, setSelectedSemester] = useState("Spring");
+  const [exams, setExams] = useState([]);
 
-  const [schedules, setSchedules] = useState([]);
-  console.log(schedules);
-  const handleBlockChange = (event) => {
-    setSelectedBlock(event.target.value);
-  };
-
-  const handleSemesterChange = (event) => {
-    setSelectedSemester(event.target.value);
-  };
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
   };
+  const handleSpecializationChange = (event) => {
+    setSelectedSpecialization(event.target.value);
+  };
+  const handleBlockChange = (event) => {
+    setSelectedBlock(event.target.value);
+  };
+  const handleSemesterChange = (event) => {
+    setSelectedSemester(event.target.value);
+  };
 
-  // Fetch exam whenever course or major is selected
   useEffect(() => {
-    if (selectedBlock && selectedSemester && selectedYear) {
-      getAllByBlockAndSemesterAndYear(
+    if (
+      selectedYear &&
+      selectedSpecialization &&
+      selectedBlock &&
+      selectedSemester
+    ) {
+      getAllExambyBlockSemesterYearSpecialization(
         selectedBlock,
         selectedSemester,
-        selectedYear
+        selectedYear,
+        selectedSpecialization // Ensure this parameter matches "specializationId" in the API call
       )
         .then((data) => {
-          setSchedules(data);
+          console.log("Fetched Exams: ", data); // Log the fetched data
+          setExams(data);
         })
         .catch((error) => {
-          console.error("Error fetching schedule:", error);
+          console.error("Error fetching exam schedules:", error);
         });
     }
-  }, [selectedBlock, selectedSemester, selectedYear]);
-
+  }, [selectedYear, selectedSpecialization, selectedBlock, selectedSemester]);
+  console.log(exams);
   // GET API VALUE CB BLOCK
   const [blocks, setBlocks] = useState([]);
   useEffect(() => {
@@ -152,21 +158,36 @@ function ScheduleManage() {
     fetchYears();
   }, []);
 
+  //GET API VALUE CB SPECIALIZATION
+  const [specializations, setSpecializations] = useState([]);
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const data = await getAllSpecializationsAPI(); // Fetch the specializations
+      const formattedSpecializations = data.map((specialization) => ({
+        value: specialization.id,
+        label: specialization.name,
+      })); // Format data with value and label
+      setSpecializations(formattedSpecializations);
+    };
+
+    fetchSpecializations(); // Call the API function
+  }, []);
+
   const selectBoxs = [
     {
       options: blocks,
       nameSelect: "Block",
       onChange: handleBlockChange,
       value: selectedBlock,
-      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
       avaiableNameSelect: false,
     },
     {
       options: semesters,
-      nameSelect: "Kỳ",
+      nameSelect: "Học kỳ",
       onChange: handleSemesterChange,
       value: selectedSemester,
-      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
+      className: "w-full mr-1 md:w-[150px] pt-4 md:pt-4",
       avaiableNameSelect: false,
     },
     {
@@ -174,14 +195,22 @@ function ScheduleManage() {
       nameSelect: "Năm",
       onChange: handleYearChange,
       value: selectedYear,
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
+    },
+    {
+      options: specializations,
+      nameSelect: "Bộ môn",
+      onChange: handleSpecializationChange,
+      value: selectedSpecialization,
       className: "w-full md:w-[150px] pt-4 md:pt-4",
       avaiableNameSelect: false,
     },
   ];
-  console.log(schedules);
+
   return (
     <Container>
-      <TitleHeader title="QUẢN LÝ LỊCH HỌC" />
+      <TitleHeader title="QUẢN LÝ LỊCH THI" />
       <div className={`flex flex-col md:flex-row min-h-svh`}>
         <div className="p-2 flex-1">
           <Table
@@ -192,33 +221,26 @@ function ScheduleManage() {
             numberSelectBox={selectBoxs}
             headers={headers}
             renderRow={renderRow}
-            data={schedules}
+            data={exams} // Pass the fetched exam data
             maxRow={10}
             cbWidth="w-8/12"
           />
-          {selectedExam && (
-            <Modal
-              isOpen={true}
-              onClose={closeModal}
-              className=""
-              label={
-                <>
-                  {selectedExam.clazz_code} - {selectedExam.subject_code} -{" "}
-                  {format(selectedExam.date_schedule, "dd/MM/yyyy")}
-                </>
-              }
-            >
+          {selectedExamSchedule && (
+            <Modal isOpen={true} onClose={closeModal} className="">
+              <h2 className="text-xl font-bold">
+                {selectedExamSchedule.name} - {selectedExamSchedule.code}
+              </h2>
               <div>
-                <div className="w-[700px] h-[380px] py-2">
+                <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
                   <TextFieldGroup
-                    major={selectedExam.major}
-                    email={selectedExam.email}
-                    perEmail={selectedExam.perEmail}
-                    clazz={selectedExam.clazz}
-                    phone={selectedExam.phone}
-                    address={selectedExam.address}
-                    credit={selectedExam.credit}
-                    ownCredit={selectedExam.ownCredit}
+                  // major={selectedExam.major}
+                  // email={selectedExam.email}
+                  // perEmail={selectedExam.perEmail}
+                  // clazz={selectedExam.clazz}
+                  // phone={selectedExam.phone}
+                  // address={selectedExam.address}
+                  // credit={selectedExam.credit}
+                  // ownCredit={selectedExam.ownCredit}
                   />
                 </div>
               </div>
@@ -235,12 +257,12 @@ function ScheduleManage() {
                   Import excel
                 </>
               }
-            ></Button>
+            />
           </div>
-          <FontGroup exam={editExam} isEditDisabled={isEditDisabled} />
+          <FontGroup exam={editExamSchedule} isEditDisabled={isEditDisabled} />
         </div>
       </div>
     </Container>
   );
 }
-export default ScheduleManage;
+export default TestdayManage;
