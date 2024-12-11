@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import avatar from '../../images/avatarUser.jpg';
 import logo from '../../images/logo.png';
 import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 import 'flowbite';
 import React from 'react';
 import { getUserScope } from '../../utils/authUtils.ts'
@@ -12,6 +13,12 @@ function Header() {
   const navigate = useNavigate();
   const baseUrl = " https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
   const role = getUserScope();
+  const notificationsRef = useRef(null);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, sender: "Admin", content: "Thông báo: Lớp 'Cơ sở dữ liệu' vào ngày 15/12 đã bị hủy do lý do kỹ thuật. Vui lòng kiểm tra lại lịch học thay đổi.", date: "2024-12-11", read: false },
+    { id: 2, sender: "Instructor", content: "Thông báo: Lớp 'JAVA 1 ' vào ngày 15/12 đã bị hủy do lý do kỹ thuật. Vui lòng kiểm tra lại lịch học thay đổi.", date: "2024-12-10", read: true },
+  ]);
 
   const handleSignOut = () => {
     // Xoá token đăng nhập khỏi localStorage
@@ -20,6 +27,15 @@ function Header() {
     // Điều hướng đến trang đăng xuất
     navigate('/dang-xuat');
   };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+        setIsNotificationsOpen(false);  // Tắt thông báo nếu click ra ngoài
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   const handleDetailInfor = () => {
     // Xoá token đăng nhập khỏi localStorage
     // localStorage.removeItem('token');
@@ -49,7 +65,7 @@ function Header() {
           {/* <div className="md:space-x-6 justify-end items-center ml-auto flex space-x-3 mr-3">
             <div className="relative">
               <p className="pt-1 pr-1 pb-1 pl-1 bg-white text-gray-700 rounded-full transition-all duration-200
-                hover:text-gray-900 focus:outline-none hover:bg-gray-100">
+                hover:text-gray-900 focus:outline-none hover:bg-gray-100 cursor-pointer">
                 <span className="justify-center items-center flex">
                   <span className="justify-center items-center flex">
                     <span className="items-center justify-center flex">
@@ -66,6 +82,50 @@ function Header() {
                   absolute -top-px -right-1">2</p>
             </div>
           </div> */}
+          <div className="md:space-x-6 justify-end items-center ml-auto flex space-x-3 mr-3">
+            <div className="relative">
+              <p
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className="pt-1 pr-1 pb-1 pl-1 bg-white text-gray-700 rounded-full transition-all duration-200 hover:text-gray-900 focus:outline-none hover:bg-gray-100 cursor-pointer"
+              >
+                <span className="justify-center items-center flex">
+                  <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round"
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                  </svg>
+                </span>
+              </p>
+              <p className="px-1.5 py-0.5 font-semibold text-xs items-center bg-indigo-600 text-white rounded-full inline-flex absolute -top-px -right-1">
+                {notifications.length}
+              </p>
+
+              {isNotificationsOpen && (
+                <div ref={notificationsRef} className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg overflow-hidden z-10 border border-gray-300 rounded-lg shadow-xl">
+                  <div className="px-4 py-2 text-xl font-bold ">THÔNG BÁO</div>
+                  <ul className="divide-y divide-gray-100">
+                    {notifications.map((notification) => (
+                      <li key={notification.id}>
+                        <button
+                           onClick={() => {
+                            navigate(`/thong-bao/${encodeURIComponent(notification.content)}`, {
+                              state: { notification },
+                            });
+                            setIsNotificationsOpen(false); 
+                          }}
+                          className ="w-full text-left black-gray-500 p-3 hover:bg-gray-200 ">
+                           {/* className={`w-full text-left p-3 hover:bg-gray-200 ${
+                            notification.read ? 'bg-gray-200' : 'bg-white'
+                          }`}> */}
+                          <p className="text-sm text-black font-bold line-clamp-3">{notification.content}</p>
+                          <p className='text-gray-500 text-sm text-right'>{notification.date}</p>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
 
           <div className="flex items-center ">
             <p className="font-semibold text-sm ">
