@@ -46,7 +46,7 @@ function Header() {
             </a>
           </div>
 
-          <div className="md:space-x-6 justify-end items-center ml-auto flex space-x-3 mr-3">
+          {/* <div className="md:space-x-6 justify-end items-center ml-auto flex space-x-3 mr-3">
             <div className="relative">
               <p className="pt-1 pr-1 pb-1 pl-1 bg-white text-gray-700 rounded-full transition-all duration-200
                 hover:text-gray-900 focus:outline-none hover:bg-gray-100">
@@ -65,7 +65,7 @@ function Header() {
               <p className="px-1.5 py-0.5 font-semibold text-xs items-center bg-indigo-600 text-white rounded-full inline-flex
                   absolute -top-px -right-1">2</p>
             </div>
-          </div>
+          </div> */}
 
           <div className="flex items-center ">
             <p className="font-semibold text-sm ">
