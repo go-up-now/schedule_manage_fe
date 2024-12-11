@@ -42,7 +42,7 @@ function HomePage() {
   }, []);
 
   const baseUrl =
-    " https://res.cloudinary.com/dc06mgef2/image/upload/v1731903390/";
+    "https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
 
   return (
     <Container>

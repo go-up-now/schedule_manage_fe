@@ -9,7 +9,7 @@ function EventDescription() {
     return <div>No event data available</div>;
   }
   const baseUrl =
-    " https://res.cloudinary.com/dc06mgef2/image/upload/v1731903390/";
+    "https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
 
   return (
     <div className="mb-8">
