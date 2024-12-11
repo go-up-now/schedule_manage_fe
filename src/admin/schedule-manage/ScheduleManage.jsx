@@ -47,7 +47,7 @@ function ScheduleManage() {
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -66,8 +66,8 @@ function ScheduleManage() {
 
   // Call API useState<Number>(2024)
 
-  const [selectedBlock, setSelectedBlock] = useState(null);
-  const [selectedSemester, setSelectedSemester] = useState(null);
+  const [selectedBlock, setSelectedBlock] = useState(1);
+  const [selectedSemester, setSelectedSemester] = useState("Spring");
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
@@ -159,6 +159,7 @@ function ScheduleManage() {
       onChange: handleBlockChange,
       value: selectedBlock,
       className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: semesters,
@@ -166,6 +167,7 @@ function ScheduleManage() {
       onChange: handleSemesterChange,
       value: selectedSemester,
       className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: years,
@@ -173,9 +175,10 @@ function ScheduleManage() {
       onChange: handleYearChange,
       value: selectedYear,
       className: "w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
   ];
-
+  console.log(schedules);
   return (
     <Container>
       <TitleHeader title="QUẢN LÝ LỊCH HỌC" />
@@ -194,12 +197,19 @@ function ScheduleManage() {
             cbWidth="w-8/12"
           />
           {selectedExam && (
-            <Modal isOpen={true} onClose={closeModal} className="">
-              <h2 className="text-xl font-bold">
-                {selectedExam.name} - {selectedExam.code}
-              </h2>
+            <Modal
+              isOpen={true}
+              onClose={closeModal}
+              className=""
+              label={
+                <>
+                  {selectedExam.clazz_code} - {selectedExam.subject_code} -{" "}
+                  {format(selectedExam.date_schedule, "dd/MM/yyyy")}
+                </>
+              }
+            >
               <div>
-                <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
+                <div className="w-[700px] h-[380px] py-2">
                   <TextFieldGroup
                     major={selectedExam.major}
                     email={selectedExam.email}

@@ -88,7 +88,7 @@ function InstructorManage() {
     fetchSpecializations(); // Call the API function
   }, []);
   // Call API
-  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
+  const [selectedSpecialization, setSelectedSpecialization] = useState(1);
   const [instructors, setInstructors] = useState<Instructor[]>([]);
 
   const handleEditClick = useCallback((Instructor) => {
@@ -132,7 +132,7 @@ function InstructorManage() {
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -177,6 +177,7 @@ function InstructorManage() {
       onChange: handleSpecializationChange,
       value: selectedSpecialization,
       className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
   ];
 
