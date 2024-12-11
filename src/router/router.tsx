@@ -30,7 +30,7 @@ import OffedReplace from "../instructor/offed-replace/OffedReplace";
 import ExamArrange from "../instructor/exam-arrange/ExamArrange";
 import Statistic from "../admin/statistics/Statistic";
 import ClassManage from "../admin/class-manage/ClassManage.tsx";
-import TestdayManage from "../admin/testday-manage/TestdayManage";
+import TestdayManage from "../admin/testday-manage/TestdayManage.tsx";
 import StudentManage from "../admin/student-manage/StudentManage.tsx";
 import ScheduleManage from "../admin/schedule-manage/ScheduleManage";
 import SemesterManage from "../admin/semester-manage/SemesterManage.tsx";

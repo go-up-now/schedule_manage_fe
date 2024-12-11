@@ -147,6 +147,7 @@ function EventManage() {
       onChange: handleAreaChange,
       value: selectedArea,
       className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      disabled: true,
     },
   ];
 

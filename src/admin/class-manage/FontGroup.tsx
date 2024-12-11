@@ -50,7 +50,7 @@ interface Subject {
 // Xác thực clazzz
 export const clazzValidationSchema = Yup.object().shape({
   id: Yup.number().required(),
-  code: Yup.string().required("Vui lòng nhập mã sinh viên"),
+  code: Yup.string().required("Vui lòng nhập mã lớp"),
   quantity: Yup.number()
     .required("Vui lòng nhập số lượng sinh viên")
     .integer("Số lượng phải là số nguyên")
@@ -87,22 +87,6 @@ const FontGroup: React.FC<FontGroupProps> = ({
   const [isOnlineLink, setIsOnlineLink] = useState(false);
   const [isRoom, setIsRoom] = useState(false);
 
-  // const defaultValues = {
-  //   id: 0,
-  //   code: '',
-  //   onlineLink: '',
-  //   quantity: '',
-  //   block: '1',
-  //   semester: 'Spring',
-  //   year: selectedYear,
-  //   subjectId: '1',
-  //   subjectName: '',
-  //   instructorId: '1',
-  //   shiftId: '1',
-  //   roomId: '1',
-  //   weekdays: '2, 4, 6',
-  // };
-
   const handleResetForm = () => {
     setAreSelectBoxesDisabled(false);
     setIsEditDisabled(false);
@@ -132,9 +116,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
   // Tạo option instructor
   const instructorOptions = listInstructor.map((instructor) => ({
     value: `${instructor.id}`,
-    label: `${
-      instructor.code + " - " + instructor.lastName + " " + instructor.firstName
-    }`,
+    label: `${instructor.code + " - " + instructor.lastName + " " + instructor.firstName
+      }`,
   }));
 
   const handleChangeSubject = async (value) => {
@@ -227,9 +210,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
         <TextField
           onField={true}
           placeholder="Mã lớp"
-          className1={`w-full ${
-            formik.touched.code && formik.errors.code && "border-red-500"
-          }`}
+          className1={`w-full ${formik.touched.code && formik.errors.code && "border-red-500"
+            }`}
           disabled={areSelectBoxesDisabled}
           {...formik.getFieldProps("code")}
         />
@@ -241,11 +223,10 @@ const FontGroup: React.FC<FontGroupProps> = ({
         <TextField
           onField={true}
           placeholder="Link online"
-          className1={`w-full mt-2 ${
-            formik.touched.onlineLink &&
+          className1={`w-full mt-2 ${formik.touched.onlineLink &&
             formik.errors.onlineLink &&
             "border-red-500"
-          }`}
+            }`}
           disabled={isOnlineLink} // Không bị vô hiệu hoá
           {...formik.getFieldProps("onlineLink")}
           onChange={(e) => handleOnlineLink(e, formik.handleChange)}
@@ -262,11 +243,10 @@ const FontGroup: React.FC<FontGroupProps> = ({
           placeholder="Số lượng sinh viên"
           className="p-0 mt-2"
           disabled={false} // Không bị vô hiệu hoá
-          className1={`w-full ${
-            formik.touched.quantity &&
+          className1={`w-full ${formik.touched.quantity &&
             formik.errors.quantity &&
             "border-red-500"
-          }`}
+            }`}
           {...formik.getFieldProps("quantity")}
         />
         {formik.errors.quantity && formik.touched.quantity && (
@@ -278,9 +258,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
           options={blocks}
           nameSelect="Block"
           // nameSelectValue=''
-          className1={`w-full ${
-            formik.touched.block && formik.errors.block && "border-red-500"
-          }`}
+          className1={`w-full ${formik.touched.block && formik.errors.block && "border-red-500"
+            }`}
           onChange={(value) =>
             formik.setFieldValue("block", value.target.value)
           }
@@ -295,11 +274,10 @@ const FontGroup: React.FC<FontGroupProps> = ({
           options={semesters}
           nameSelect="Học kỳ"
           nameSelectValue=""
-          className1={`w-full ${
-            formik.touched.semester &&
+          className1={`w-full ${formik.touched.semester &&
             formik.errors.semester &&
             "border-red-500"
-          }`}
+            }`}
           onChange={(value) =>
             formik.setFieldValue("semester", value.target.value)
           }
@@ -314,9 +292,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
           options={years ? years : year}
           nameSelect="Năm học"
           nameSelectValue=""
-          className1={`w-full ${
-            formik.touched.year && formik.errors.year && "border-red-500"
-          }`}
+          className1={`w-full ${formik.touched.year && formik.errors.year && "border-red-500"
+            }`}
           onChange={(value) => formik.setFieldValue("year", value.target.value)}
           value={formik.values.year || undefined}
         />
@@ -329,11 +306,10 @@ const FontGroup: React.FC<FontGroupProps> = ({
           options={subjectOptions}
           nameSelect="Môn học"
           nameSelectValue=""
-          className1={`w-full ${
-            formik.touched.subjectId &&
+          className1={`w-full ${formik.touched.subjectId &&
             formik.errors.subjectId &&
             "border-red-500"
-          }`}
+            }`}
           onChange={(value) => {
             formik.setFieldValue("subjectId", value.target.value);
             handleChangeSubject(value.target.value);
@@ -352,11 +328,10 @@ const FontGroup: React.FC<FontGroupProps> = ({
           disable={instructorValue ? false : isInstructor}
           nameSelectValue=""
           nameSelect="Giảng viên"
-          className1={`w-full ${
-            formik.touched.instructorId &&
+          className1={`w-full ${formik.touched.instructorId &&
             formik.errors.instructorId &&
             "border-red-500"
-          }`}
+            }`}
           onChange={(value) =>
             formik.setFieldValue("instructorId", value.target.value)
           }
@@ -373,9 +348,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
           options={shifts}
           // nameSelectValue=''
           nameSelect="Ca"
-          className1={`w-full ${
-            formik.touched.shiftId && formik.errors.shiftId && "border-red-500"
-          }`}
+          className1={`w-full ${formik.touched.shiftId && formik.errors.shiftId && "border-red-500"
+            }`}
           onChange={(value) =>
             formik.setFieldValue("shiftId", value.target.value)
           }
@@ -391,9 +365,8 @@ const FontGroup: React.FC<FontGroupProps> = ({
           nameSelect="Phòng"
           nameSelectValue=""
           disable={isRoom}
-          className1={`w-full ${
-            formik.touched.roomId && formik.errors.roomId && "border-red-500"
-          }`}
+          className1={`w-full ${formik.touched.roomId && formik.errors.roomId && "border-red-500"
+            }`}
           // onChange={(value) => formik.setFieldValue('roomId', value.target.value)}
           value={formik.values.roomId || undefined}
           onChange={(value) => {
@@ -414,11 +387,10 @@ const FontGroup: React.FC<FontGroupProps> = ({
           options={weekdays}
           nameSelectValue=""
           nameSelect="Ngày học trong tuần"
-          className1={`w-full ${
-            formik.touched.weekdays &&
+          className1={`w-full ${formik.touched.weekdays &&
             formik.errors.weekdays &&
             "border-red-500"
-          }`}
+            }`}
           onChange={(value) =>
             formik.setFieldValue("weekdays", value.target.value)
           }

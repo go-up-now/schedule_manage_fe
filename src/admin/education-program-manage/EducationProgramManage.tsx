@@ -282,12 +282,13 @@ function EducationProgramManage() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            showSelectBoxes={true}
+            // showSelectBoxes={true}
             // numberSelectBox={selectBoxs}
             headers={headers}
             renderRow={renderRow}
             data={educationPrograms} // Pass the fetched EducationPrograms data
             maxRow={10}
+            showSelectBox={true}
           />
           {selectedEducationProgram && (
             <Modal isOpen={true} onClose={closeModal} className="py-12">

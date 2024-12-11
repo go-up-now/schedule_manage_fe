@@ -20,7 +20,7 @@ function Table({
   showSelectBox = false,
   optionsValue = [],
   showSelectBoxes = false,
-  numberSelectBox = [],
+  numberSelectBox = [{}],
   showBtnStart = false,
   btnStart = [],
   showBtnEnd = false,
@@ -159,6 +159,7 @@ function Table({
                     className={selectBox.className}
                     optionNameSelect={selectBox.optionNameSelect}
                     avaiableNameSelect={selectBox.avaiableNameSelect}
+                    disable={selectBox.disabled}
                   />
                 ))}
               </div>

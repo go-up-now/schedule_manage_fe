@@ -30,7 +30,14 @@ export const semesterProgressValidationSchema = Yup.object().shape({
     .required("Vui lòng chọn block"),
   semester: Yup.string()
     .required("Vui lòng chọn học kỳ"),
-  year: Yup.string().required('Vui lòng nhập năm học'),
+  // year: Yup.string().required('Vui lòng nhập năm học'),
+  year: Yup.number()
+    .required("Vui lòng nhập năm học")
+    .integer("Năm học phải là số nguyên")
+    .positive("Năm học phải là số dương")
+    .typeError("Năm học phải là số") // Đây là thông báo lỗi khi kiểu dữ liệu không đúng
+    .min(2001, "Năm học phải lớn hơn 2000")
+    .max(2999, "Năm học phải nhỏ hơn 3000"),
   createDateStart: Yup.date()
     .required("Vui lòng nhập ngày bắt đầu cho admin")
     .test('is-valid-date', 'Ngày bắt đầu không được nhỏ hơn ngày hiện tại', function (value) {

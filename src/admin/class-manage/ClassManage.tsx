@@ -238,22 +238,6 @@ function ClassManage() {
     },
   ];
 
-  // const defaultValues = {
-  //   id: 0,
-  //   code: '',
-  //   onlineLink: '',
-  //   quantity: '',
-  //   block: '1',
-  //   semester: 'Spring',
-  //   year: selectedYear,
-  //   subjectId: '1',
-  //   subjectName: '',
-  //   instructorId: '1',
-  //   shiftId: '1',
-  //   roomId: '1',
-  //   weekdays: '2, 4, 6',
-  // };
-
   const formikClazz = useFormik({
     initialValues: {
       id: editClazz ? editClazz.id : 0,

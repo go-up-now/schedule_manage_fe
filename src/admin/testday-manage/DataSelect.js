@@ -6,9 +6,9 @@ export const instructor = [{ value: "lmt16", label: "lmt16" }];
 
 export const date = [{ value: "30/10/2024", label: "30/10/2024" }];
 
-export const clazz = [{ value: "SD18301", label: "SD18301" }];
+export const clazzOption = [{ value: "SD18301", label: "SD18301" }];
 
-export const ca = [
+export const shifts = [
   { value: 1, label: "Ca 1" },
   { value: 2, label: "Ca 2" },
   { value: 3, label: "Ca 3" },

@@ -50,3 +50,7 @@ export const getClazzesByInstructor = (block, semester, year) => {
       throw error;
     });
 };
+
+export const getAllClazzAPI = () => {
+  return axiosInstance.get(`/api/clazzs`);
+};

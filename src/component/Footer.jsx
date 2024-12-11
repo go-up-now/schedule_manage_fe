@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import icon from "../images/logo_fpt.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import nghia from '../images/nghia.jpg'
+import logo from '../images/logo.png'
+import hoc from '../images/hoc.jpg'
+import truong from '../images/truong.jpg'
+import phat from '../images/phat.jpg'
+import hieu from '../images/hieu.jpg'
+import nhu from '../images/nhu.jpg'
 
 const Footer = () => {
   // const [flexCol, setFlexCol] = useState("flex-wrap");
@@ -40,7 +47,7 @@ const Footer = () => {
               className={`w-full md:w-1/3 pt-0 md:pt-4 mb-3 md:mb-0 flex flex-row md:flex-col justify-start`}
             >
               <div className="w-36 mr-8">
-                <img src={icon} alt="" className="h-full w-full" />
+                <img src={logo} alt="" className="h-28 w-full" />
               </div>
               <div className="">
                 <p className="text-sm py-1">Công viên phần mềm Quang Trung</p>
@@ -77,32 +84,32 @@ const Footer = () => {
                 {/* Hình ảnh thành viên*/}
                 <div className="flex">
                   <img
-                    src="https://via.placeholder.com/40"
-                    alt="Member 1"
+                    src={nghia}
+                    alt="Hữu Nghĩa"
                     className="rounded-full w-10 h-10 -ml-2"
                   />
                   <img
-                    src="https://via.placeholder.com/40"
-                    alt="Member 2"
+                    src={hoc}
+                    alt="Tiến Học"
                     className="rounded-full w-10 h-10 -ml-2"
                   />
                   <img
-                    src="https://via.placeholder.com/40"
-                    alt="Member 3"
+                    src={hieu}
+                    alt="Trung Hiếu"
                     className="rounded-full w-10 h-10 -ml-2"
                   />
                   <img
-                    src="https://via.placeholder.com/40"
-                    alt="Member 4"
+                    src={phat}
+                    alt="Vinh Phát"
                     className="rounded-full w-10 h-10 -ml-2"
                   />
                   <img
-                    src="https://via.placeholder.com/40"
-                    alt="Member 5"
+                    src={truong}
+                    alt="Xuân Trường"
                     className="rounded-full w-10 h-10 -ml-2"
                   />
                   <img
-                    src="https://via.placeholder.com/40"
+                    src={nhu}
                     alt="Member 6"
                     className="rounded-full w-10 h-10 -ml-2"
                   />
