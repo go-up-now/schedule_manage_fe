@@ -216,11 +216,11 @@ function ClassManage() {
 
   const selectBoxs = [
     {
-      options: years ? years : year,
-      nameSelect: "Năm học",
-      onChange: handleYearChange,
-      value: selectedYear,
-      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      options: blocks,
+      nameSelect: "Block",
+      onChange: handleBlockChange,
+      value: selectedBlock,
+      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
     },
     {
       options: semesters,
@@ -230,10 +230,10 @@ function ClassManage() {
       className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
     },
     {
-      options: blocks,
-      nameSelect: "Block",
-      onChange: handleBlockChange,
-      value: selectedBlock,
+      options: years ? years : year,
+      nameSelect: "Năm học",
+      onChange: handleYearChange,
+      value: selectedYear,
       className: "w-full md:w-[150px] pt-4 md:pt-4",
     },
   ];

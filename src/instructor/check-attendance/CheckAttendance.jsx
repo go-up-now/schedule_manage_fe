@@ -31,8 +31,8 @@ function CheckAttendance() {
 
   // get danh sách khi đã có dữ liệu attenced
   useEffect(() => {
-    if (item && item.clazzId && item.scheduleId) {
-      getAttendanceByClazzId(item.clazzId, item.scheduleId)
+    if (item && item.clazzId && item.scheculeId) {
+      getAttendanceByClazzId(item.clazzId, item.scheculeId)
         .then((data) => {
           if (data && data.length > 0) {
             const initializedData = data.map((student) => ({
@@ -167,7 +167,7 @@ function CheckAttendance() {
   return (
     <Container>
       <TitleHeader
-        title={`Danh sách lớp id:${item.clazzId} - ${item.code} -${item.scheduleId}`}
+        title={`Danh sách lớp id:${item.clazzId} - ${item.code} -${item.scheculeId}`}
       />
       <div className="min-h-[600px]">
         <Table

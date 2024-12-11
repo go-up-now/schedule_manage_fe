@@ -174,7 +174,7 @@ const NoteForm = ({ valueMonth, valueYear, user, selectNotes }) => {
   };
 
   return (
-    <div className="border rounded-lg h-auto pt-4 md:w-[70%] w-full md:px-8 px-4">
+    <div className="border rounded-lg h-auto pt-4 md:w-[70%] w-full md:px-8 px-4 min-h-[575px] max-h-[575px]">
       <p className="w-full justify-center flex mt-4 text-xl font-medium mb-8">
         Thêm nhắc nhở
       </p>
@@ -278,7 +278,7 @@ const NoteForm = ({ valueMonth, valueYear, user, selectNotes }) => {
 
       {/* {error && <div>{error}</div>} */}
 
-      <div className="border-t border-black mx-4 flex flex-col mt-4 mb-4 py-1">
+      <div className="border-t border-black flex flex-col mt-8 pt-4 mb-4 py-1">
         <p className="w-full font-medium">
           SỐ LƯỢNG GHI CHÚ THÁNG {valueMonth} : {notesMonth.length}
         </p>
