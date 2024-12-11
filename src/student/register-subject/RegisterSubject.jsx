@@ -15,7 +15,7 @@ function RegisterSubject() {
   return (
     <Container>
       <TitleHeader title={"ĐĂNH KÝ MÔN HỌC"} />
-      <div className="">
+      <div className="mt-4">
         <Tabs tabs={tabsSubject} />
       </div>
     </Container>

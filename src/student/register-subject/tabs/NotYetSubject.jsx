@@ -1,13 +1,13 @@
 import Table from "../../../component/Table";
 import Button from "../../../component/Button";
 import React, { useState, useEffect } from "react";
-import {
-  getClazzByStudent,
-  postClazzByStudent,
-} from "../../../api/ClazzStudent";
+import { getClazzByStudent } from "../../../api/ClazzStudent";
+import { registerClass } from "../../../api/StudyIn";
 import { toast } from "react-toastify";
+
 function NotYetSubject() {
   const [getclazz, setGetClazz] = useState([]);
+  console.log(getclazz);
 
   const headers = [
     "Mã môn",
@@ -23,7 +23,8 @@ function NotYetSubject() {
   ];
 
   const header1s = ["Môn", "Lớp", "Ca", "Thứ", "Còn lại", " "];
-  // call api khi chưa chọn bộ môn
+
+  // Call API to get class data
   useEffect(() => {
     const fetchClazzByStudent = async () => {
       try {
@@ -41,14 +42,15 @@ function NotYetSubject() {
 
   const handleRegister = async (clazzId) => {
     try {
-      const response = await postClazzByStudent(clazzId);
-      toast.success("Đăng ký thành công!");
-      const updatedClazzes = await getClazzByStudent();
-      setGetClazz(updatedClazzes.data);
+      const response = await registerClass(clazzId);
+      toast.success("Đăng ký lớp học thành công!");
+      console.log("Registration successful:", response);
     } catch (error) {
-      toast.error("Đăng ký thất bại!");
+      toast.error("Đăng ký lớp học không thành công!");
+      console.error("Registration error:", error);
     }
   };
+
   const renderRow = (item) => [
     <td key={`item-code-${item.id}`} className="px-6 py-4">
       {item.subjectCode}
@@ -111,59 +113,51 @@ function NotYetSubject() {
     </td>,
   ];
 
-  const [desktop, setDesktop] = useState(true);
-  const [mobile, setMobile] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 783) {
-        setMobile(true);
-        setDesktop(false);
+        setIsDesktop(false);
       } else {
-        setMobile(false);
-        setDesktop(true);
+        setIsDesktop(true);
       }
     };
     window.addEventListener("resize", handleResize);
-    // Kiểm tra kích thước màn hình khi component được mount
-    handleResize();
+    handleResize(); // Check screen size on component mount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [mobile, desktop]);
+  }, []);
 
   return (
-    <div className="">
-      {desktop && (
-        <>
-          <Table
-            DefaultTable={true}
-            showOptions={true}
-            showSearch={true}
-            showSelectBox={true}
-            showBtnEnd={true}
-            headers={headers}
-            renderRow={renderRow}
-            data={getclazz}
-            maxRow={10}
-          />
-        </>
-      )}
-      {mobile && (
-        <>
-          <Table
-            DefaultTable={true}
-            showOptions={true}
-            showSearch={true}
-            showSelectBox={true}
-            headers={header1s}
-            renderRow={renderRow1}
-            data={getclazz}
-            maxRow={5}
-          />
-        </>
+    <div>
+      {isDesktop ? (
+        <Table
+          DefaultTable={true}
+          showOptions={true}
+          showSearch={true}
+          showSelectBox={true}
+          showBtnEnd={true}
+          headers={headers}
+          renderRow={renderRow}
+          data={getclazz}
+          maxRow={10}
+        />
+      ) : (
+        <Table
+          DefaultTable={true}
+          showOptions={true}
+          showSearch={true}
+          showSelectBox={true}
+          headers={header1s}
+          renderRow={renderRow1}
+          data={getclazz}
+          maxRow={5}
+        />
       )}
     </div>
   );
 }
+
 export default NotYetSubject;

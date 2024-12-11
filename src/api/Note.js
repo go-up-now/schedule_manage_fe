@@ -1,6 +1,11 @@
 import axiosInstance from "./AxiosConfig";
 
 // get note theo ngày, tháng và năm
+export const getAllNoteAPI = () => {
+  return axiosInstance.get("/api/notes/getAllNote");
+};
+
+// get note theo ngày, tháng và năm
 export const getNoteByDayAPI = (day, month, year) => {
   return axiosInstance.get("/api/notes/getNoteByDay", {
     params: {
