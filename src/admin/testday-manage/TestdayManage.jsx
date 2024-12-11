@@ -46,7 +46,7 @@ function TestdayManage() {
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          className="text-xs p-4"
+          className="text-[10px] p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -66,9 +66,9 @@ function TestdayManage() {
   // API Call
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
-  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
-  const [selectedBlock, setSelectedBlock] = useState(null);
-  const [selectedSemester, setSelectedSemester] = useState(null);
+  const [selectedSpecialization, setSelectedSpecialization] = useState(1);
+  const [selectedBlock, setSelectedBlock] = useState(1);
+  const [selectedSemester, setSelectedSemester] = useState("Spring");
   const [exams, setExams] = useState([]);
 
   const handleYearChange = (event) => {
@@ -180,6 +180,7 @@ function TestdayManage() {
       onChange: handleBlockChange,
       value: selectedBlock,
       className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: semesters,
@@ -187,6 +188,7 @@ function TestdayManage() {
       onChange: handleSemesterChange,
       value: selectedSemester,
       className: "w-full mr-1 md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: years,
@@ -194,6 +196,7 @@ function TestdayManage() {
       onChange: handleYearChange,
       value: selectedYear,
       className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: specializations,
@@ -201,6 +204,7 @@ function TestdayManage() {
       onChange: handleSpecializationChange,
       value: selectedSpecialization,
       className: "w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
   ];
 

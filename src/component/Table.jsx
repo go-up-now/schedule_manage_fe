@@ -139,6 +139,7 @@ function Table({
                     onChange={selectBox.onChange}
                     value={selectBox.value}
                     className={selectBox.className}
+                    disable={selectBox.disable}
                   />
                 ))}
               </div>
@@ -159,6 +160,7 @@ function Table({
                     className={selectBox.className}
                     optionNameSelect={selectBox.optionNameSelect}
                     avaiableNameSelect={selectBox.avaiableNameSelect}
+                    disable={selectBox.disable}
                   />
                 ))}
               </div>
@@ -250,8 +252,9 @@ function Table({
             {getPageNumbers().map((page, index) => (
               <button
                 key={index}
-                className={`mx-0 px-4 py-2 font-bold ${currentPage === page ? "bg-blue-50" : ""
-                  } rounded`}
+                className={`mx-0 px-4 py-2 font-bold ${
+                  currentPage === page ? "bg-blue-50" : ""
+                } rounded`}
                 onClick={() => setCurrentPage(page)}
               >
                 {page + 1}

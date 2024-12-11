@@ -87,6 +87,7 @@ function StudentManage() {
   }, []);
 
   const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
   useEffect(() => {
     const fetchCourses = async () => {
       const data = await getAllCourse(); // Fetch the Courses
@@ -95,14 +96,20 @@ function StudentManage() {
         label: course.course,
       })); // Format data with value and label
       setCourses(formattedCourses);
+      if (formattedCourses.length > 0) {
+        setSelectedCourse(formattedCourses[0].value); // Set the first course as default
+      }
     };
-
     fetchCourses(); // Call the API function
   }, []);
+  console.log(selectedCourse);
 
   // Call API
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [selectedMajor, setSelectedMajor] = useState(null);
+
+  const [selectedMajor, setSelectedMajor] = useState(1);
+  console.log(selectedCourse);
+  console.log(selectedMajor);
+
   const [students, setStudents] = useState<Student[]>([]);
   const dispatch = useDispatch();
   const handleEditClick = useCallback((student) => {
@@ -140,7 +147,7 @@ function StudentManage() {
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -219,6 +226,7 @@ function StudentManage() {
       value: selectedCourse,
       nameSelectValue: null,
       className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: specializations,
@@ -227,6 +235,7 @@ function StudentManage() {
       value: selectedMajor,
       nameSelectValue: null,
       className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
   ];
 
@@ -403,7 +412,7 @@ function StudentManage() {
       code: "PS14121", // Lấy mã chương trình học
       first_name: "Thanh",
       last_name: "Phan Thị",
-      birthday: new Date('02-02-2002'),
+      birthday: new Date("02-02-2002"),
       gender: "Nữ",
       address: "Ho Chi Minh City",
       email: "2@gmail.com",

@@ -84,8 +84,8 @@ function ClassManage() {
   const [years, setYears] = useState([]);
   // Call API
   const [selectedYear, setSelectedYear] = useState<Number>(2024);
-  const [selectedSemester, setSelectedSemester] = useState(null);
-  const [selectedBlock, setSelectedBlock] = useState(null);
+  const [selectedSemester, setSelectedSemester] = useState(1);
+  const [selectedBlock, setSelectedBlock] = useState(1);
   const [clazzs, setClazzs] = useState<Clazz[]>([]);
   const [instructorValue, setInstructorValue] = useState("");
   const [subjectValue, setSubjectValue] = useState("");
@@ -141,7 +141,7 @@ function ClassManage() {
     <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -221,6 +221,7 @@ function ClassManage() {
       onChange: handleBlockChange,
       value: selectedBlock,
       className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: semesters,
@@ -228,6 +229,7 @@ function ClassManage() {
       onChange: handleSemesterChange,
       value: selectedSemester,
       className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
     {
       options: years ? years : year,
@@ -235,6 +237,7 @@ function ClassManage() {
       onChange: handleYearChange,
       value: selectedYear,
       className: "w-full md:w-[150px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
   ];
 
@@ -279,10 +282,8 @@ function ClassManage() {
 
       // Tạo đối tượng mới với 'rest' và giá trị mới của 'x'
       let formattedClazz;
-      if (roomId == "")
-        formattedClazz = { ...values, roomId: 0 };
-      else
-        formattedClazz = { ...values };
+      if (roomId == "") formattedClazz = { ...values, roomId: 0 };
+      else formattedClazz = { ...values };
 
       const action = async () => {
         if (values.id === 0) {

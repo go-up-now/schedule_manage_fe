@@ -1,7 +1,7 @@
 import TextField from "../../component/TextField";
 
 function TextFieldGroup({
-  major,
+  specialization_name,
   codeSubject,
   codeClass,
   codeInstructor,
@@ -12,8 +12,8 @@ function TextFieldGroup({
   return (
     <div className=" flex flex-wrap ">
       <TextField
-        label="Chuyên ngành:"
-        value={major}
+        label="Bộ môn:"
+        value={specialization_name}
         className="w-2/4 pt-4 px-4"
         disabled
       />
