@@ -220,6 +220,7 @@ function StudentManage() {
   }, [selectedCourse, selectedMajor, isReLoadTable]);
   const selectBoxs = [
     {
+      name: "Khóa học:",
       options: courses,
       nameSelect: "Khoá",
       onChange: handleCourseChange,
@@ -229,6 +230,7 @@ function StudentManage() {
       avaiableNameSelect: false,
     },
     {
+      name: "Bộ môn:",
       options: specializations,
       nameSelect: "Bộ môn",
       onChange: handleMajorChange,
@@ -447,7 +449,7 @@ function StudentManage() {
             <Modal
               isOpen={true}
               onClose={closeModal}
-              label={` ${selectedStudent.lastName} ${selectedStudent.firstName} - ${selectedStudent.code}`}
+              label={`${selectedStudent.code} - ${selectedStudent.lastName} ${selectedStudent.firstName}`}
             >
               <div>
                 <div className="w-[700px] py-2">

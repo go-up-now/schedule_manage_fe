@@ -67,3 +67,19 @@ export const getAllByBlockAndSemesterAndYear = (block, semester, year) => {
       throw error;
     });
 };
+
+export const createScheduleAPI = (formData) => {
+  return axiosInstance.post('/api/schedules', formData);  
+};
+
+export const updateScheduleAPI = (formData, id) => {
+  return axiosInstance.put(`/api/schedules/${id}`, formData);
+};
+
+export const importExcelScheduleAPI = (formData) => {
+  return axiosInstance.post(`/api/schedules/excel/upload`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

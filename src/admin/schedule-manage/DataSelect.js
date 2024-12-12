@@ -24,7 +24,7 @@ export const instructor = [
   { value: "lmt16", label: "lmt16" },
 ];
 
-export const clazz = [
+export const clazzOption = [
   { value: null, label: "- Lớp -" },
   { value: "SD18301", label: "SD18301" },
 ];

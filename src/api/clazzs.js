@@ -33,6 +33,7 @@ export const importExcelClazzAPI = (formData) => {
     },
   });
 };
+
 export const getClazzesByInstructor = (block, semester, year) => {
   return axiosInstance
     .get(`/api/clazzs/getClazzesByInstructor`, {

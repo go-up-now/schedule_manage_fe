@@ -142,6 +142,7 @@ function EventManage() {
 
   const selectBoxs = [
     {
+      name: "Khu vực:",
       options: area ? area : areaOption,
       nameSelect: "Khu vực",
       onChange: handleAreaChange,

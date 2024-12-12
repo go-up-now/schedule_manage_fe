@@ -172,6 +172,7 @@ function InstructorManage() {
 
   const selectBoxs = [
     {
+      name: "Bộ môn:",
       options: specializations,
       nameSelect: "Bộ môn",
       onChange: handleSpecializationChange,
@@ -272,9 +273,9 @@ function InstructorManage() {
       values.id === 0
         ? openConfirm(action, "Bạn có chắc muốn thêm giảng viên này?")
         : openConfirm(
-            action,
-            `Bạn có chắc muốn cập nhật giảng viên ${editInstructor?.code}?`
-          );
+          action,
+          `Bạn có chắc muốn cập nhật giảng viên ${editInstructor?.code}?`
+        );
     },
   });
 
@@ -388,7 +389,7 @@ function InstructorManage() {
             <Modal
               isOpen={true}
               onClose={closeModal}
-              label={` ${selectedInstructor.lastName} ${selectedInstructor.firstName} - ${selectedInstructor.code}`}
+              label={`${selectedInstructor.code} - ${selectedInstructor.lastName} ${selectedInstructor.firstName}`}
             >
               <div>
                 <div className="w-[700px] py-2">

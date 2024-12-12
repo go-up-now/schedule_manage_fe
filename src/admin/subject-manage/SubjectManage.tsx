@@ -162,6 +162,7 @@ function SubjectManage() {
 
   const selectBoxs = [
     {
+      name: "Bộ môn:",
       options: specializations,
       nameSelect: "Bộ môn",
       onChange: handleSpecializationChange,

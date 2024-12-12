@@ -280,7 +280,7 @@ function EducationProgramManage() {
           const formattedYears = response.data.map((item) => ({
             value: item.year,
             label: item.year,
-          }));
+          })).reverse();
           setYears(formattedYears);
         }
       }

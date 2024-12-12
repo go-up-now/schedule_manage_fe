@@ -84,7 +84,7 @@ function ClassManage() {
   const [years, setYears] = useState([]);
   // Call API
   const [selectedYear, setSelectedYear] = useState<Number>(2024);
-  const [selectedSemester, setSelectedSemester] = useState(1);
+  const [selectedSemester, setSelectedSemester] = useState('Spring');
   const [selectedBlock, setSelectedBlock] = useState(1);
   const [clazzs, setClazzs] = useState<Clazz[]>([]);
   const [instructorValue, setInstructorValue] = useState("");
@@ -183,7 +183,7 @@ function ClassManage() {
           const formattedYears = response.data.map((item) => ({
             value: item.year,
             label: item.year,
-          }));
+          })).reverse();
           setYears(formattedYears);
         }
       }
@@ -216,6 +216,7 @@ function ClassManage() {
 
   const selectBoxs = [
     {
+      name: "Block:",
       options: blocks,
       nameSelect: "Block",
       onChange: handleBlockChange,
@@ -224,6 +225,7 @@ function ClassManage() {
       avaiableNameSelect: false,
     },
     {
+      name: "Học kỳ:",
       options: semesters,
       nameSelect: "Học kỳ",
       onChange: handleSemesterChange,
@@ -232,6 +234,7 @@ function ClassManage() {
       avaiableNameSelect: false,
     },
     {
+      name: "Năm học:",
       options: years ? years : year,
       nameSelect: "Năm học",
       onChange: handleYearChange,
@@ -421,7 +424,9 @@ function ClassManage() {
               isOpen={true}
               onClose={closeModal}
               className=""
-              label={<>{selectedClazz.code}</>}
+              label={<>
+                Lớp: {selectedClazz.code} - Năm: {selectedClazz.year} - Học kỳ: {selectedClazz.semester} - Block: {selectedClazz.block}
+              </>}
             >
               <div>
                 <div className="w-[700px] py-2">

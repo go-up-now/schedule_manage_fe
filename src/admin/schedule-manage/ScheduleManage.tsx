@@ -1,52 +1,51 @@
-import React, { useState, useEffect, useCallback } from "react";
 import MiniMenu from "../../component/MiniMenu.jsx";
+import React, { useState, useEffect, useCallback } from "react";
 import Table from "../../component/Table.jsx";
 import Button from "../../component/Button.jsx";
 import Modal from "../../component/Modal.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faFileImport } from "@fortawesome/free-solid-svg-icons";
 import FontGroup from "./FontGroup.tsx";
-import TextFieldGroup from "./TextFieldGroup.jsx";
-import { getAllExambyBlockSemesterYearSpecialization, createExamScheduleAPI, updateExamScheduleAPI, importExcelExamScheduleAPI } from "../../api/examSchedule.js";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import TextFieldGroup from "./TextFieldGroup.jsx";
 import { getAllYearAPI } from "../../api/years.js";
+import { getAllByBlockAndSemesterAndYear, updateScheduleAPI, createScheduleAPI, importExcelScheduleAPI } from "../../api/Schedule.js";
 import { getAllBlocksAPI } from "../../api/Block.js";
 import { getAllSemesterAPI } from "../../api/Semester.js";
-import { getAllSpecializationsAPI } from "../../api/Specialization.js";
-import { getAllClazzAPI } from '../../api/clazzs.js'
-import Modal2 from "../../component/Modal2.tsx";
-import { useFormik } from "formik";
-import { toast } from "react-toastify";
-import { examScheduleValidationSchema } from "./FontGroup.tsx";
+import { format } from "date-fns";
 import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
 import UploadExcelModal from "../../utils/UpLoadExcel.tsx";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { scheduleValidationSchema } from "./FontGroup.tsx";
+import Modal2 from "../../component/Modal2.tsx";
 
-interface ExamSchedule {
-  exam_id: number;
-  exam_date: string;
-  clazz_code: string;
+interface Schedule {
+  id: number;
   clazzId: number;
-  subject_code: number;
-  shift_id: number;
+  clazz_code: string;
+  date_schedule: string;
   instructor_code: string;
   room_name: string;
-  roomId: number;
-  batch_exam: string;
+  specialization_name: string;
+  status: boolean;
+  subject_code: string;
+  shift_id: number;
   subject_name: string;
-  last_name: string;
-  first_name: string;
+  instructor_lastName: string;
+  instructor_firstName: string;
+  building_name: string;
   start_time: string;
   end_time: string;
-  building_name: string;
 }
 
-function TestdayManage() {
-  const headers = ["Mã môn", "Mã lớp", "Giảng viên", "Ngày thi", "Đợt thi", "Ca", "Phòng", " "];
+function ScheduleManage() {
+  const headers = ["Mã lớp", "Mã Môn", "Ngày", "Trạng thái", ""];
 
-  const [selectedExamSchedule, setSelectedExamSchedule] = useState<ExamSchedule>();
-  const [editExamSchedule, setEditExamSchedule] = useState<ExamSchedule>();
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule>();
+  const [editSchedule, setEditSchedule] = useState<Schedule>();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [isReLoadTable, setIsReLoadTable] = useState(false);
   const [isModalOpenExcel, setIsModalOpenExcel] = useState(false);
@@ -58,24 +57,28 @@ function TestdayManage() {
     confirmQuestion,
   } = useConfirm();
 
-  // API Call
-  const currentYear = new Date().getFullYear();
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-  const [selectedSpecialization, setSelectedSpecialization] = useState(1);
+  // Call API useState<Number>(2024)
   const [selectedBlock, setSelectedBlock] = useState(1);
   const [selectedSemester, setSelectedSemester] = useState("Spring");
-  const [exams, setExams] = useState<ExamSchedule[]>([]);
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(false);
-  const [clazz, setClazz] = useState([]);
+  const [blocks, setBlocks] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [years, setYears] = useState([]);
 
-  const handleEditClick = useCallback((exam) => {
-    setEditExamSchedule(exam);
+  const handleEditClick = useCallback((schedule) => {
+    setEditSchedule(schedule);
     setIsEditDisabled(true);
   }, []);
 
+  // const openModal = (schedule) => setSelectedSchedule(schedule);
+  // const closeModal = () => setSelectedSchedule(null);
+
   const openModal = (item, id) => {
     if (id === "chi-tiet") {
-      setSelectedExamSchedule(item);
+      setSelectedSchedule(item);
     }
     else if (id === "excel") {
       setIsModalOpenExcel(true);
@@ -87,37 +90,29 @@ function TestdayManage() {
   };
 
   const closeModal = () => {
-    setSelectedExamSchedule("");
+    setSelectedSchedule("");
     setIsModalOpenExcel(false);
     // setIsModalConfirmOpen(false);
   };
 
-  const renderRow = (item: ExamSchedule) => [
-    <td key={`item-subject_code-${item.exam_id}`} className="border-b">
-      {item.subject_code}
-    </td>,
-    <td key={`item-clazz_code-${item.exam_id}`} className="border-b">
+  const renderRow = (item: Schedule) => [
+    <td key={`item-clazz_code-${item.id}`} className=" border-b">
       {item.clazz_code}
     </td>,
-    <td key={`item-instructor_code-${item.exam_id}`} className="border-b">
-      {item.instructor_code}
+    <td key={`item-subject_code-${item.id}`} className=" border-b">
+      {item.subject_code}
     </td>,
-    <td key={`item-exam_date-${item.exam_id}`} className="border-b">
-      {item.exam_date}
+    <td key={`item-date_schedule-${item.id}`} className=" border-b">
+      {format(item.date_schedule, "dd-MM-yyyy")}
     </td>,
-    <td key={`item-batch_exam-${item.exam_id}`} className="border-b">
-      {item.batch_exam}
+    <td key={`item-status-${item.id}`} className=" border-b">
+      {item.status}
+      <input type="checkbox" checked={item.status} />
     </td>,
-    <td key={`item-shift_id-${item.exam_id}`} className="border-b">
-      {item.shift_id}
-    </td>,
-    <td key={`item-room_name-${item.exam_id}`} className="border-b">
-      {item.room_name}
-    </td>,
-    <td key={`item-case-${item.exam_id}`}>
+    <td key={`item-case-${item.id}`}>
       <div className="flex justify-center items-center">
         <MiniMenu
-          classNameBtn="text-xs p-4"
+          classNameBtn="text-2xl p-4"
           iconMenu={faCaretDown}
           menuItems={[
             {
@@ -134,45 +129,35 @@ function TestdayManage() {
     </td>,
   ];
 
-
-
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
-  };
-  const handleSpecializationChange = (event) => {
-    setSelectedSpecialization(event.target.value);
-  };
   const handleBlockChange = (event) => {
     setSelectedBlock(event.target.value);
   };
+
   const handleSemesterChange = (event) => {
     setSelectedSemester(event.target.value);
   };
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
 
+  // Fetch schedule whenever course or major is selected
   useEffect(() => {
-    if (
-      selectedYear &&
-      selectedSpecialization &&
-      selectedBlock &&
-      selectedSemester
-    ) {
-      getAllExambyBlockSemesterYearSpecialization(
+    if (selectedBlock && selectedSemester && selectedYear) {
+      getAllByBlockAndSemesterAndYear(
         selectedBlock,
         selectedSemester,
-        selectedYear,
-        selectedSpecialization // Ensure this parameter matches "specializationId" in the API call
+        selectedYear
       )
         .then((data) => {
-          setExams(data);
+          setSchedules(data);
         })
         .catch((error) => {
-          console.error("Error fetching exam schedules:", error);
+          console.error("Error fetching schedule:", error);
         });
     }
-  }, [selectedYear, selectedSpecialization, selectedBlock, selectedSemester, isReLoadTable]);
+  }, [selectedBlock, selectedSemester, selectedYear, isReLoadTable]);
 
   // GET API VALUE CB BLOCK
-  const [blocks, setBlocks] = useState([]);
   useEffect(() => {
     const fetchBlocks = async () => {
       const data = await getAllBlocksAPI();
@@ -187,7 +172,6 @@ function TestdayManage() {
   }, []);
 
   // GET API VALUE CB SEMESTER
-  const [semesters, setSemesters] = useState([]);
   useEffect(() => {
     const fetchSemesters = async () => {
       const data = await getAllSemesterAPI();
@@ -202,7 +186,6 @@ function TestdayManage() {
   }, []);
 
   // GET API VALUE CB YEAR
-  const [years, setYears] = useState([]);
   useEffect(() => {
     const fetchYears = async () => {
       try {
@@ -222,38 +205,23 @@ function TestdayManage() {
     fetchYears();
   }, []);
 
-  //GET API VALUE CB SPECIALIZATION
-  const [specializations, setSpecializations] = useState([]);
-  useEffect(() => {
-    const fetchSpecializations = async () => {
-      const data = await getAllSpecializationsAPI(); // Fetch the specializations
-      const formattedSpecializations = data.map((specialization) => ({
-        value: specialization.id,
-        label: specialization.name,
-      })); // Format data with value and label
-      setSpecializations(formattedSpecializations);
-    };
-
-    fetchSpecializations(); // Call the API function
-  }, []);
-
   const selectBoxs = [
     {
-      name: "Block:",
       options: blocks,
+      name: "Block:",
       nameSelect: "Block",
       onChange: handleBlockChange,
       value: selectedBlock,
-      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
+      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
       avaiableNameSelect: false,
     },
     {
       name: "Học kỳ:",
       options: semesters,
-      nameSelect: "Học kỳ",
+      nameSelect: "Kỳ",
       onChange: handleSemesterChange,
       value: selectedSemester,
-      className: "w-full mr-1 md:w-[150px] pt-4 md:pt-4",
+      className: "w-full md:w-[150px] mr-1 pt-4 md:pt-4",
       avaiableNameSelect: false,
     },
     {
@@ -262,57 +230,34 @@ function TestdayManage() {
       nameSelect: "Năm",
       onChange: handleYearChange,
       value: selectedYear,
-      className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
-      avaiableNameSelect: false,
-    },
-    {
-      name: "Bộ môn:",
-      options: specializations,
-      nameSelect: "Bộ môn",
-      onChange: handleSpecializationChange,
-      value: selectedSpecialization,
       className: "w-full md:w-[150px] pt-4 md:pt-4",
       avaiableNameSelect: false,
     },
   ];
 
-  useEffect(() => {
-    const fetchAllClazz = async () => {
-      const response = await getAllClazzAPI(); // Fetch the clazz
-      const formattedClazz = response.data.map((clazz) => ({
-        value: clazz.id,
-        label: `${clazz.code + ' - ' + clazz.semester + ' ' + clazz.year + ' - Block ' + clazz.block}`,
-      })); // Format data with value and label
-      setClazz(formattedClazz);
-    };
-
-    fetchAllClazz(); // Call the API function
-  }, []);
-
-  const formikExamSchedule = useFormik({
+  const formikSchedule = useFormik({
     initialValues: {
-      id: editExamSchedule ? editExamSchedule.exam_id : 0,
-      date: editExamSchedule ? editExamSchedule.exam_date : "",
-      clazzId: editExamSchedule ? editExamSchedule.clazzId : "0",
-      batch: editExamSchedule ? editExamSchedule.batch_exam : "0",
-      roomId: editExamSchedule ? editExamSchedule.roomId : "0",
-      shiftId: editExamSchedule ? editExamSchedule.shift_id : "0",
+      id: editSchedule ? editSchedule.id : 0,
+      date: editSchedule ? editSchedule.date_schedule : "",
+      clazzId: editSchedule ? editSchedule.clazzId : "0",
+      status: editSchedule ? editSchedule.status : true,
     },
     enableReinitialize: true,
-    validationSchema: examScheduleValidationSchema,
+    validationSchema: scheduleValidationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-      const formattedExamSchedule = { ...values };
+      const formattedSchedule = { ...values };
+      console.log("formattedSchedule:", formattedSchedule);
       const action = async () => {
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading
           try {
-            const response = await createExamScheduleAPI(formattedExamSchedule);
+            const response = await createScheduleAPI(formattedSchedule);
             if (response && response.data) {
               if (response.statusCode !== 200)
                 toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Thêm mới lịch thi thành công");
+                toast.success("Thêm mới lịch học thành công");
                 resetForm();
                 setIsReLoadTable(!isReLoadTable);
               }
@@ -325,17 +270,17 @@ function TestdayManage() {
         } else {
           setLoading(true); // Bắt đầu loading
           try {
-            const response = await updateExamScheduleAPI(
-              formattedExamSchedule,
+            const response = await updateScheduleAPI(
+              formattedSchedule,
               values.id
             );
             if (response && response.data) {
               if (response.statusCode !== 200)
                 toast.error(response.message);
               if (response.statusCode === 200) {
-                toast.success("Cập nhật lịch thi thành công");
+                toast.success("Cập nhật lịch học thành công");
                 resetForm();
-                setEditExamSchedule(null);
+                setEditSchedule(null);
                 setIsReLoadTable(!isReLoadTable);
                 setIsEditDisabled(false);
               }
@@ -351,25 +296,25 @@ function TestdayManage() {
         // setIsReLoadTable(!isReLoadTable);
       };
       values.id === 0
-        ? openConfirm(action, `Bạn có chắc muốn thêm lịch thi này?`)
+        ? openConfirm(action, `Bạn có chắc muốn thêm lịch học này?`)
         : openConfirm(
           action,
-          `Bạn có chắc muốn cập nhật lịch thi này?`
+          `Bạn có chắc muốn cập nhật lịch học này?`
         );
     },
   });
 
   // Excel
-  const extractedData = exams.map((item) => ({
+  const extractedData = schedules.map((item) => ({
     subject_code: item.subject_code,
     subject_name: item.subject_name,
     clazz_code: item.clazz_code,
     instructor_code: item.instructor_code,
-    instructor_name: item.last_name + ' ' + item.first_name,
-    exam_date: item.exam_date,
+    instructor_name: item.instructor_lastName + ' ' + item.instructor_firstName,
+    date_schedule: item.date_schedule,
     shift_id: item.shift_id,
     room_name: item.room_name,
-    batch_exam: item.batch_exam,
+    specialization_name: item.specialization_name,
     building_name: item.building_name,
     start_time: item.start_time,
     end_time: item.end_time,
@@ -381,9 +326,6 @@ function TestdayManage() {
       STT: "1",
       date: new Date("2025-01-03"),
       clazzCode: "SD18301",
-      batch: 2,
-      roomName: 'F.204',
-      shift: 3,
       year: 2024,
       semester: 'Spring',
       block: 1,
@@ -393,9 +335,6 @@ function TestdayManage() {
       STT: "2",
       date: new Date("2025-01-06"),
       clazzCode: "SD18303",
-      batch: 3,
-      roomName: 'F.206',
-      shift: 2,
       year: 2024,
       semester: 'Spring',
       block: 2,
@@ -405,7 +344,7 @@ function TestdayManage() {
 
   return (
     <Container>
-      <TitleHeader title="QUẢN LÝ LỊCH THI" />
+      <TitleHeader title="QUẢN LÝ LỊCH HỌC" />
       <div className={`flex flex-col md:flex-row min-h-svh`}>
         <div className="p-2 flex-1">
           <Table
@@ -416,37 +355,37 @@ function TestdayManage() {
             numberSelectBox={selectBoxs}
             headers={headers}
             renderRow={renderRow}
-            data={exams} // Pass the fetched exam data
+            data={schedules}
             maxRow={10}
             cbWidth="w-8/12"
           />
-          {selectedExamSchedule && (
+          {selectedSchedule && (
             <Modal
               isOpen={true}
               onClose={closeModal}
               className=""
               label={
                 <>
-                  {selectedExamSchedule.clazz_code} - {selectedExamSchedule.subject_code} - {selectedExamSchedule.subject_name}
+                  {selectedSchedule.clazz_code} - {selectedSchedule.subject_code} -{" "}
+                  {format(selectedSchedule.date_schedule, "dd/MM/yyyy")}
                 </>
               }
             >
               <div>
                 <div className="w-[700px] py-2">
                   <TextFieldGroup
-                    exam_date={selectedExamSchedule.exam_date}
-                    clazz_code={selectedExamSchedule.clazz_code}
-                    subject_code={selectedExamSchedule.subject_code}
-                    shift_id={selectedExamSchedule.shift_id}
-                    instructor_code={selectedExamSchedule.instructor_code}
-                    room_name={selectedExamSchedule.room_name}
-                    batch_exam={selectedExamSchedule.batch_exam}
-                    subject_name={selectedExamSchedule.subject_name}
-                    last_name={selectedExamSchedule.last_name}
-                    first_name={selectedExamSchedule.first_name}
-                    start_time={selectedExamSchedule.start_time}
-                    end_time={selectedExamSchedule.end_time}
-                    building_name={selectedExamSchedule.building_name}
+                    clazz_code={selectedSchedule.clazz_code}
+                    date_schedule={format(
+                      selectedSchedule.date_schedule,
+                      "dd-MM-yyyy"
+                    )}
+                    instructor_code={selectedSchedule.instructor_code}
+                    room_name={selectedSchedule.room_name}
+                    shift_id={selectedSchedule.shift_id}
+                    specialization_name={selectedSchedule.specialization_name}
+                    status={selectedSchedule.status}
+                    subject_code={selectedSchedule.subject_code}
+                    subject_name={selectedSchedule.subject_name}
                   />
                 </div>
               </div>
@@ -468,12 +407,11 @@ function TestdayManage() {
           </div>
           <FontGroup
             isEditDisabled={isEditDisabled}
-            onClick={() => formikExamSchedule.submitForm()}
-            formik={formikExamSchedule}
+            onClick={() => formikSchedule.submitForm()}
+            formik={formikSchedule}
             loading={loading}
-            setEditExamSchedule={setEditExamSchedule}
+            setEditSchedule={setEditSchedule}
             setIsEditDisabled={setIsEditDisabled}
-            clazz={clazz}
           />
           <ModalConfirm
             isOpen={isConfirmOpen}
@@ -491,10 +429,10 @@ function TestdayManage() {
               onClose={closeModal}
               dataExport={extractedData}
               dataTemplate={dataTemplate}
-              exportFileName="Danh sách lịch thi"
-              exportFileNamePattern="Danh sách lịch thi mẫu để import"
-              sheetName="DSLT"
-              importExcelAPI={importExcelExamScheduleAPI}
+              exportFileName="Danh sách lịch học"
+              exportFileNamePattern="Danh sách lịch học mẫu để import"
+              sheetName="DSLH"
+              importExcelAPI={importExcelScheduleAPI}
               isReLoadTable={isReLoadTable}
               setIsReLoadTable={setIsReLoadTable}
             />
@@ -506,4 +444,4 @@ function TestdayManage() {
     </Container>
   );
 }
-export default TestdayManage;
+export default ScheduleManage;

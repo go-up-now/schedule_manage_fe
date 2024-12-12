@@ -48,7 +48,7 @@ interface SemesterProgress {
 }
 
 function SemesterManage() {
-  const headers = ["Block", "Semester", "Year", "Active", "Chi tiết"];
+  const headers = ["Block", "Học kỳ", "Năm học", "Trạng thái", ""];
   const [selectedSemesterProgress, setSelectedSemesterProgress] =
     useState<SemesterProgress | null>(null);
   const [editSemesterProgress, setEditSemesterProgress] =
@@ -133,9 +133,8 @@ function SemesterManage() {
     </td>,
     <td
       key={`item-active-${item.id}`}
-      className={`border-b font-bold ${
-        item.isActive ? "text-green-500" : "text-red-500"
-      }`}
+      className={`border-b font-bold ${item.isActive ? "text-green-500" : "text-red-500"
+        }`}
     >
       {item.isActive ? "Đang hoạt động" : "Không hoạt động"}
     </td>,
