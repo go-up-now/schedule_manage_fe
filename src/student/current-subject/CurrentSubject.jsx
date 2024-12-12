@@ -10,6 +10,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 
+const subjects = [
+  {
+    code_subject: "COM107",
+    name_subject: "Tin học",
+    credit_subject: 3,
+    code_clazz: "SD18301",
+    shift: 1,
+    day_of_week: "Monday, Wednesday, Friday",
+    instructor_first_name: "Vỹ",
+    instrutor_last_name: "Thái Anh",
+    start_time: "07:15:00",
+    end_time: "09:15:00",
+  },
+  {
+    code_subject: "SKI101",
+    name_subject: "Lập trình cơ bản",
+    credit_subject: 3,
+    code_clazz: "SD18302",
+    shift: 2,
+    day_of_week: "Tuesday, Thursday, Saturday",
+    instructor_first_name: "Vỹ",
+    instrutor_last_name: "Thái Anh",
+    start_time: "07:15:00",
+    end_time: "09:15:00",
+  },
+];
+
 function CurrentSubject() {
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -30,102 +57,73 @@ function CurrentSubject() {
     handleModalClose();
   };
 
-  const headers = ["Mã môn học", "Tên môn học", "Ca", "Thứ", "Giảng viên", " "];
+  const headers = [
+    "Mã môn",
+    "Tên môn",
+    "Mã lớp",
+    "Tín chỉ",
+    "Giảng viên",
+    "Ca",
+    "Thứ",
 
-  const subjects = [
-    {
-      id: 1,
-      code: "SOF306",
-      name: "Java6",
-      shift: 1,
-      week_days: "2",
-      instructor: "liemht6",
-      clazz: "SD18301",
-    },
-    {
-      id: 2,
-      code: "SOF306",
-      name: "Phát triển cá nhân 2",
-      shift: 1,
-      week_days: "3, 5, 7",
-      instructor: "lynk18",
-      clazz: "SD18301",
-    },
+    " ",
   ];
 
   const handlePost = useCallback((item) => {
-    navigate(`/doi-lich-hoc/${encodeURIComponent(item.code)}`, {
+    navigate(`/doi-lich-hoc/${encodeURIComponent(item.code_subject)}`, {
       state: { item }, // Pass both item and studentList in the state
     });
   });
 
   const renderRow = (item) => [
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.code}
+    <td key={`item-code_subject-${item.id}`} className="px-6 py-4">
+      {item.code_subject}
     </td>,
-    <td key={`item-name-${item.id}`} className="px-6 py-4">
-      {item.name}
+    <td key={`item-name_subject-${item.id}`} className="px-6 py-4">
+      {item.name_subject}
+    </td>,
+    <td key={`item-code_clazz-${item.id}`} className="px-6 py-4">
+      {item.code_clazz}
+    </td>,
+    <td key={`item-credit_subject-${item.id}`} className="px-6 py-4">
+      {item.credit_subject}
+    </td>,
+    <td key={`item-instructor-${item.id}`} className="px-6 py-4">
+      {item.instrutor_last_name} {item.instructor_first_name}
     </td>,
     <td key={`item-shift-${item.id}`} className="px-6 py-4">
       {item.shift}
     </td>,
-    <td key={`item-date-${item.id}`} className="px-6 py-4">
-      {item.date}
+    <td key={`item-day_of_week-${item.id}`} className="px-6 py-4">
+      {item.day_of_week}
     </td>,
-    <td key={`item-instructor-${item.id}`} className="px-6 py-4">
-      {item.instructor}
-    </td>,
-    <td key={`item-menu-${item.id}`} className="px-6 py-4">
-      <MiniMenu
-        iconMenu={faEllipsis}
-        mt="mt-6"
-        menuItems={[
-          { text: "Đổi lịch học", onClick: () => handlePost(item) },
-          {
-            text: "Xóa đăng ký",
-            isDanger: true,
-            onClick: () => handleUnregisterClick(item),
-          },
-        ]}
+
+    <td key={`item-menu-${item.id}`} className="px-4 py-4">
+      <Button
+        label="Đổi lịch học"
+        className="bg-white font-bold text-blue-500 "
+        onClick={() => handlePost(item)}
       />
     </td>,
   ];
 
-  // const [desktop, setDesktop] = useState(true);
-  // const [mobile, setMobile] = useState(false);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth <= 783) {
-  //       setMobile(true);
-  //       setDesktop(false);
-  //     } else {
-  //       setMobile(false);
-  //       setDesktop(true);
-  //     }
-  //   };
-  //   window.addEventListener("resize", handleResize);
-  //   // Kiểm tra kích thước màn hình khi component được mount
-  //   handleResize();
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, [mobile, desktop]);
-
   return (
     <Container>
       <TitleHeader title={"MÔN HỌC HIỆN TẠI"} />
-      <div className="py-4">
+      <div className="min-h-[600px]">
         <Table
-          advanced={false}
-          showSelectBox={false}
+          DefaultTable={true}
+          showOptions={true}
+          showSearch={true}
+          showSelectBox={true}
+          showBtnEnd={true}
           headers={headers}
           renderRow={renderRow}
           data={subjects}
-          maxRow={5}
+          maxRow={10}
         />
 
-        <Modal isOpen={isModalOpen} onClose={handleModalClose} label="X">
+        {/* <Modal isOpen={isModalOpen} onClose={handleModalClose} label="X">
           <h2 className="text-center font-medium text-xl">Xác nhận hủy môn</h2>
           <div className="h-28 p-2">
             <FontAwesomeIcon
@@ -149,7 +147,7 @@ function CurrentSubject() {
               className="bg-red-500 text-white hover:bg-red-600"
             />
           </div>
-        </Modal>
+        </Modal> */}
       </div>
     </Container>
   );

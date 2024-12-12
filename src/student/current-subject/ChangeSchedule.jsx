@@ -8,7 +8,7 @@ function ChangeSchedule() {
   const shifts = [1, 2, 3, 4, 5, 6];
   const location = useLocation();
   const { item } = location.state || {}; // Lấy item từ state
-
+  console.log(item);
   const clazzs = [
     {
       code: "SD18302",
@@ -68,37 +68,26 @@ function ChangeSchedule() {
     },
   ];
 
-  const [selectedShift, setSelectedShift] = useState(null);
+  // GET VALUE OF CURRENT CLAZZ BY ID STUDENT AND ID STUDYIN
+  const currentClazz = {
+    code_subject: item.code_clazz,
+    name_subject: item.name_subject,
+    code_clazz: item.code_clazz,
+    day_of_week: item.day_of_week,
+    shift: item.shift,
+  };
 
-  // const [flexCol, setFlexCol] = useState("");
-  // const [widthInfo, setWidthInfo] = useState("w-[40%]");
-  // const [widthBox, setWidthBox] = useState("w-1/3");
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth <= 783) {
-  //       setFlexCol("flex-col-reverse");
-  //       setWidthInfo("w-full");
-  //       setWidthBox("w-full");
-  //     } else if (window.innerWidth <= 1050) {
-  //       setWidthBox("w-1/2");
-  //     } else {
-  //       setFlexCol("");
-  //       setWidthInfo("w-[40%]");
-  //       setWidthBox("w-1/3");
-  //     }
-  //   };
-  //   window.addEventListener("resize", handleResize);
-  //   // Kiểm tra kích thước màn hình khi component được mount
-  //   handleResize();
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, [flexCol, widthInfo, widthBox]);
+  // THAO TÁC CHỌN CA HỌC
+  const [selectedShift, setSelectedShift] = useState(null);
+  //console.log(selectedShift);
 
   return (
     <Container>
-      <TitleHeader title={`ĐỔI LỊCH HỌC MÔN ${item.code}`} />
-      <div className="min-h-[700px]">
+      <TitleHeader
+        className="uppercase"
+        title={`ĐỔI LỊCH HỌC MÔN ${item.name_subject}`}
+      />
+      <div className="min-h-[700px] mt-4">
         <div
           className={`flex justify-between pr-6 flex-col-reverse md:flex-row`}
         >
@@ -124,21 +113,21 @@ function ChangeSchedule() {
           <div className={`w-full md:w-[40%] mx-4 my-2`}>
             <p className="font-semibold mb-1">Ca học hiện tại</p>
             <div className="border rounded-lg p-3 gap-5">
-              <div className="flex pb-1">
-                <p className="text-sm text-gray-600">Lớp: </p>{" "}
-                <p className="text-sm pl-1">{item.clazz}</p>
-              </div>
               <div className="flex py-1">
                 <p className="text-sm text-gray-600">Môn: </p>{" "}
-                <p className="text-sm pl-1">{item.name}</p>
+                <p className="text-sm pl-1">{currentClazz.name_subject}</p>
               </div>
-              <div className="flex py-1">
-                <p className="text-sm text-gray-600">Thứ: </p>{" "}
-                <p className="text-sm pl-1">{item.week_days}</p>
+              <div className="flex pb-1">
+                <p className="text-sm text-gray-600">Lớp: </p>{" "}
+                <p className="text-sm pl-1">{item.code_clazz}</p>
               </div>
               <div className="flex py-1">
                 <p className="text-sm text-gray-600">Ca: </p>{" "}
                 <p className="text-sm pl-1">{item.shift}</p>
+              </div>
+              <div className="flex py-1">
+                <p className="text-sm text-gray-600">Thứ: </p>{" "}
+                <p className="text-sm pl-1">{item.day_of_week}</p>
               </div>
             </div>
           </div>

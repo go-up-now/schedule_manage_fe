@@ -33,6 +33,11 @@ const SimpleCalendar = () => {
     setValueYear(format(newDate, "yyyy"));
   };
 
+  const onActiveStartDateChange = ({ activeStartDate }) => {
+    setValueMonth(format(activeStartDate, "MM"));
+    setValueYear(format(activeStartDate, "yyyy"));
+  };
+  console.log(valueMonth);
   // Call API to get notes by month
   const [notesAll, setNotesAll] = useState([]);
   useEffect(() => {
@@ -152,6 +157,7 @@ const SimpleCalendar = () => {
                 tileContent={tileContent}
                 tileClassName={tileClassName}
                 showFixedNumberOfWeeks
+                onActiveStartDateChange={onActiveStartDateChange}
               />
             </StyledCalendar>
           </CalendarContainer>
