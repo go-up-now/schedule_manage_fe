@@ -17,6 +17,7 @@ function OffedReplace() {
 
   // call API
   const [offdays, setOffdays] = useState([]);
+  console.log(offdays);
   useEffect(() => {
     getScheduleStatusFalse()
       .then((response) => {
