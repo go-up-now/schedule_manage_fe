@@ -2,105 +2,125 @@ import Table from "../../../component/Table";
 import Button from "../../../component/Button";
 import React, { useState, useEffect } from "react";
 import Container from "../../../component/Container.tsx";
+import { toast } from "react-toastify";
+const subjects = [
+  {
+    code_subject: "COM107",
+    name_subject: "Tin học",
+    credit_subject: 3,
+    code_clazz: "SD18301",
+    shift: 1,
+    day_of_week: "Monday, Wednesday, Friday",
+    status: false,
+  },
+  {
+    code_subject: "SKI101",
+    name_subject: "Lập trình cơ bản",
+    credit_subject: 3,
+    code_clazz: "SD18302",
+    shift: 2,
+    day_of_week: "Tuesday, Thursday, Saturday",
+    status: true,
+  },
+];
+
 function PlanSubject() {
   const headers = [
     "Mã môn",
     "Môn",
     "Số tín chỉ",
     "Lớp",
-    "Số lượng",
-    "Còn lại",
     "Ca",
     "Thứ",
-    "Thời gian",
-    " ",
+    "Trạng thái",
+    "",
+    "",
   ];
 
-  const header1s = ["Mã môn", "Môn", "Lớp", "Ca", "Thứ", " "];
-
-  const subjects = [
-    {
-      id: 1,
-      code: "COM107",
-      name: "Tin học",
-      credit: 3,
-      clazz: "SD18301",
-      amount: 40,
-      available: 30,
-      shift: 1,
-      day_of_week: "2, 4, 6",
-      time: "07:15:00 - 09:15:00",
-    },
-    {
-      id: 2,
-      code: "SKI105",
-      name: "Kỹ năng học tập",
-      credit: 3,
-      clazz: "SD18301",
-      amount: 40,
-      available: 19,
-      shift: 1,
-      day_of_week: "3, 5, 7",
-      time: "07:15:00 - 09:15:00",
-    },
-  ];
+  const header1s = ["Môn", "Lớp", "Ca", "Thứ", "", ""];
 
   const renderRow = (item) => [
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.code}
+    <td key={`item-code_subject-${item.id}`} className="px-4 py-4">
+      {item.code_subject}
     </td>,
-    <td key={`item-name-${item.id}`} className="px-4 py-4">
-      {item.name}
+    <td key={`item-name_subject-${item.id}`} className="px-4 py-4">
+      {item.name_subject}
     </td>,
-    <td key={`item-credit-${item.id}`} className="px-6 py-4">
-      {item.credit}
+    <td key={`item-credit_subject-${item.id}`} className="px-6 py-4">
+      {item.credit_subject}
     </td>,
-    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
-      {item.clazz}
-    </td>,
-    <td key={`item-amount-${item.id}`} className="px-6 py-4">
-      {item.amount}
-    </td>,
-    <td key={`item-available-${item.id}`} className="px-6 py-4">
-      {item.available}
+    <td key={`item-code_clazz-${item.id}`} className="px-6 py-4">
+      {item.code_clazz}
     </td>,
     <td key={`item-shift-${item.id}`} className="px-6 py-4">
       {item.shift}
     </td>,
+
     <td key={`item-day_of_week-${item.id}`} className="px-4 py-4">
       {item.day_of_week}
     </td>,
-    <td key={`item-time-${item.id}`} className="px-6 py-4">
-      {item.time}
+    <td key={`item-status-${item.id}`} className="px-6 py-4">
+      {item.status ? (
+        <>
+          <p className="text-green-500">Đã Thanh toán</p>
+        </>
+      ) : (
+        <>
+          <p className="text-red-500">Chưa thanh toán</p>
+        </>
+      )}
     </td>,
-    <td key={`item-menu-${item.id}`} className="px-6 py-4">
+    <td key={`item-paid-${item.id}`} className="px-0 py-4">
       <Button
-        label="Huỷ"
-        className="bg-white font-bold text-red-600 hover:bg-white hover:text-red-700"
+        label="Thanh toán"
+        className=" text-white justify-center p-2"
+        disabled={item.status}
+        onClick={() => handlePaid(item)}
       />
+    </td>,
+    <td key={`item-menu-${item.id}`} className="px-4 py-4">
+      {item.status ? (
+        <></>
+      ) : (
+        <>
+          <Button
+            label="Huỷ"
+            className="bg-white font-bold text-red-500 hover:bg-white "
+            onClick={() => handleDelete(item)}
+          />
+        </>
+      )}
     </td>,
   ];
 
   const renderRow1 = (item) => [
-    <td key={`item-code-${item.id}`} className="px-6 py-4">
-      {item.code}
+    <td key={`item-name_subject-${item.id}`} className="px-1 py-4">
+      {item.name_subject}
     </td>,
-    <td key={`item-name-${item.id}`} className="px-4 py-4">
-      {item.name}
+    <td key={`item-code_clazz-${item.id}`} className="px-1 py-4">
+      {item.code_clazz}
     </td>,
-    <td key={`item-clazz-${item.id}`} className="px-6 py-4">
-      {item.clazz}
-    </td>,
-    <td key={`item-shift-${item.id}`} className="px-6 py-4">
+    <td key={`item-shift-${item.id}`} className="px-1 py-4">
       {item.shift}
     </td>,
-    <td key={`item-day_of_week-${item.id}`} className="px-4 py-4">
+
+    <td key={`item-day_of_week-${item.id}`} className="px-1 py-4">
       {item.day_of_week}
+    </td>,
+    <td key={`item-paid-${item.id}`} className="px-4 py-4">
+      <Button
+        label="Thanh toán"
+        className=" text-white justify-center p-1"
+        disabled={item.status}
+        onClick={() => handlePaid(item)}
+      />
     </td>,
     <td key={`item-menu-${item.id}`} className="px-6 py-4">
       <Button
         label="Huỷ"
-        className="bg-white font-bold text-red-600 hover:bg-white hover:text-red-700"
+        className="bg-white font-bold text-red-500 hover:bg-white "
+        disabled={item.status}
+        onClick={() => handleDelete(item)}
       />
     </td>,
   ];
@@ -111,19 +131,7 @@ function PlanSubject() {
     setSelectedMajor(event.target.value);
   };
 
-  const selectBoxs = [
-    {
-      options: [
-        { value: 1, label: "Công nghệ thông tin" },
-        { value: 2, label: "Lập trình web" },
-      ],
-      nameSelect: "Bộ môn",
-      onChange: handleMajorChange,
-      value: selectedMajor,
-      className: "mr-1 w-[200px] pt-4 md:pt-4",
-    },
-  ];
-
+  // RESPONSIVE
   const [desktop, setDesktop] = useState(true);
   const [mobile, setMobile] = useState(false);
 
@@ -145,6 +153,32 @@ function PlanSubject() {
     };
   }, [mobile, desktop]);
 
+  // THAO TÁC THANH TOÁN VÀ HUỶ ĐĂNG KÝ
+  const handlePaid = (item) => {
+    try {
+      toast.success("Thanh toán thành công!");
+      //console.log("Registration successful:", response);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1500);
+    } catch (error) {
+      toast.error("Thanh toán không thành công!");
+      //console.error("Registration error:", error);
+    }
+  };
+
+  const handleDelete = (item) => {
+    try {
+      toast.success("Huỷ đăng ký thành công!");
+      //console.log("Registration successful:", response);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1500);
+    } catch (error) {
+      toast.error("Huỷ đăng ký không thành công!");
+      //console.error("Registration error:", error);
+    }
+  };
   return (
     <div className="">
       {desktop && (
@@ -168,12 +202,11 @@ function PlanSubject() {
             DefaultTable={true}
             showOptions={true}
             showSearch={true}
-            searchClass="pr-20"
             showSelectBox={true}
             headers={header1s}
             renderRow={renderRow1}
             data={subjects}
-            maxRow={5}
+            maxRow={10}
           />
         </>
       )}

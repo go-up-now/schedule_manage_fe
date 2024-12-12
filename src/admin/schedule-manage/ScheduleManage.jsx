@@ -209,16 +209,20 @@ function ScheduleManage() {
               }
             >
               <div>
-                <div className="w-[700px] h-[380px] py-2">
+                <div className="w-[700px] py-2">
                   <TextFieldGroup
-                    major={selectedExam.major}
-                    email={selectedExam.email}
-                    perEmail={selectedExam.perEmail}
-                    clazz={selectedExam.clazz}
-                    phone={selectedExam.phone}
-                    address={selectedExam.address}
-                    credit={selectedExam.credit}
-                    ownCredit={selectedExam.ownCredit}
+                    clazz_code={selectedExam.clazz_code}
+                    date_schedule={format(
+                      selectedExam.date_schedule,
+                      "dd-MM-yyyy"
+                    )}
+                    instructor_code={selectedExam.instructor_code}
+                    room_name={selectedExam.room_name}
+                    shift_id={selectedExam.shift_id}
+                    specialization_name={selectedExam.specialization_name}
+                    status={selectedExam.status}
+                    subject_code={selectedExam.subject_code}
+                    subject_name={selectedExam.subject_name}
                   />
                 </div>
               </div>

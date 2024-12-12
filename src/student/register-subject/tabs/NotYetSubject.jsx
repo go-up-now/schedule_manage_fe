@@ -11,7 +11,7 @@ function NotYetSubject() {
 
   const headers = [
     "Mã môn",
-    "Môn",
+    "Tên môn",
     "Số tín chỉ",
     "Lớp",
     "Số lượng",
@@ -92,19 +92,19 @@ function NotYetSubject() {
   ];
 
   const renderRow1 = (item) => [
-    <td key={`subject-name-${item.id}`} className="px-4 py-4">
+    <td key={`subject-name-${item.id}`} className="px-2 py-4">
       {item.subject_name}
     </td>,
-    <td key={`class-code-${item.id}`} className="px-6 py-4">
+    <td key={`class-code-${item.id}`} className="px-2 py-4">
       {item.code}
     </td>,
-    <td key={`shift-${item.id}`} className="px-6 py-4">
+    <td key={`shift-${item.id}`} className="px-2 py-4">
       {item.shift}
     </td>,
-    <td key={`study-day-${item.id}`} className="px-4 py-4">
+    <td key={`study-day-${item.id}`} className="px-1 py-4">
       {item.study_day}
     </td>,
-    <td key={`item-available-${item.id}`} className="px-6 py-4">
+    <td key={`item-available-${item.id}`} className="px-0 py-4">
       {item.quantity - item.amout}
     </td>,
     <td key={`action-${item.id}`} className="px-6 py-4">
@@ -156,7 +156,7 @@ function NotYetSubject() {
           headers={header1s}
           renderRow={renderRow1}
           data={getclazz}
-          maxRow={5}
+          maxRow={10}
         />
       )}
     </div>
