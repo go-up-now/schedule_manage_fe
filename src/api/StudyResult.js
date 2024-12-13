@@ -24,12 +24,39 @@ export const getAllStudyResult = () => {
     });
 };
 
-export const getMarkDetail = (clazzId, subjectId) => {
+
+
+//Lấy toàn bộ môn phải học trong chương trình đào tạo, nếu đã học qua phải hiện ra kết quả (Passed, Failed) và điểm trung bình
+export const getStudyHistoryByStudentIdAPI = () => {
   return axiosInstance
-    .get(`/api/studyResult/getMarkDetail`, {
+    .get(`/api/studyResult/study-history`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Lỗi khi lấy thông tin sinh viên:", error);
+      throw error;
+    });
+};
+
+//Lấy các môn đã học qua cùng với toàn bộ các cột điểm cũng như kết quả học tập
+export const getMarkTableByStudentIdAPI = () => {
+  return axiosInstance
+    .get(`/api/studyResult/mark-table`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Lỗi khi lấy thông tin sinh viên:", error);
+      throw error;
+    });
+};
+
+export const getMarkDetail = (studyInId) => {
+  return axiosInstance
+    .get(`api/studyResult/mark-detail`, {
       params: {
-        clazzId: clazzId,
-        subjectId: subjectId,
+        studyInId: studyInId,
       },
     })
     .then((response) => {

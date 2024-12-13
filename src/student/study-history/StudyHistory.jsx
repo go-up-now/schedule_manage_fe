@@ -2,7 +2,7 @@ import Table from "../../component/Table";
 import React, { useState, useEffect } from "react";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-import { getAllStudyResult } from "../../api/StudyResult.js";
+import { getAllStudyResult,getStudyHistoryByStudentIdAPI } from "../../api/StudyResult.js";
 function StudyHistory() {
   const headers = [
     "Lớp",
@@ -48,17 +48,17 @@ function StudyHistory() {
     <td key={`item-year-${item.id}`} className="px-6 py-4">
       {item.year}
     </td>,
-    <td key={`item-mark_average-${item.id}`} className="px-6 py-4">
-      {item.mark_average == null ? (
+    <td key={`item-average_mark-${item.id}`} className="px-6 py-4">
+      {item.average_mark == null ? (
         <p></p>
       ) : (
-        <p>{Math.round(item.mark_average * 10) / 10}</p>
+        <p>{Math.round(item.average_mark * 10) / 10}</p>
       )}
     </td>,
     <td key={`item-result-${item.id}`} className="px-6 py-4 font">
-      {item.mark_average == null ? (
+      {item.average_mark == null ? (
         <p></p>
-      ) : item.mark_average < 5 ? (
+      ) : item.average_mark < 5 ? (
         <p className="text-red-500 font-bold">Failed</p>
       ) : (
         <p className="text-green-500 font-bold">Passed</p>
@@ -69,13 +69,13 @@ function StudyHistory() {
       item.block != null &&
       item.semester != null &&
       item.year != null &&
-      item.mark_average != null ? (
+      item.average_mark != null ? (
         <p>Đã hoàn thành</p>
       ) : item.clazz_code != null &&
         item.block != null &&
         item.semester != null &&
         item.year != null &&
-        item.mark_average == null ? (
+        item.average_mark == null ? (
         <p>Chưa hoàn thành</p>
       ) : (
         <p>Chưa học</p>
@@ -93,11 +93,11 @@ function StudyHistory() {
     <td key={`item-credits-${item.id}`} className="px-6 py-4">
       {item.credits}
     </td>,
-    <td key={`item-mark_average-${item.id}`} className="px-6 py-4">
-      {Math.round(item.mark_average * 10) / 10}
+    <td key={`item-average_mark-${item.id}`} className="px-6 py-4">
+      {Math.round(item.average_mark * 10) / 10}
     </td>,
     <td key={`item-result-${item.id}`} className="px-6 py-4 font">
-      {item.mark_average < 5 ? (
+      {item.average_mark < 5 ? (
         <p className="text-red-500 font-bold">Failed</p>
       ) : (
         <p className="text-green-500 font-bold">Passed</p>
@@ -135,7 +135,7 @@ function StudyHistory() {
 
   const [credit, setCredits] = useState(0);
   // useEffect(() => {
-  //   getAllStudyResult()
+  //   getStudyHistoryByStudentIdAPI()
   //     .then((data) => {
   //       setStudyResult(data);
   //     })
@@ -143,109 +143,142 @@ function StudyHistory() {
   //       console.error("Error fetching exam:", error);
   //     });
   // }, []);
+  console.log(studyResult)
+
+  // useEffect(() => {
+  //   getStudyHistoryByStudentIdAPI()
+  //     .then((data) => {
+  //       // Filter out items with null average_mark
+  //       const validResults = data.filter((item) => item.average_mark !== null);
+  //       // Calculate total and average of valid average_mark values
+  //       const total = validResults.reduce(
+  //         (sum, item) => sum + item.average_mark,
+  //         0
+  //       );
+
+  //       const average =
+  //         validResults.length > 0 ? total / validResults.length : 0;
+  //       setAverageMark(Math.round(average * 10) / 10);
+
+  //       // Calculate total credits for valid results
+  //       const totalCredits = validResults.reduce(
+  //         (sum, item) => sum + item.credits,
+  //         0
+  //       );
+
+  //       setCredits(totalCredits);
+  //       // Sorting logic
+  //       const semesterOrder = ["Spring", "Summer", "Fall"];
+  //       const sortedData = data.sort((a, b) => {
+  //         const allNonNullA =
+  //           a.block != null &&
+  //           a.clazz_code != null &&
+  //           a.credits != null &&
+  //           a.semester != null &&
+  //           a.subject_code != null &&
+  //           a.subject_id != null &&
+  //           a.subject_name != null &&
+  //           a.average_mark != null &&
+  //           a.year != null;
+  //         const allNonNullB =
+  //           b.block != null &&
+  //           b.clazz_code != null &&
+  //           b.credits != null &&
+  //           b.semester != null &&
+  //           b.subject_code != null &&
+  //           b.subject_id != null &&
+  //           b.subject_name != null &&
+  //           b.average_mark != null &&
+  //           b.year != null;
+  //         const nonNullExceptScoreA =
+  //           a.block != null &&
+  //           a.clazz_code != null &&
+  //           a.credits != null &&
+  //           a.semester != null &&
+  //           a.subject_code != null &&
+  //           a.subject_id != null &&
+  //           a.subject_name != null &&
+  //           a.average_mark == null &&
+  //           a.year != null;
+  //         const nonNullExceptScoreB =
+  //           b.block != null &&
+  //           b.clazz_code != null &&
+  //           b.credits != null &&
+  //           b.semester != null &&
+  //           b.subject_code != null &&
+  //           b.subject_id != null &&
+  //           b.subject_name != null &&
+  //           b.average_mark == null &&
+  //           b.year != null;
+  //         if (allNonNullA && !allNonNullB) return -1;
+  //         if (!allNonNullA && allNonNullB) return 1;
+  //         if (nonNullExceptScoreA && !nonNullExceptScoreB) return -1;
+  //         if (!nonNullExceptScoreA && nonNullExceptScoreB) return 1; // Sort by year first, then by semester order
+  //         if (a.year !== b.year) {
+  //           return a.year - b.year;
+  //         } else {
+  //           return (
+  //             semesterOrder.indexOf(a.semester) -
+  //             semesterOrder.indexOf(b.semester)
+  //           );
+  //         }
+  //       });
+  //       setStudyResult(sortedData);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching exam:", error);
+  //     });
+  // }, []);
+
   useEffect(() => {
-    getAllStudyResult()
+    getStudyHistoryByStudentIdAPI()
       .then((data) => {
-        // Filter out items with null mark_average
-        const validResults = data.filter((item) => item.mark_average !== null);
-        // Calculate total and average of valid mark_average values
+        // LỌC RA CÁC MÃNG CÓ TRUNG BÌNH KHÁC NULL
+        const validResults = data.filter((item) => item.average_mark != null);
+  
+        // TÍNH TỔNG ĐIỂM TRUNG BÌNH
         const total = validResults.reduce(
-          (sum, item) => sum + item.mark_average,
+          (sum, item) => sum + item.average_mark,
           0
         );
-
         const average =
           validResults.length > 0 ? total / validResults.length : 0;
         setAverageMark(Math.round(average * 10) / 10);
-
-        // Calculate total credits for valid results
+  
+        // TÍNH TỐNG TÍN CHỈ 
         const totalCredits = validResults.reduce(
           (sum, item) => sum + item.credits,
           0
         );
-
         setCredits(totalCredits);
-        // Sorting logic
+  
+        // Sorting logic for year, semester, and block
         const semesterOrder = ["Spring", "Summer", "Fall"];
         const sortedData = data.sort((a, b) => {
-          const allNonNullA =
-            a.block != null &&
-            a.clazz_code != null &&
-            a.credits != null &&
-            a.semester != null &&
-            a.subject_code != null &&
-            a.subject_id != null &&
-            a.subject_name != null &&
-            a.mark_average != null &&
-            a.year != null;
-          const allNonNullB =
-            b.block != null &&
-            b.clazz_code != null &&
-            b.credits != null &&
-            b.semester != null &&
-            b.subject_code != null &&
-            b.subject_id != null &&
-            b.subject_name != null &&
-            b.mark_average != null &&
-            b.year != null;
-          const nonNullExceptScoreA =
-            a.block != null &&
-            a.clazz_code != null &&
-            a.credits != null &&
-            a.semester != null &&
-            a.subject_code != null &&
-            a.subject_id != null &&
-            a.subject_name != null &&
-            a.mark_average == null &&
-            a.year != null;
-          const nonNullExceptScoreB =
-            b.block != null &&
-            b.clazz_code != null &&
-            b.credits != null &&
-            b.semester != null &&
-            b.subject_code != null &&
-            b.subject_id != null &&
-            b.subject_name != null &&
-            b.mark_average == null &&
-            b.year != null;
-          if (allNonNullA && !allNonNullB) return -1;
-          if (!allNonNullA && allNonNullB) return 1;
-          if (nonNullExceptScoreA && !nonNullExceptScoreB) return -1;
-          if (!nonNullExceptScoreA && nonNullExceptScoreB) return 1; // Sort by year first, then by semester order
+          // First, sort by year
           if (a.year !== b.year) {
             return a.year - b.year;
-          } else {
-            return (
-              semesterOrder.indexOf(a.semester) -
-              semesterOrder.indexOf(b.semester)
-            );
           }
+  
+          // Next, sort by semester (Spring < Summer < Fall)
+          const semesterComparison = semesterOrder.indexOf(a.semester) - semesterOrder.indexOf(b.semester);
+          if (semesterComparison !== 0) {
+            return semesterComparison;
+          }
+  
+          // Finally, sort by block (1 before 2)
+          return a.block - b.block;
         });
+  
         setStudyResult(sortedData);
       })
       .catch((error) => {
         console.error("Error fetching exam:", error);
       });
   }, []);
-
-  // useEffect(() => {
-  //   const marks = studyResult.map((item) => item.mark_average); // Tạo mảng chứa các giá trị mark_average
-
-  //   setMark(marks);
-
-  //   // Tính tổng và trung bình
-  //   const total = marks.reduce((sum, value) => sum + value, 0); // Tổng các giá trị
-  //   const average = marks.length > 0 ? total / marks.length : 0; // Trung bình
-  //   setAverageMark(Math.round(average * 10) / 10); // Cập nhật giá trị trung bình
-
-  //   const credits = studyResult.map((item) => item.credits); // Tạo mảng chứa các giá trị mark_average
-
-  //   setCredists(credits);
-
-  //   // Tính tổng và trung bình
-  //   const totalCredits = credits.reduce((sum, value) => sum + value, 0); // Tổng các giá trị// Trung bình
-  //   setCredists(totalCredits); // Cập nhật giá trị trung bình
-  // }, [studyResult]);
+  
+  
+  
   return (
     <>
       <Container>

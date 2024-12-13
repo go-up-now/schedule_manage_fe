@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 function NotYetSubject() {
   const [getclazz, setGetClazz] = useState([]);
-  console.log(getclazz);
+  
 
   const headers = [
     "Mã môn",
@@ -31,7 +31,7 @@ function NotYetSubject() {
         const response = await getClazzByStudent();
         if (response) {
           setGetClazz(response.data);
-          console.log("data", response.data);
+          //console.log("data", response.data);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
