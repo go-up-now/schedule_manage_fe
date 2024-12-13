@@ -55,3 +55,14 @@ export const getClazzesByInstructor = (block, semester, year) => {
 export const getAllClazzAPI = () => {
   return axiosInstance.get(`/api/clazzs`);
 };
+
+//Lấy tất cả các lớp học mà sinh viên đã đăng ký trong block, semester, year hiện tại
+export const getRegistedClazzes = async () => {
+  try {
+    const response = await axiosInstance.get('/api/clazzs/registed-clazzes'); 
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching registered classes:", error);
+    throw error; 
+  }
+};

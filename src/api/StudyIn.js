@@ -13,3 +13,17 @@ export const registerClass = async (clazzId) => {
     throw error;
   }
 };
+
+export const deleteClazz = async (clazzId) => {
+  try {
+    const response = await axiosInstance.delete('api/studyins/delete', {
+      params: { clazzId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting class:", error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+};
+
+
