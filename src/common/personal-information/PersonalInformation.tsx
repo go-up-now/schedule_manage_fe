@@ -76,7 +76,7 @@ function PersonalInformation() {
     setOpenInfo(false);
     setOpenWork(true);
   };
-  console.log(setUser);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 1000) {

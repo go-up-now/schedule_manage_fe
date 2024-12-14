@@ -59,10 +59,19 @@ export const getAllClazzAPI = () => {
 //Lấy tất cả các lớp học mà sinh viên đã đăng ký trong block, semester, year hiện tại
 export const getRegistedClazzes = async () => {
   try {
-    const response = await axiosInstance.get('/api/clazzs/registed-clazzes'); 
-    return response.data; 
+    const response = await axiosInstance.get('/api/clazzs/registed-clazzes');
+    return response.data;
   } catch (error) {
     console.error("Error fetching registered classes:", error);
-    throw error; 
+    throw error;
   }
+};
+
+export const getClazzesToChangeShiftBySubjectIdAndShiftAPI = (subjectId, shift) => {
+  return axiosInstance.get(`/api/clazzs/clazzes-to-change`, {
+    params: {
+      subjectId: subjectId,
+      shift: shift,
+    }
+  });
 };

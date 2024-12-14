@@ -26,4 +26,19 @@ export const deleteClazz = async (clazzId) => {
   }
 };
 
+export const updateAllStudyInIsTrueByStudent = () => {
+  return axiosInstance.put("/api/studyins/student");
+};
 
+export const getAllIdOfStudyInByBlockAndSemesterAndYearOfStudent2API = () => {
+  return axiosInstance.get("/api/studyins/student");
+};
+
+export const handleChangeClazzAPI = (oldClazzId, newClazzId) => {
+  return axiosInstance.put("/api/studyins/change-clazz", null, {
+    params: {
+      oldClazzId: oldClazzId,
+      newClazzId: newClazzId
+    }
+  });
+};

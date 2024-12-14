@@ -1,61 +1,45 @@
 import Table from "../../component/Table";
-import MiniMenu from "../../component/MiniMenu";
-import Modal from "../../component/Modal";
 import Button from "../../component/Button";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { useState, useCallback } from "react";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useCallback, useEffect } from "react";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-
-const subjects = [
-  {
-    code_subject: "COM107",
-    name_subject: "Tin học",
-    credit_subject: 3,
-    code_clazz: "SD18301",
-    shift: 1,
-    day_of_week: "Monday, Wednesday, Friday",
-    instructor_first_name: "Vỹ",
-    instrutor_last_name: "Thái Anh",
-    start_time: "07:15:00",
-    end_time: "09:15:00",
-  },
-  {
-    code_subject: "SKI101",
-    name_subject: "Lập trình cơ bản",
-    credit_subject: 3,
-    code_clazz: "SD18302",
-    shift: 2,
-    day_of_week: "Tuesday, Thursday, Saturday",
-    instructor_first_name: "Vỹ",
-    instrutor_last_name: "Thái Anh",
-    start_time: "07:15:00",
-    end_time: "09:15:00",
-  },
-];
+import { toast } from "react-toastify";
+import { getAllIdOfStudyInByBlockAndSemesterAndYearOfStudent2API } from "../../api/StudyIn.js";
 
 function CurrentSubject() {
   const navigate = useNavigate();
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [subjects, setsSubjects] = useState([]);
 
-  const handleUnregisterClick = (subject) => {
-    setSelectedSubject(subject);
-    setModalOpen(true);
-  };
+  // Lấy môn học hiện tại
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        let response = await getAllIdOfStudyInByBlockAndSemesterAndYearOfStudent2API();
+        if (response && response.statusCode == 200) {
+          setsSubjects(response.data);
+        }
+      } catch (error) {
+        toast.error("Lấy danh sách môn học hiện tại của sinh viên không thành công!")
+      }
+    };
+    fetchClasses();
+  }, []);
 
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setSelectedSubject(null);
-  };
+  // const handleUnregisterClick = (subject) => {
+  //   setSelectedSubject(subject);
+  //   setModalOpen(true);
+  // };
 
-  const handleConfirmUnregistration = () => {
-    console.log(`Đã đăng ký môn: ${selectedSubject.name}`);
-    handleModalClose();
-  };
+  // const handleModalClose = () => {
+  //   setModalOpen(false);
+  //   setSelectedSubject(null);
+  // };
+
+  // const handleConfirmUnregistration = () => {
+  //   console.log(`Đã đăng ký môn: ${selectedSubject.name}`);
+  //   handleModalClose();
+  // };
 
   const headers = [
     "Mã môn",
@@ -70,32 +54,32 @@ function CurrentSubject() {
   ];
 
   const handlePost = useCallback((item) => {
-    navigate(`/doi-lich-hoc/${encodeURIComponent(item.code_subject)}`, {
+    navigate(`/doi-lich-hoc/${encodeURIComponent(item.subjectCode)}`, {
       state: { item }, // Pass both item and studentList in the state
     });
   });
 
   const renderRow = (item) => [
     <td key={`item-code_subject-${item.id}`} className="px-6 py-4">
-      {item.code_subject}
+      {item.subjectCode}
     </td>,
     <td key={`item-name_subject-${item.id}`} className="px-6 py-4">
-      {item.name_subject}
+      {item.subjectName}
     </td>,
     <td key={`item-code_clazz-${item.id}`} className="px-6 py-4">
-      {item.code_clazz}
+      {item.clazzCode}
     </td>,
     <td key={`item-credit_subject-${item.id}`} className="px-6 py-4">
-      {item.credit_subject}
+      {item.credits}
     </td>,
     <td key={`item-instructor-${item.id}`} className="px-6 py-4">
-      {item.instrutor_last_name} {item.instructor_first_name}
+      {item.instructorCode} - {item.lastName} {item.firstName}
     </td>,
     <td key={`item-shift-${item.id}`} className="px-6 py-4">
       {item.shift}
     </td>,
-    <td key={`item-day_of_week-${item.id}`} className="px-6 py-4">
-      {item.day_of_week}
+    <td key={`item-study_day-${item.id}`} className="px-6 py-4">
+      {item.study_day}
     </td>,
 
     <td key={`item-menu-${item.id}`} className="px-4 py-4">

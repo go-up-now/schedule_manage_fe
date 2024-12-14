@@ -1,6 +1,6 @@
 import Tabs from "../../component/Tabs";
 import NotYetSubject from "./tabs/NotYetSubject";
-import PlanSubject from "./tabs/PlanSubject";
+import PlanSubject from "./tabs/PlanSubject.tsx";
 // import ChangeScheduleSubject from "../current-subject/ChangeScheduleSubject";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";

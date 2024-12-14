@@ -1,18 +1,18 @@
 import axios from "axios";
 
-const axiosInstance  = axios.create({
+const axiosInstance = axios.create({
   baseURL: 'http://localhost:8080',
   timeout: 10000,
   headers: {
-    Accept: 'application/json', 
+    Accept: 'application/json',
   },
 });
 
 //Interceptor xử lý request trước khi gửi đi
 axiosInstance.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('token'); 
-    const isLoginPage = window.location.pathname === "/login"; 
+    const token = localStorage.getItem('token');
+    const isLoginPage = window.location.pathname === "/dang-nhap";
 
     if (!isLoginPage && token) {
       config.headers['Authorization'] = `Bearer ${token}`;
@@ -28,7 +28,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => {
     return response.data;
- 
+
   },
   error => {
     let res = {};
@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
     } else {
       console.error('Error setting up request:', error.message);
     }
-    return Promise.reject(res); 
+    return Promise.reject(res);
   }
 );
 
