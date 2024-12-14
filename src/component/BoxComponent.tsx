@@ -6,8 +6,8 @@ interface BoxItem {
 }
 
 interface CheckboxComponentProps {
-    selectedItem: BoxItem;
-    setSelectedItem: (item: BoxItem) => void;
+    selectedItem: BoxItem[];
+    setSelectedItem: (item: BoxItem[]) => void;
 }
 
 const BoxComponent: React.FC<CheckboxComponentProps> = ({ selectedItem, setSelectedItem }) => {
@@ -34,16 +34,16 @@ const BoxComponent: React.FC<CheckboxComponentProps> = ({ selectedItem, setSelec
     };
 
     return (
-        <div className="grid grid-cols-2 gap-4 p-1">
+        <div className="grid grid-cols-1 gap-2 p-1">
             {selectedItem.map((item) => (
                 <div
                     key={item.id}
-                    className="flex justify-between items-center p-2 border border-gray-300 rounded text-xs font-bold"
+                    className="flex justify-center items-center px-2 rounded-xl bg-blue-300 text-white"
                 >
-                    <span>{item.name}</span>
+                    <span className="break-words w-full text-center" style={{ fontSize: "0.6rem" }}>{item.name}</span>
                     <button
                         onClick={() => handleRemove(item.id)}
-                        className="bg-red-500 text-white p-1 rounded"
+                        className="bg-blue-300 text-white rounded text-xl"
                     >
                         &times;
                     </button>

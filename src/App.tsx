@@ -12,7 +12,8 @@ import { setUser } from './reducers/userSlice.tsx';
 import { getUserScope } from "./utils/authUtils.ts";
 import { initFlowbite } from 'flowbite';
 import { ROLE } from './enum/Role.tsx'
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [sideMenuIsExpand, setSideMenuIsExpand] = useState(true);
@@ -64,16 +65,16 @@ function App() {
       </div>
       <ToastContainer
         position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
+        autoClose={3000}
+        hideProgressBar
         newestOnTop={false}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
-      // transition:Bounce,
+        theme="colored"
+        transition={Zoom}
       />
     </>
   );

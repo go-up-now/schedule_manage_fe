@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "../component/ProtectedRoute.tsx";
-import App from "../App.js";
+import App from "../App.tsx";
 import IF from "../component/IF.tsx";
 import { getUserScope } from "../utils/authUtils.ts";
 import ErrorPage from "../common/ErrorPage.tsx";

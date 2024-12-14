@@ -264,9 +264,9 @@ function EducationProgramManage() {
       values.id === 0
         ? openConfirm(action, "Bạn có chắc muốn thêm chương trình đào tạo này?")
         : openConfirm(
-            action,
-            `Bạn có chắc muốn cập nhật ${editEducationProgram?.name}?`
-          );
+          action,
+          `Bạn có chắc muốn cập nhật ${editEducationProgram?.name}?`
+        );
     },
   });
 
@@ -333,12 +333,13 @@ function EducationProgramManage() {
 
           {/* Modal subject */}
           {isModalSubject && (
-            <Modal isOpen={true} onClose={closeModal} className="py-12">
-              <h2 className="text-xl font-bold">
-                Chọn môn học cho chương trình đào tạo
-              </h2>
+            <Modal
+              isOpen={true}
+              onClose={closeModal}
+              label={`Chọn môn học cho chương trình đào tạo`}
+            >
               <div>
-                <div className="w-[700px] h-[380px] border-t border-t-gray-500 mt-5 py-2">
+                <div className="w-[700px] py-2">
                   <CheckboxGroup
                     items={items}
                     onSubmit={handleCheckboxSubmit}

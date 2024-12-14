@@ -45,7 +45,12 @@ function ChangeSchedule() {
         if (response.statusCode === 200) {
           toast.success("Đổi lịch học thành công");
 
+          let response1 = await getClazzesToChangeShiftBySubjectIdAndShiftAPI(item.subjectId, clazz.shift);
+          if (response1 && response1.statusCode == 200) {
+            setsClazzs(response1.data);
+          }
           const currentClazz = {
+            subjectId:item.subjectId,
             subjectCode: item.subjectCode,
             subjectName: item.subjectName,
             clazzCode: clazz.clazz_code,
