@@ -100,3 +100,13 @@ export const getAllCourse = () => {
       throw error;
     });
 };
+
+export const countStudentCannotPresent = (scheduleId, date, shift) => {
+  return axiosInstance.put(`/api/students/cannot-present`,{
+    params:{
+      scheduleId:scheduleId,
+      date:date,
+      shift:shift
+    }
+  } );
+};

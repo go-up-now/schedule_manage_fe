@@ -7,24 +7,27 @@ import { format } from "date-fns";
 import { getAllRoomAvailableAPI } from "../../api/rooms.js";
 import { createRetakeScheduleAPI } from "../../api/RetakeSchedule.js";
 import { toast } from "react-toastify";
+import { countStudentCannotPresent } from "../../api/Student.js";
+import { useFormik } from "formik";
 
 function FieldGroup({ thisDay, onFieldChange }) {
   const handleChange = (field) => (event) => {
     onFieldChange(field, event.target.value);
   };
 
-  console.log(thisDay);
+  // console.log(thisDay);
   // GET API ALL Shift
   const [cbShift, setCbShift] = useState([]);
-
+  const [studentsCannotAttend, setStudentsCannotAttend] = useState(0);
   const clazzId = thisDay.clazzId;
+  const [selectedShift, setSelectedShift] = useState(null);
   const date = format(new Date(thisDay.date), "yyyy-MM-dd");
 
   useEffect(() => {
-    if (clazzId && date) {
-      getAllShiftAvailableAPI(clazzId, date)
+    if (date) {
+      getAllShiftAvailableAPI(date)
         .then((response) => {
-          console.log("API response:", response);
+            // console.log("API response:", response);
           if (Array.isArray(response)) {
             setCbShift(response);
           } else {
@@ -35,10 +38,23 @@ function FieldGroup({ thisDay, onFieldChange }) {
           console.error("Failed to fetch all shifts:", error);
         });
     }
-  }, [clazzId, date]);
-
-  const [selectedShift, setSelectedShift] = useState(null);
+  }, [date]);
+  useEffect(() => {
+    if (thisDay.scheduleId && selectedShift && date) {
+      countStudentCannotPresent(thisDay.scheduleId, date, selectedShift)
+        .then((response) => {
+          if (response.data) {
+            setStudentsCannotAttend(response.data); 
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch student count:", error);
+        });
+    }
+  }, [thisDay.scheduleId, selectedShift, date]);
+  
   const handleChangeShift = (event) => {
+    // console.log("Selected Shift:", event.target.value); 
     setSelectedShift(event.target.value);
   };
 
@@ -50,11 +66,11 @@ function FieldGroup({ thisDay, onFieldChange }) {
     : [];
 
   const [cbRoom, setCbRoom] = useState([]);
-  const [buildingId, setBuildingId] = useState(1);
+  // const [shift, setShift] = useState(1);
 
   useEffect(() => {
-    if (buildingId && date) {
-      getAllRoomAvailableAPI(buildingId, date)
+    if (selectedShift  && date) {
+      getAllRoomAvailableAPI(selectedShift , date)
         .then((response) => {
           console.log("API response:", response);
           if (Array.isArray(response)) {
@@ -67,7 +83,7 @@ function FieldGroup({ thisDay, onFieldChange }) {
           console.error("Failed to fetch all rooms:", error);
         });
     }
-  }, [buildingId, date]);
+  }, [selectedShift , date]);
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   const handleChangeRoom = (event) => {
@@ -76,8 +92,8 @@ function FieldGroup({ thisDay, onFieldChange }) {
 
   const optionRoom = Array.isArray(cbRoom)
     ? cbRoom.map((room) => ({
-        value: room.roomName,
-        label: room.roomName,
+        value: room.room_name,
+        label: room.room_name,
       }))
     : [];
 
@@ -87,14 +103,15 @@ function FieldGroup({ thisDay, onFieldChange }) {
     shiftId: selectedShift,
     roomName: selectedRoom,
   };
-  console.log("Form Data:", formData);
+  // console.log("Form Data:", formData);
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await createRetakeScheduleAPI(formData);
       toast.success("ĐẶT LỊCH THÀNH CÔNG!");
-      console.log("Response:", response);
+      // console.log("Response:", response);
       setTimeout(() => {
         window.location.reload();
       }, 1500);
@@ -158,7 +175,7 @@ function FieldGroup({ thisDay, onFieldChange }) {
           />
           <div className="pb-2 px-4 h-[80px] flex items-end text-red-500">
             <p>Số lượng sinh viên không thể tham dự:</p>
-            <span className="ml-4 font-medium">40</span>
+            <span className="ml-4 font-medium">{studentsCannotAttend}</span>
           </div>
         </div>
       </div>

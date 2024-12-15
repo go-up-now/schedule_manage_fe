@@ -100,7 +100,7 @@ function Header() {
               </p>
 
               {isNotificationsOpen && (
-                <div ref={notificationsRef} className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg overflow-hidden z-10 border border-gray-300 rounded-lg shadow-xl">
+                <div ref={notificationsRef} className="absolute right-0 mt-2 w-96 bg-white shadow-lg rounded-lg overflow-hidden z-10 border border-gray-300 rounded-lg shadow-xl">
                   <div className="px-4 py-2 text-xl font-bold ">THÔNG BÁO</div>
                   <ul className="divide-y divide-gray-100">
                     {notifications.map((notification) => (
