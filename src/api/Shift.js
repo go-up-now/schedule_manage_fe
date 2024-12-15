@@ -1,10 +1,9 @@
 import axiosInstance from "./AxiosConfig"; // Adjust the import path as necessary
 
-export const getAllShiftAvailableAPI = (clazzId, date) => {
+export const getAllShiftAvailableAPI = (date) => {
   return axiosInstance
-    .get("/api/shifts/getAllShiftAvailable", {
+    .get("/api/shifts/available-shift", {
       params: {
-        clazzId: clazzId,
         date: date,
       },
     })

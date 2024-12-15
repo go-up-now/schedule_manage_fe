@@ -4,11 +4,11 @@ export const getAllRoomByAdminAreaAPI = () => {
   return axiosInstance.get("/api/rooms");
 };
 
-export const getAllRoomAvailableAPI = (buildingId, date) => {
+export const getAllRoomAvailableAPI = (shift, date) => {
   return axiosInstance
-    .get("/api/rooms/getAllRoomAvailable", {
+    .get("/api/rooms/get-available-rooms", {
       params: {
-        buildingId: buildingId,
+        shift: shift,
         date: date,
       },
     })

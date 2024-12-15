@@ -128,7 +128,7 @@ const router = createBrowserRouter([
       {
         path: "/thong-bao/:nameNotification",
         element: (
-          <ProtectedRoute allowedRoles={[ROLE.STUDENT, ROLE.INSTRUCTOR]}>
+          <ProtectedRoute allowedRoles={[ROLE.STUDENT, ROLE.INSTRUCTOR, ROLE.ADMIN]}>
             <NotificationDetail />
           </ProtectedRoute>
         ),
