@@ -5,7 +5,7 @@ import TextArea from "../../component/TextArea";
 
 function TextFieldGroup({ ...props }) {
   const baseUrl =
-    "https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
+    "https://res.cloudinary.com/dc06mgef2/image/upload/v1734324086/";
 
   return (
     <div className="flex">

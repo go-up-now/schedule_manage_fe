@@ -42,7 +42,7 @@ function HomePage() {
   }, []);
 
   const baseUrl =
-    "https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
+    "https://res.cloudinary.com/dc06mgef2/image/upload/v1734324086/";
 
   return (
     <Container>
@@ -59,7 +59,7 @@ function HomePage() {
               }}
             >
               <img
-                className="w-full"
+                className="w-full h-32 object-cover"
                 src={`${baseUrl}${event.image}`}
                 alt={event.name}
               />

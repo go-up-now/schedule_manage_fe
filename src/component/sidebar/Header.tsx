@@ -11,7 +11,7 @@ import { ROLE } from "../../enum/Role.tsx"
 function Header() {
   const userInfo = useSelector((state) => state.user.userInfo);  // Lấy thông tin người dùng từ Redux
   const navigate = useNavigate();
-  const baseUrl = " https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
+  const baseUrl = "https://res.cloudinary.com/dc06mgef2/image/upload/v1734324086/";
   const role = getUserScope();
   const notificationsRef = useRef(null);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);

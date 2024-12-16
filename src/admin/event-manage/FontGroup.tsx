@@ -62,7 +62,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
     window.open('https://res.cloudinary.com/dc06mgef2/image/upload/v1731903390/fpoly-1655782316-8753-1655782371_1200x0_dwnzkj.jpg', '_blank');
   };
   const baseUrl =
-    "https://res.cloudinary.com/dc06mgef2/image/upload/v1730087450/student/";
+    "https://res.cloudinary.com/dc06mgef2/image/upload/v1734324086/";
 
   useEffect(() => {
     setBoxesDisabled(isEditDisabled);
