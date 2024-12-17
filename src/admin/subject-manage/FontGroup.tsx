@@ -11,6 +11,7 @@ import { differenceInYears } from 'date-fns';
 import { FormikProps } from 'formik';
 import Spinner from "../../component/Spinner.tsx";
 import { getAllSubject } from '../../api/Subject.js'
+import BoxComponent from "../../component/BoxComponent.tsx";
 
 interface FontGroupProps {
   isEditDisabled?: boolean;
@@ -20,6 +21,9 @@ interface FontGroupProps {
   setEditSubject
   setIsEditDisabled
   specialization
+  selectedItem;
+  setSelectedItem;
+  onClickAddMarkColumn
 }
 
 // Xác thực giảng viên
@@ -55,6 +59,9 @@ const FontGroup: React.FC<FontGroupProps> = ({
   setEditSubject,
   setIsEditDisabled,
   specialization,
+  selectedItem,
+  setSelectedItem,
+  onClickAddMarkColumn
 }) => {
   const [areSelectBoxesDisabled, setAreSelectBoxesDisabled] = useState(false);
   const [listSubject, setListSubject] = useState([]);
@@ -72,6 +79,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
     else {
       setEditSubject(null)
     }
+    setSelectedItem([])
   };
 
   const handleAPI = async () => {
@@ -176,6 +184,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
       <div>
         <TextArea
           placeholder="Nhiệm vụ"
+          rows={2}
           className="p-0 mt-2"
           className1={`w-full ${formik.touched.mission && formik.errors.mission && 'border-red-500'}`}
           {...formik.getFieldProps('mission')}
@@ -189,6 +198,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
         <TextArea
           placeholder="Ghi chú"
           className="p-0 mt-2"
+          rows={2}
           className1={`w-full ${formik.touched.note && formik.errors.note && 'border-red-500'}`}
           {...formik.getFieldProps('note')}
           disabled={false} // Không bị vô hiệu hoá
@@ -201,11 +211,21 @@ const FontGroup: React.FC<FontGroupProps> = ({
         <TextArea
           placeholder="Mô tả"
           className="p-0 mt-2"
+          rows={2}
           // className1={`w-full ${formik.touched.description && formik.errors.description && 'border-red-500'}`}
           {...formik.getFieldProps('description')}
           disabled={false} // Không bị vô hiệu hoá
         />
       </div>
+      <span className="text-red-500 font-bold">(%: tỉ lệ % cột điểm, Đợt: 1 hoặc 2)</span>
+      <div className="min-h-72 max-h-72 w-full border-2 overflow-auto">
+        <BoxComponent
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          isTextField={true}
+        />
+      </div>
+
       <div className="flex mt-4">
         <div className="w-1/3 flex justify-center">
           <Button
@@ -235,6 +255,14 @@ const FontGroup: React.FC<FontGroupProps> = ({
             className="w-11/12 p-2 text-white justify-center"
             disabled={loading}
             onClick={onClick}
+          />
+        </div>
+        <div className="w-1/3 flex justify-center">
+          <Button
+            label="Chọn cột điểm"
+            className="w-12/12 p-1 text-white justify-center"
+            disabled={loading}
+            onClick={onClickAddMarkColumn}
           />
         </div>
       </div>

@@ -5,6 +5,12 @@ interface CheckboxItem {
     label: string;
 }
 
+// interface SelectedItem {
+//     id: string;
+//     percentage: number;
+//     part: number;
+// }
+
 interface CheckboxComponentProps {
     items: CheckboxItem[];
     onSubmit: (selectedItems: { id: string; name: string }[]) => void;

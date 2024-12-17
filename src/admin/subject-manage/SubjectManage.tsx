@@ -30,6 +30,9 @@ import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
 import UploadExcelModal from "../../utils/UpLoadExcel.tsx";
 import { getAllSpecializationsAPI } from "../../api/Specialization.js";
+import { getSubjectMarkBySubjectIdAPI } from "../../api/SubjectMark.js";
+import { getAllMarkColumnAPI } from "../../api/MarkColumn.js";
+import CheckboxGroup from "../../component/CheckBoxGroup.tsx";
 
 interface Subject {
   id: number;
@@ -46,6 +49,24 @@ interface Subject {
   specializationId: number;
 }
 
+interface CheckboxItem {
+  id: string;
+  name: string;
+  percentage: number;
+  part: number;
+}
+
+interface SelectedItem {
+  id: string;
+  percentage: number;
+  part: number;
+}
+
+interface MarkColumn {
+  id: string;
+  name: string;
+}
+
 function SubjectManage() {
   const headers = ["Mã môn", "Tên môn", "Tín chỉ", "Tổng giờ học", ""];
 
@@ -53,6 +74,7 @@ function SubjectManage() {
   const [editSubject, setEditSubject] = useState<Subject>();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<CheckboxItem[]>([]);
   const {
     isConfirmOpen,
     openConfirm,
@@ -68,7 +90,11 @@ function SubjectManage() {
   // Call API
   const [selectedSpecialization, setSelectedSpecialization] = useState(1);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [markColumns, setMarkColumns] = useState<MarkColumn[]>([]);
   const [specializations, setSpecializations] = useState([]);
+  const [isModalMarkColumn, setIsModalMarkColumn] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [itemss, setItemss] = useState<Set<SelectedItem>>(new Set());
 
   useEffect(() => {
     const fetchSpecializations = async () => {
@@ -86,6 +112,20 @@ function SubjectManage() {
   const handleEditClick = useCallback((subject) => {
     setEditSubject(subject);
     setIsEditDisabled(true);
+
+    getSubjectMarkBySubjectIdAPI(subject.id)
+      .then((data) => {
+        const markColumnItem = data.data?.map((markColumn) => ({
+          id: `${markColumn.mark_column_id}`,
+          name: `${markColumn.mark_column_name}`,
+          percentage: `${markColumn.percentage}`,
+          part: `${markColumn.part}`,
+        }));
+        setSelectedItem(markColumnItem);
+      })
+      .catch((error) => {
+        console.error("Error fetching markColumn:", error);
+      });
   }, []);
 
   // const openModal = (Subject) => setSelectedSubject(Subject);
@@ -98,12 +138,16 @@ function SubjectManage() {
       setIsSubject(item);
       setIsModalConfirmOpen(true);
     }
+    else if (id === "mark-column") {
+      setIsModalMarkColumn(true);
+    }
   };
 
   const closeModal = () => {
     setSelectedSubject("");
     setIsModalOpenExcel(false);
     setIsModalConfirmOpen(false);
+    setIsModalMarkColumn(false);
   };
 
   const renderRow = (item: Subject) => [
@@ -193,18 +237,57 @@ function SubjectManage() {
     validationSchema: subjectValidationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-      const formattedSubject = { ...values };
+      const subjectDTO = { ...values };
+      const items = Array.from(itemss);
+
+      let message = '';
+      let sumPercentage = 0.0
+      items.forEach((item) => {
+        if (typeof item.percentage == 'undefined' || typeof item.part == 'undefined') {
+          message = "Vui lòng nhập đầy đủ tỉ lệ phần trăm và đợt cho cột điểm!";
+          return;
+        }
+        else if (item.part < 1 || item.part > 2) {
+          message = `Đợt không thể là ${item.part}. Vui lòng nhập đúng đợt cho cột điểm!`;
+          return;
+        }
+        else if (item.percentage < 0.0 || item.percentage > 100.0) {
+          message = `Tỉ lệ phần trăm không thể là ${item.percentage}. Vui lòng nhập đúng tỉ lệ phần trăm cho cột điểm!`;
+          return;
+        }
+        sumPercentage += Number(item.percentage);
+      })
+
+      if (message) {
+        toast.error(message);
+        return;
+      }
+      if (sumPercentage > 100.0) {
+        toast.error(`Tổng tỉ lệ phần trăm đã nhập là ${sumPercentage}. Vui lòng nhập tổng tỉ lệ phần trăm của các cột điểm từ 0 - 100!`);
+        return;
+      }
+      if (items.length <= 0) {
+        toast.error(`Vui lòng chọn cột điểm cho môn học!`);
+        return;
+      }
+
+      const formData = {
+        items,
+        subjectDTO,
+      };
+
       const action = async () => {
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading
           try {
-            const response = await createSubjectAPI(formattedSubject);
-            if (response && response.data) {
+            const response = await createSubjectAPI(formData);
+            if (response) {
               if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
                 toast.success("Thêm mới môn học thành công");
                 resetForm();
                 setIsReLoadTable(!isReLoadTable);
+                setSelectedItem([]);
               }
             }
           } catch (error) {
@@ -216,16 +299,17 @@ function SubjectManage() {
           setLoading(true); // Bắt đầu loading
           try {
             const response = await updateSubjectAPI(
-              formattedSubject,
+              formData,
               values.id
             );
-            if (response && response.data) {
+            if (response) {
               if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
                 toast.success("Cập nhật môn học thành công");
                 resetForm();
                 setEditSubject(null);
                 setIsReLoadTable(!isReLoadTable);
+                setSelectedItem([]);
               }
             }
           } catch (error) {
@@ -241,9 +325,9 @@ function SubjectManage() {
       values.id === 0
         ? openConfirm(action, `Bạn có chắc muốn thêm môn học ${values?.code}?`)
         : openConfirm(
-            action,
-            `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`
-          );
+          action,
+          `Bạn có chắc muốn cập nhật môn học ${editSubject?.code}?`
+        );
     },
   });
 
@@ -324,6 +408,7 @@ function SubjectManage() {
   const callAPI = async () => {
     try {
       const response = await getAllSpecializationsAPI();
+      const response2 = await getAllMarkColumnAPI();
       if (response && response.data) {
         if (response.statusCode === 200) {
           const formattedSpecialization = response.data.map((item) => ({
@@ -331,6 +416,16 @@ function SubjectManage() {
             label: item.name,
           }));
           setSpecialization(formattedSpecialization);
+        }
+      }
+
+      if (response2 && response2.data) {
+        if (response2.statusCode === 200) {
+          // const formattedSpecialization = response2.data.map((item) => ({
+          //   value: item.id,
+          //   label: item.name,
+          // }));
+          setMarkColumns(response2.data);
         }
       }
     } catch (error) {
@@ -341,6 +436,37 @@ function SubjectManage() {
   useEffect(() => {
     callAPI();
   }, []);
+
+  // Tạo cột điểm cho môn học
+  const items = markColumns.map((markColumn) => ({
+    id: `${markColumn.id}`,
+    label: `${markColumn.name}`,
+  }));
+
+  const handleCheckboxSubmit = (
+    selectedItems: { id: string; name: string }[]
+  ) => {
+    setSelectedItem((prevArray) => {
+      // Lọc các phần tử trong selectedItems mà id chưa tồn tại trong prevArray
+      const filteredArray = selectedItems.filter(
+        (newItem) => !prevArray.some((existingItem) => existingItem.id === newItem.id)
+      );
+      // Thêm các phần tử hợp lệ vào array hiện tại
+      return [...prevArray, ...filteredArray];
+    });
+    setIsModalMarkColumn(false);
+  };
+
+  // set lại các cột điểm đã chọn
+  useEffect(() => {
+    if (selectedItem) {
+      // Trích xuất các `id` và tạo Set
+      const idsSet = new Set(selectedItem.map((item) => item.id));
+      const item = new Set(selectedItem.map((item) => item));
+      setSelected(idsSet);
+      setItemss(item)
+    }
+  }, [selectedItem]);
 
   return (
     <Container>
@@ -389,6 +515,26 @@ function SubjectManage() {
               </div>
             </Modal>
           )}
+
+          {/* Modal subject */}
+          {isModalMarkColumn && (
+            <Modal
+              isOpen={true}
+              onClose={closeModal}
+              label={`Chọn cột điểm cho môn học`}
+            >
+              <div>
+                <div className="w-[700px] py-2">
+                  <CheckboxGroup
+                    items={items}
+                    onSubmit={handleCheckboxSubmit}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </div>
+              </div>
+            </Modal>
+          )}
         </div>
         <div className={`p-2 w-full md:w-[300px]`}>
           <div className="px-2 pt-4 mb-5">
@@ -411,6 +557,9 @@ function SubjectManage() {
             setEditSubject={setEditSubject}
             setIsEditDisabled={setIsEditDisabled}
             specialization={specializations}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            onClickAddMarkColumn={() => openModal("", "mark-column")}
           />
           <ModalConfirm
             isOpen={isConfirmOpen}

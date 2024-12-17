@@ -84,9 +84,9 @@ function EducationProgramManage() {
 
     getAllByEducationProgramId(educationProgram.id)
       .then((data) => {
-        setSelectedItem(data.data);
+        // setSelectedItem(data.data);
         // Trích xuất các `id` và tạo Set
-        const idsSet = new Set(data.data.map((item) => item.id));
+        // const idsSet = new Set(data.data.map((item) => item.id));
         // Tạo option subject
         const privateMajorItem = data.data?.map((privateMajor) => ({
           id: `${privateMajor.id}`,
@@ -208,7 +208,7 @@ function EducationProgramManage() {
         ids,
         educationProgramDTO,
       };
-      console.log("check", values);
+      console.log("chẹc", ids)
       const action = async () => {
         if (values.id === 0) {
           setLoading(true); // Bắt đầu loading
