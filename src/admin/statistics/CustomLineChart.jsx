@@ -46,11 +46,7 @@ const CustomLineChart = ({ data, lines, gradients }) => {
           ))}
         </defs>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="name"
-          //   tick={{ fill: "#8884d8" }} // Tick color
-          //   axisLine={{ stroke: "#8884d8" }} // Axis line color
-        />
+        <XAxis dataKey="year" />
         <YAxis />
         <Tooltip />
         <Legend />

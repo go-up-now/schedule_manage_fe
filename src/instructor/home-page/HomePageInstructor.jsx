@@ -59,7 +59,7 @@ function HomePageInstructor() {
               }}
             >
               <img
-                className="w-full"
+                className="w-full h-32 object-cover"
                 src={`${baseUrl}${event.image}`}
                 alt={event.name}
               />
