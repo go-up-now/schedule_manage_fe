@@ -150,6 +150,7 @@ function StudySchedule() {
     currentProgress.currentProgress === "first-part" ||
     currentProgress.currentProgress === "second-part";
   const scheduleNull = [];
+
   return (
     <Container>
       <TitleHeader title={"LỊCH HỌC"} />
