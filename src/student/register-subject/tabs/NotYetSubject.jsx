@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 
 function NotYetSubject() {
   const [getclazz, setGetClazz] = useState([]);
-  
 
   const headers = [
     "Mã môn",
@@ -49,7 +48,7 @@ function NotYetSubject() {
         window.location.reload();
       }, 1500);
     } catch (error) {
-      toast.error("Đăng ký lớp học không thành công!");
+      toast.error(error.data.message);
       console.error("Registration error:", error);
     }
   };

@@ -206,7 +206,7 @@ const sidebarStructure = [
       {
         id: "teachDay",
         title: "Lịch dạy ",
-        name: "teach.teachDay",
+        name: "clazz_list_manage.teachDay",
         link: "/lich-day",
         icon: "dot",
         role: [ROLE.INSTRUCTOR],
@@ -214,7 +214,7 @@ const sidebarStructure = [
       {
         id: "teachManage",
         title: "Danh sách lớp dạy",
-        name: "teach.teachManage",
+        name: "clazz_list_manage.teachManage",
         link: "/danh-sach-lop-day",
         icon: "dot",
         role: [ROLE.INSTRUCTOR],

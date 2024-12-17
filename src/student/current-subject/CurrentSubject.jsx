@@ -6,21 +6,43 @@ import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { toast } from "react-toastify";
 import { getAllIdOfStudyInByBlockAndSemesterAndYearOfStudent2API } from "../../api/StudyIn.js";
+import { getCurrentProgressAPI } from "../../api/SemesterProgress.js";
 
 function CurrentSubject() {
   const navigate = useNavigate();
   const [subjects, setsSubjects] = useState([]);
 
+  // CALL API CURRENT PROGRESS
+  const [currentProgress, setCurrentProgress] = useState("");
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const response = await getCurrentProgressAPI();
+        setCurrentProgress(response.data);
+      } catch (error) {
+        console.error("Error fetching schedule data:", error);
+      }
+    };
+    fetchSchedule();
+  }, []);
+  //console.log(currentProgress);
+
+  const flag = currentProgress === "prepair";
+
+  console.log(flag);
   // Lấy môn học hiện tại
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        let response = await getAllIdOfStudyInByBlockAndSemesterAndYearOfStudent2API();
+        let response =
+          await getAllIdOfStudyInByBlockAndSemesterAndYearOfStudent2API();
         if (response && response.statusCode == 200) {
           setsSubjects(response.data);
         }
       } catch (error) {
-        toast.error("Lấy danh sách môn học hiện tại của sinh viên không thành công!")
+        toast.error(
+          "Lấy danh sách môn học hiện tại của sinh viên không thành công!"
+        );
       }
     };
     fetchClasses();
@@ -54,9 +76,13 @@ function CurrentSubject() {
   ];
 
   const handlePost = useCallback((item) => {
-    navigate(`/doi-lich-hoc/${encodeURIComponent(item.subjectCode)}`, {
-      state: { item }, // Pass both item and studentList in the state
-    });
+    if (flag) {
+      navigate(`/doi-lich-hoc/${encodeURIComponent(item.subjectCode)}`, {
+        state: { item }, // Pass both item and studentList in the state
+      });
+    } else {
+      toast.error("Không phải thời gian đổi ca học");
+    }
   });
 
   const renderRow = (item) => [

@@ -4,6 +4,7 @@ import { getExamSchedule } from "../../api/ExamScheduleStudent";
 import { calculateDates } from "../../api/ScheduleStudent";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import { getCurrentProgressAPI } from "../../api/SemesterProgress.js";
 
 function ExamSchedule() {
   const [selectedDay, setSelectedDay] = useState(7);
@@ -31,6 +32,22 @@ function ExamSchedule() {
       nameSelectValue: 7,
     },
   ];
+
+  // CALL API CURRENT PROGRESS
+  const [currentProgress, setCurrentProgress] = useState("");
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const response = await getCurrentProgressAPI();
+        setCurrentProgress(response.data);
+      } catch (error) {
+        console.error("Error fetching schedule data:", error);
+      }
+    };
+    fetchSchedule();
+  }, []);
+  console.log(currentProgress);
 
   useEffect(() => {
     const fetchExamSchedule = async () => {
@@ -134,39 +151,61 @@ function ExamSchedule() {
     };
   }, [mobile, desktop]);
 
+  const flag =
+    currentProgress === "first-part" || currentProgress === "second-part";
+  const scheduleNull = [];
+
   return (
     <Container>
       <TitleHeader title={"LỊCH THI"} />
-      <div className="py-4">
-        {desktop && (
-          <>
+      {!flag ? (
+        <>
+          <div className="py-4 min-h-[600px]">
             <Table
               DefaultTable={true}
-              showOptions={true}
-              showSelectBox={true}
-              optionsValue={numberSelectBox}
+              showTurnPage={false}
               headers={headers}
               renderRow={renderRow}
-              data={examSchedule}
+              data={scheduleNull}
               maxRow={10}
+              nullData="Hiện tại chưa có lịch học"
             />
-          </>
-        )}
-        {mobile && (
-          <>
-            <Table
-              DefaultTable={true}
-              showOptions={true}
-              showSelectBox={true}
-              optionsValue={numberSelectBox}
-              headers={header1s}
-              renderRow={renderRow1}
-              data={examSchedule}
-              maxRow={10}
-            />
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="py-4 min-h-[600px]">
+            {desktop && (
+              <>
+                <Table
+                  DefaultTable={true}
+                  showOptions={true}
+                  showSelectBox={true}
+                  optionsValue={numberSelectBox}
+                  headers={headers}
+                  renderRow={renderRow}
+                  data={examSchedule}
+                  maxRow={10}
+                />
+              </>
+            )}
+            {mobile && (
+              <>
+                <Table
+                  DefaultTable={true}
+                  showOptions={true}
+                  showSelectBox={true}
+                  optionsValue={numberSelectBox}
+                  headers={header1s}
+                  renderRow={renderRow1}
+                  data={examSchedule}
+                  maxRow={10}
+                />
+              </>
+            )}
+          </div>
+        </>
+      )}
     </Container>
   );
 }

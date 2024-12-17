@@ -1,36 +1,75 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Table from "../../component/Table";
 import Button from "../../component/Button";
 import Modal from "../../component/Modal";
-import TextField from "../../component/TextField";
-import { student } from "./student";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import TextFieldGroup from "./TextFieldGroup.jsx";
-import { getAllStudentbyClazzId } from "../../api/Student.js";
+import { getStudentWithQualifiByClazzIdAPI } from "../../api/Student.js";
+import { getSubjectMarkByClazzIdAPI } from "../../api/SubjectMark.js";
+import { getMarkByClazzId } from "../../api/StudyResult.js";
+import { getCurrentProgressAPI } from "../../api/SemesterProgress.js";
+import { toast } from "react-toastify";
+
 function StudentList() {
   const location = useLocation();
   const { item } = location.state || {};
   const navigate = useNavigate();
 
+  // CALL API CURRENT PROGRESS
+  const [currentProgress, setCurrentProgress] = useState("");
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const response = await getCurrentProgressAPI();
+        setCurrentProgress(response.data);
+      } catch (error) {
+        console.error("Error fetching schedule data:", error);
+      }
+    };
+    fetchSchedule();
+  }, []);
+
+  const flag2 = currentProgress === "second-part";
+
+  // Fetch marks list by clazz ID
+  const [marksList, setMarksList] = useState([]);
+  useEffect(() => {
+    if (item.clazz_id) {
+      getSubjectMarkByClazzIdAPI(item.clazz_id)
+        .then((data) => {
+          setMarksList(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching subject marks:", error);
+        });
+    }
+  }, [item.clazz_id]);
+
+  const [resultList, setResultList] = useState([]);
+  useEffect(() => {
+    if (item.clazz_id) {
+      getMarkByClazzId(item.clazz_id)
+        .then((data) => {
+          setResultList(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching subject marks:", error);
+        });
+    }
+  }, [item.clazz_id]);
+  console.log(resultList);
+
+  // Generate table headers dynamically
   const headers = [
     "Mã sinh viên",
     "Tên sinh viên",
-    "Lab 1",
-    "Lab 2",
-    "Lab 3",
-    "Lab 4",
-    "ASM 1",
-    "Lab 5",
-    "Lab 6",
-    "Lab 7",
-    "Lab 8",
-    "ASM 2",
-    "ASM final",
+    ...marksList.map((item) => item.mark_column_name),
     "Cập nhật",
   ];
 
@@ -39,112 +78,80 @@ function StudentList() {
   const openModal = (student) => setSelectedStudent(student);
   const closeModal = () => setSelectedStudent(null);
 
-  const renderRow = (item) => [
-    <td key={`item-code-${item.id}`} className="">
-      {item.code}
+  const handleFieldChange = (field, value) => {
+    setSelectedStudent((prev) => {
+      const updatedStudent = { ...prev, [field]: value };
+
+      // Update the result list to reflect the change in the selected student
+      setResultList((prevList) =>
+        prevList.map((student) =>
+          student.id === prev.id ? { ...student, [field]: value } : student
+        )
+      );
+
+      return updatedStudent; // Return updated student
+    });
+  };
+
+  const renderRow = (student) => [
+    <td key={`studentCode-${student.studentId}`} className="px-1 ">
+      {student.studentCode}
     </td>,
-    <td key={`item-name-${item.id}`} className="">
-      {item.name}
+    <td key={`studentFullName-${student.studentId}`} className="px-1">
+      {student.studentFullName}
     </td>,
-    <td key={`item-lab1-${item.id}`} className="">
-      {item.lab1}
-    </td>,
-    <td key={`item-lab2-${item.id}`} className="">
-      {item.lab2}
-    </td>,
-    <td key={`item-lab3-${item.id}`} className="">
-      {item.lab3}
-    </td>,
-    <td key={`item-lab4-${item.id}`} className="">
-      {item.lab4}
-    </td>,
-    <td key={`item-asm1-${item.id}`} className="">
-      {item.asm1}
-    </td>,
-    <td key={`item-lab5-${item.id}`} className="">
-      {item.lab5}
-    </td>,
-    <td key={`item-lab6-${item.id}`} className="">
-      {item.lab6}
-    </td>,
-    <td key={`item-lab7-${item.id}`} className="">
-      {item.lab7}
-    </td>,
-    <td key={`item-lab8-${item.id}`} className="">
-      {item.lab8}
-    </td>,
-    <td key={`item-asm2-${item.id}`} className="">
-      {item.asm2}
-    </td>,
-    <td key={`item-asmFinal-${item.id}`} className="">
-      {item.asmFinal}
-    </td>,
-    <td key={`item-capnhat-${item.id}`} className="flex justify-center p-1  ">
+    ...marksList.map((mark) => {
+      const studentMark =
+        student.marks.find((m) => m.markName === mark.mark_column_name)
+          ?.studentMark || 0;
+      return (
+        <td
+          key={`mark-${mark.mark_column_name}-${student.studentId}`}
+          className="px-1"
+        >
+          {studentMark}
+        </td>
+      );
+    }),
+    <td key={`update-${student.studentId}`} className="flex justify-center p-1">
       <div className="w-full h-full flex items-center justify-center">
         <Button
-          onClick={() => {
-            openModal(item);
-            console.log(item);
-          }}
-          label={
-            <>
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </>
-          }
-          className="w-full md:w-1/2 p-4 justify-center text-white "
+          onClick={() => openModal(student)}
+          label={<FontAwesomeIcon icon={faPenToSquare} />}
+          className="w-full md:w-1/2 p-4 justify-center text-white"
         />
       </div>
     </td>,
   ];
 
-  const btnStart = [
-    {
-      id: 1,
-      name: "In Excel",
-      onclick: {},
-    },
-  ];
-
-  const [studentList, setStudentList] = useState([]);
-  // Fetch student list on component mount
+  // CALL API DATA TABLE DANH SACH SINH VIEN VÀ DIEM
+  const [students, setStudents] = useState([]);
   useEffect(() => {
-    if (item.clazz_id) {
-      getAllStudentbyClazzId(item.clazz_id)
-        .then((data) => {
-          const updatedStudents = data.map((student) => ({
-            ...student,
-            condition: true,
-          }));
-
-          const filteredStudents = updatedStudents.filter(
-            (student) => student.condition === true
-          );
-
-          setStudentList(filteredStudents);
-        })
-        .catch((error) => {
-          console.error("Error fetching student list:", error);
-        });
-    }
+    const fetchStudents = async () => {
+      const data = await getStudentWithQualifiByClazzIdAPI(item.clazz_id);
+      setStudents(data);
+    };
+    fetchStudents();
   }, [item.clazz_id]);
 
-  console.log("studentListCallAPI");
-  console.log(studentList);
-
-  // handleExamClick function
-  const handleExamClick = useCallback(
-    (item) => {
-      navigate(
-        `/xep-dot-thi/${encodeURIComponent(
-          item.subject_code
-        )}/${encodeURIComponent(item.clazz_code)}`,
-        {
-          state: { item, studentList }, // Pass both item and studentList in the state
-        }
+  // Function to reload the data (trigger state change)
+  const reloadData = async () => {
+    try {
+      // Re-fetch data for the table
+      const studentsData = await getStudentWithQualifiByClazzIdAPI(
+        item.clazz_id
       );
-    },
-    [navigate, studentList] // Include studentList in the dependency array
-  );
+      const marksData = await getSubjectMarkByClazzIdAPI(item.clazz_id);
+      const resultsData = await getMarkByClazzId(item.clazz_id);
+
+      // Set the new data to the state
+      setStudents(studentsData);
+      setMarksList(marksData);
+      setResultList(resultsData);
+    } catch (error) {
+      console.error("Error reloading data:", error);
+    }
+  };
 
   const btnEnd = [
     {
@@ -155,35 +162,38 @@ function StudentList() {
           Xếp lịch thi
         </>
       ),
-      onClick: () => handleExamClick(item),
+      onClick: () => {
+        if (flag2) {
+          navigate(
+            `/xep-dot-thi/${encodeURIComponent(
+              item.subject_code
+            )}/${encodeURIComponent(item.clazz_code)}`,
+            {
+              state: { item, students },
+            }
+          );
+        } else {
+          toast.error("Hiện không phải thời điểm sắp lịch thi");
+        }
+      },
     },
   ];
 
-  const [className, setClassName] = useState("w-7/12 h-[620px]");
+  const [className, setClassName] = useState("w-4/12 h-[620px]");
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 985) {
         setClassName("w-[95%] h-[95%] overflow-auto relative");
       } else {
-        setClassName("w-7/12 h-[620px]");
+        setClassName("w-4/12 h-[620px]");
       }
     };
     window.addEventListener("resize", handleResize);
-    // Kiểm tra kích thước màn hình khi component được mount
     handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [className]);
-
-  const handleFieldChange = (field, value) => {
-    setSelectedStudent((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  // CALL API
+  }, []);
 
   return (
     <Container>
@@ -191,20 +201,7 @@ function StudentList() {
         title={`DANH SÁCH SINH VIÊN ${item.clazz_code} - MÔN ${item.subject_name}`}
         titleClassName="uppercase text-[1.25rem] font-medium"
       />
-
       <div className="min-h-[800px]">
-        {/* <div className="border rounded-md mb-2 h-10 ">
-          {item ? (
-            <div className="h-full px-4 flex items-center justify-between font-medium text-lg text-blue-700">
-              <p>idClazz: {item.clazzId}</p>
-              <p>codeClazz: {item.clazz}</p>
-              <p>codeSubject: {item.subjectCode}</p>
-              <p>nameSubject: {item.subjectName}</p>
-            </div>
-          ) : (
-            <p>No item data available</p>
-          )}
-        </div> */}
         <Table
           DefaultTable={true}
           showOptions={true}
@@ -214,21 +211,25 @@ function StudentList() {
           btnEnd={btnEnd}
           headers={headers}
           renderRow={renderRow}
-          data={student}
-          maxRow={student.length}
+          data={resultList}
+          maxRow={50}
           showTurnPage={false}
         />
         {selectedStudent && (
           <Modal
             isOpen={true}
             onClose={closeModal}
-            className={`${className}`}
-            label={`${selectedStudent.name} - ${selectedStudent.code}`}
+            className={className}
+            label={`${selectedStudent.studentFullName} - ${selectedStudent.studentCode}`}
           >
             <div>
               <TextFieldGroup
                 thisStudent={selectedStudent}
                 onFieldChange={handleFieldChange}
+                item={item}
+                currentProgress={currentProgress}
+                reloadData={reloadData}
+                closeModal={closeModal}
               />
             </div>
           </Modal>
