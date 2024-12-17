@@ -29,12 +29,13 @@ function RegisterSubject() {
     fetchSchedule();
   }, []);
   console.log(currentProgress);
-  const flag = currentProgress === "prepair";
+  const flagPrepair = currentProgress.currentProgress === "prepaire";
+  const flagCreate = currentProgress.currentProgress === "create";
 
   return (
     <Container>
       <TitleHeader title={"ĐĂNH KÝ MÔN HỌC"} />
-      {flag ? (
+      {flagPrepair ? (
         <>
           <div className="min-h-[600px]">
             <Tabs tabs={tabsSubject} />

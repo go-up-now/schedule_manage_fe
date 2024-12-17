@@ -27,7 +27,7 @@ function CurrentSubject() {
   }, []);
   //console.log(currentProgress);
 
-  const flag = currentProgress === "prepair";
+  const flag = currentProgress.currentProgress === "prepaire";
 
   console.log(flag);
   // Lấy môn học hiện tại

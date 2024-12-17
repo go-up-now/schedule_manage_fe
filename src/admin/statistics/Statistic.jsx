@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SelectBox from "../../component/SelectBox";
-import {getStatisticByYear} from '../../api/admin.js'
-import {getAllYearAPI} from '../../api/years.js'
+import { getStatisticByYear } from "../../api/admin.js";
+import { getAllYearAPI } from "../../api/years.js";
 import {
   faChalkboardUser,
   faF,
@@ -88,8 +88,8 @@ function Statistic() {
         if (response.data) {
           setStatistics(response.data);
 
-          const yearStart = parseInt(selectedYear) - 5; 
-          const yearEnd = parseInt(selectedYear); 
+          const yearStart = parseInt(selectedYear) - 5;
+          const yearEnd = parseInt(selectedYear);
           let tempChartData = [];
           for (let year = yearStart; year <= yearEnd; year++) {
             const response = await getStatisticByYear(year.toString());
@@ -114,21 +114,21 @@ function Statistic() {
 
     fetchStatistics();
   }, [selectedYear]);
-  
+  console.log(statistics);
   return (
     <Container>
       <TitleHeader title="THỐNG KÊ" />
-       {/* SelectBox for Year Selection */}
-       <div className="my-6 w-56">
-          <SelectBox
-            options={years}
-            value={selectedYear}
-            onChange={handleYearChange}
-            name="Năm học"
-            nameSelect="Chọn năm"
-            nameSelectValue=""
-          />
-        </div>
+      {/* SelectBox for Year Selection */}
+      <div className="my-6 w-56">
+        <SelectBox
+          options={years}
+          value={selectedYear}
+          onChange={handleYearChange}
+          name="Năm học"
+          nameSelect="Chọn năm"
+          nameSelectValue=""
+        />
+      </div>
       <div className="w-full mt-6 flex md:flex-row flex-col min-h-[500px]">
         <div className="w-3/12 flex flex-col items-center justify-between">
           <div className="w-full flex border items-center rounded-md">
@@ -185,7 +185,11 @@ function Statistic() {
         </div>
 
         <div className={`w-9/12 flex items-center`}>
-          <CustomLineChart data={chartData} lines={lines} gradients={gradients} />
+          <CustomLineChart
+            data={chartData}
+            lines={lines}
+            gradients={gradients}
+          />
         </div>
       </div>
     </Container>
