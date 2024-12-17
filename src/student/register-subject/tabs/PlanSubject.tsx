@@ -249,22 +249,23 @@ function PlanSubject() {
   const handlePayment = async () => {
     setLoading(true);
 
-    const payments = [
-      {
-        name: "Mỳ tôm Hảo Hảo ly",
-        quantity: 2,
+    // const payments = [
+    //   {
+    //     name: "Mỳ tôm Hảo Hảo ly",
+    //     quantity: 2,
+    //     price: 1000,
+    //   },
+    // ];
+    let payments = [];
+    classes.forEach(element => {
+      let payment = {
+        name: element.subject_name,
+        quantity: 1,
+        // price: element.price
         price: 1000,
-      },
-    ];
-    // let payments = [];
-    // classes.forEach(element => {
-    //   let payment = {
-    //     name: element.subject_name,
-    //     quantity: 1,
-    //     price: element.price
-    //   }
-    //   payments.push(payment)
-    // });
+      }
+      payments.push(payment)
+    });
 
     try {
       let response = await paymentAPI(payments);

@@ -144,7 +144,7 @@ const NoteForm = ({ valueMonth, valueYear, user, selectNotes }) => {
       if (selectNotes) {
         const response = await updateNoteAPI(selectNotes.note_id, noteDTO);
 
-        toast.success("THÊM GHI CHÚ THÀNH CÔNG");
+        toast.success("CẬP NHẬT GHI CHÚ THÀNH CÔNG");
         setContent("");
         setDate("");
         setNoteTime("");

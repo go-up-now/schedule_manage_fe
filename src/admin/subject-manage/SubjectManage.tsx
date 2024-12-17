@@ -263,7 +263,11 @@ function SubjectManage() {
         return;
       }
       if (sumPercentage > 100.0) {
-        toast.error(`Tổng tỉ lệ phần trăm đã nhập là ${sumPercentage}. Vui lòng nhập tổng tỉ lệ phần trăm của các cột điểm từ 0 - 100!`);
+        toast.error(`Tổng tỉ lệ phần trăm đã nhập là ${sumPercentage}. Vui lòng nhập tổng tỉ lệ phần trăm của các cột điểm là 100!`);
+        return;
+      }
+      else if (sumPercentage < 100.0) {
+        toast.error(`Tổng tỉ lệ phần trăm đã nhập là ${sumPercentage}. Vui lòng nhập tổng tỉ lệ phần trăm của các cột điểm là 100!`);
         return;
       }
       if (items.length <= 0) {

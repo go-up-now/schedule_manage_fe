@@ -359,14 +359,14 @@ function StudentManage() {
                   console.error("Error fetching students:", error);
                 });
             }
-            toast.success("Xóa lớp học thành công");
+            toast.success("Xóa thêm sinh thành công");
           }
         } else {
-          toast.error("Xóa lớp học không thành công");
+          toast.error("Xóa thêm sinh không thành công");
         }
         closeModal();
       } catch (error) {
-        toast.error("Xóa lớp học không thành công");
+        toast.error("Xóa thêm sinh không thành công");
       }
     }
   };
