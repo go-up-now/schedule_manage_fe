@@ -52,8 +52,8 @@ function TextFieldGroup({
     setLocalMarks(updatedMarks);
   };
 
-  const flag1 = currentProgress === "first-part";
-  const flag2 = currentProgress === "second-part";
+  const flag1 = currentProgress.currentProgress === "first-part";
+  const flag2 = currentProgress.currentProgress === "second-part";
 
   const saveMarks = async () => {
     const updatedMarks = marksList.map((mark) => ({

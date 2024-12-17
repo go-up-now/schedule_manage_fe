@@ -35,7 +35,7 @@ function StudentList() {
     fetchSchedule();
   }, []);
 
-  const flag2 = currentProgress === "second-part";
+  const flag2 = currentProgress.currentProgress === "second-part";
 
   // Fetch marks list by clazz ID
   const [marksList, setMarksList] = useState([]);
