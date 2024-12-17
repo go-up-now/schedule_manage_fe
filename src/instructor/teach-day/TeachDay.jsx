@@ -135,11 +135,11 @@ function TeachDay() {
   const handleCancelSchedule = async (clazz) => {
     try {
       // Fetch schedule details based on the class scheduleId
-      const scheduleData = await getScheduleById(clazz.scheculeId);
+      const scheduleData = await getScheduleById(clazz.scheduleId);
       console.log("Schedule Data:", scheduleData); // Log fetched schedule data
 
       // Call the cancelSchedule API with the correct data
-      const response = await cancelSchedule(clazz.scheculeId, scheduleData);
+      const response = await cancelSchedule(clazz.scheduleId, scheduleData);
       console.log("Lịch dạy đã được huỷ thành công:", response);
 
       // Success toast
@@ -151,7 +151,7 @@ function TeachDay() {
     } catch (error) {
       console.error("Lỗi khi huỷ lịch dạy:", error);
       // Show error toast
-      const scheduleData = await getScheduleById(clazz.scheculeId);
+      const scheduleData = await getScheduleById(clazz.scheduleId);
       console.log("Schedule Data:", scheduleData);
       toast.error("HUỶ THẤT BẠI");
     }
@@ -161,7 +161,7 @@ function TeachDay() {
   const renderShiftId = (clazz) => {
     //console.log("Rendering Class:", clazz); // Log each class
     return clazz ? (
-      <div className="w-24 h-22 flex flex-col items-start p-2 rounded-md shadow-inner border relative">
+      <div className="w-24 h-22 flex flex-col items-start justify-center p-2 rounded-md shadow-inner border relative">
         <div className="w-full text-left">
           <h3 className="text-[0.9rem] font-medium py-1">{clazz.roomName}</h3>
           <h3 className="text-[0.8rem]">{clazz.code}</h3>
@@ -204,11 +204,14 @@ function TeachDay() {
     });
 
     return [
-      <td key={`item-date-${date}`} className="px-6 py-2">
+      <td key={`item-date-${date}`} className="px-4 py-2">
         {date}
       </td>,
       ...shiftIdArray.map((clazz, index) => (
-        <td key={`item-shiftId${index + 1}-${date}`} className="px-6 py-2">
+        <td
+          key={`item-shiftId${index + 1}-${date}`}
+          className="px-2 pl-12 py-2"
+        >
           {renderShiftId(clazz)}
         </td>
       )),
@@ -235,7 +238,13 @@ function TeachDay() {
 
   return (
     <Container>
-      <TitleHeader title={`Danh sách lịch dạy từ ngày ${thatDate}`} />
+      <TitleHeader
+        title={
+          <>
+            <p className="upper-case">DANH SÁCH LỊCH DẠY TỪ NGÀY {thatDate}</p>
+          </>
+        }
+      />
       <div className="min-h-[600px]">
         {desktop && (
           <Table

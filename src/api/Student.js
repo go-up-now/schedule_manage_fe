@@ -102,11 +102,41 @@ export const getAllCourse = () => {
 };
 
 export const countStudentCannotPresent = (scheduleId, date, shift) => {
-  return axiosInstance.put(`/api/students/cannot-present`,{
-    params:{
-      scheduleId:scheduleId,
-      date:date,
-      shift:shift
-    }
-  } );
+  return axiosInstance.put(`/api/students/cannot-present`, {
+    params: {
+      scheduleId: scheduleId,
+      date: date,
+      shift: shift,
+    },
+  });
+};
+
+export const getStudentsByInstructorIdAndClazzIdAPI = async (clazzId) => {
+  try {
+    const response = await axiosInstance.get(
+      "/api/students/getStudentsByInstructorIdAndClazzId",
+      {
+        params: { clazzId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    throw error;
+  }
+};
+
+export const getStudentWithQualifiByClazzIdAPI = async (clazzId) => {
+  try {
+    const response = await axiosInstance.get(
+      "/api/students/students-for-arrange-batch",
+      {
+        params: { clazzId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching qualified students:", error);
+    throw error;
+  }
 };

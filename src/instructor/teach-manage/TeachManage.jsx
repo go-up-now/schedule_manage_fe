@@ -7,6 +7,9 @@ import { faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import { getClazzesByInstructor } from "../../api/clazzs.js";
+import { getAllBlocksAPI } from "../../api/Block.js";
+import { getAllSemesterAPI } from "../../api/Semester.js";
+import { getAllYearAPI } from "../../api/years.js";
 
 function TeachManage() {
   const navigate = useNavigate();
@@ -58,10 +61,63 @@ function TeachManage() {
   );
 
   // Call API
-  const [selectedYear, setSelectedYear] = useState(2024);
-  const [selectedSemester, setSelectedSemester] = useState("Spring");
-  const [selectedBlock, setSelectedBlock] = useState(1);
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedSemester, setSelectedSemester] = useState("Fall");
+  const [selectedBlock, setSelectedBlock] = useState(2);
+
   const [clazzTeaching, setClazzTeaching] = useState([]);
+  const [blocks, setBlocks] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [years, setYears] = useState([]);
+
+  // GET API VALUE CB BLOCK
+  useEffect(() => {
+    const fetchBlocks = async () => {
+      const data = await getAllBlocksAPI();
+      const formattedBlocks = data.map((block) => ({
+        value: block.block,
+        label: block.block,
+      })); // Format data with value and label
+      setBlocks(formattedBlocks);
+    };
+
+    fetchBlocks(); // Call the API function
+  }, []);
+
+  // GET API VALUE CB SEMESTER
+  useEffect(() => {
+    const fetchSemesters = async () => {
+      const data = await getAllSemesterAPI();
+      const formattedSemesters = data.map((semester) => ({
+        value: semester.semester,
+        label: semester.semester,
+      })); // Format data with value and label
+      setSemesters(formattedSemesters);
+    };
+
+    fetchSemesters(); // Call the API function
+  }, []);
+
+  // GET API VALUE CB YEAR
+  useEffect(() => {
+    const fetchYears = async () => {
+      try {
+        const response = await getAllYearAPI();
+        const formattedYears = response.data
+          .map((year) => ({
+            value: year.year,
+            label: year.year.toString(),
+          }))
+          .reverse();
+        setYears(formattedYears);
+      } catch (error) {
+        console.error("Failed to fetch years:", error);
+      }
+    };
+
+    fetchYears();
+  }, []);
 
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
@@ -88,38 +144,43 @@ function TeachManage() {
 
   const selectBoxs = [
     {
-      options: [
-        { value: 2023, label: "2023" },
-        { value: 2022, label: "2022" },
-      ],
-      nameSelect: "2024",
-      onChange: handleYearChange,
-      value: selectedYear,
-      className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
-    },
-    {
-      options: [
-        { value: "Summer", label: "Summer" },
-        { value: "Fall", label: "Fall" },
-        { value: "Winter", label: "Winter" },
-      ],
-      nameSelect: "Spring",
-      onChange: handleSemesterChange,
-      value: selectedSemester,
-      className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
-    },
-    {
-      options: [{ value: 2, label: "Block II" }],
-      nameSelect: "Block I",
+      options: blocks,
+      name: "Block",
       onChange: handleBlockChange,
       value: selectedBlock,
       className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
+    },
+    {
+      options: semesters,
+      name: "Kỳ",
+      onChange: handleSemesterChange,
+      value: selectedSemester,
+      className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
+    },
+    {
+      options: years,
+      name: "Năm",
+      onChange: handleYearChange,
+      value: selectedYear,
+      className: "md:mr-1 w-full md:w-[200px] pt-4 md:pt-4",
+      avaiableNameSelect: false,
     },
   ];
 
   return (
     <Container>
-      <TitleHeader title="Danh sách lớp phụ trách" />
+      <TitleHeader
+        title={
+          <>
+            <p className="upper-case">
+              DANH SÁCH LỚP PHỤ TRÁCH BLOCK {selectedBlock} KỲ{" "}
+              {selectedSemester} NĂM {selectedYear}
+            </p>
+          </>
+        }
+      />
       <div className="min-h-[800px]">
         <Table
           DefaultTable={true}
@@ -132,6 +193,7 @@ function TeachManage() {
           renderRow={renderRow}
           data={clazzTeaching}
           maxRow={10}
+          searchClass={"mt-7"}
         />
       </div>
     </Container>

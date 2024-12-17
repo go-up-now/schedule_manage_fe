@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-import { getClazzesToChangeShiftBySubjectIdAndShiftAPI } from '../../api/clazzs.js'
-import { handleChangeClazzAPI } from '../../api/StudyIn.js'
+import { getClazzesToChangeShiftBySubjectIdAndShiftAPI } from "../../api/clazzs.js";
+import { handleChangeClazzAPI } from "../../api/StudyIn.js";
 import { toast } from "react-toastify";
 
 function ChangeSchedule() {
@@ -19,20 +19,23 @@ function ChangeSchedule() {
   // Lấy danh sách lớp học muốn đổi
   useEffect(() => {
     const fetchClasses = async () => {
-      if (item) {
+      if (selectedShift && item) {
         try {
-          let response = await getClazzesToChangeShiftBySubjectIdAndShiftAPI(item.subjectId, item.shift);
+          let response = await getClazzesToChangeShiftBySubjectIdAndShiftAPI(
+            item.subjectId,
+            selectedShift
+          );
           if (response && response.statusCode == 200) {
             setsClazzs(response.data);
           }
         } catch (error) {
-          toast.error("Lấy danh sách lớp học muốn đổi không thành công!")
+          toast.error("Lấy danh sách lớp học muốn đổi không thành công!");
         }
-      };
-    }
+      }
+    };
 
     fetchClasses();
-  }, []);
+  }, [selectedShift]);
 
   // Đổi lịch học
 
@@ -40,32 +43,34 @@ function ChangeSchedule() {
     try {
       const response = await handleChangeClazzAPI(item.classId, clazz.clazz_id);
       if (response && response.data) {
-        if (response.statusCode !== 200)
-          toast.error(response.message);
+        if (response.statusCode !== 200) toast.error(response.message);
         if (response.statusCode === 200) {
           toast.success("Đổi lịch học thành công");
 
-          let response1 = await getClazzesToChangeShiftBySubjectIdAndShiftAPI(item.subjectId, clazz.shift);
+          let response1 = await getClazzesToChangeShiftBySubjectIdAndShiftAPI(
+            item.subjectId,
+            clazz.shift
+          );
           if (response1 && response1.statusCode == 200) {
             setsClazzs(response1.data);
           }
           const currentClazz = {
-            subjectId:item.subjectId,
+            subjectId: item.subjectId,
             subjectCode: item.subjectCode,
             subjectName: item.subjectName,
             clazzCode: clazz.clazz_code,
             study_day: clazz.study_day,
             shift: clazz.shift,
-            classId: clazz.clazz_id
+            classId: clazz.clazz_id,
           };
-          setItem(currentClazz)
+          setItem(currentClazz);
         }
       }
     } catch (error) {
       console.log("lỗi:", error);
       toast.error(error.data.message);
     }
-  }
+  };
 
   return (
     <Container>
@@ -82,14 +87,15 @@ function ChangeSchedule() {
             <div className="border rounded-lg grid grid-cols-3 gap-5 p-4">
               {shifts.map((shift) => (
                 <Button
-                  className={`p-3 justify-center ${shift === selectedShift
-                    ? "text-xs font-semibold text-white"
-                    : "bg-gray-200 hover:bg-gray-300 text-xs"
-                    }`}
+                  key={shift}
+                  className={`p-3 justify-center ${
+                    shift === selectedShift
+                      ? "text-xs font-semibold text-white"
+                      : "bg-gray-200 hover:bg-gray-300 text-xs"
+                  } `}
                   onClick={() => {
                     setSelectedShift(shift);
                   }}
-                  key={shift}
                   label={`Ca ${shift}`}
                 />
               ))}
@@ -126,15 +132,13 @@ function ChangeSchedule() {
               {clazzs
                 .filter((clazz) => clazz.shift === selectedShift)
                 .map((clazz) => (
-                  <div className={`w-full md:w-1/3`} key={clazz.code}>
+                  <div className={`w-full md:w-1/3`} key={clazz.clazz_id}>
                     <div className="w-full my-4 flex justify-center">
                       <div className="p-4 border rounded-lg flex flex-wrap">
                         <div className="w-1/2 p-1 text-sm">
                           <p className="py-1">Lớp: {clazz.clazz_code}</p>
                           <p className="py-1">Phòng: {clazz.room_name}</p>
-                          <p className="py-1">
-                            Số lượng SV: {clazz.amout}
-                          </p>
+                          <p className="py-1">Số lượng SV: {clazz.amout}</p>
                         </div>
                         <div className="w-1/2 p-1 text-sm">
                           <p className="py-1">
@@ -147,10 +151,11 @@ function ChangeSchedule() {
                         </div>
                         <div className="justify-center w-full p-2 flex mt-2">
                           <Button
-                            className={`text-xs font-bold p-2 w-full justify-center ${clazz.count_student >= 40
-                              ? "bg-gray-300 "
-                              : " text-white bg-blue-500 hover:bg-blue-600"
-                              }`}
+                            className={`text-xs font-bold p-2 w-full justify-center ${
+                              clazz.count_student >= 40
+                                ? "bg-gray-300 "
+                                : " text-white bg-blue-500 hover:bg-blue-600"
+                            }`}
                             label="ĐỔI LỊCH"
                             onClick={() => handleChangeSchedule(clazz)}
                           />

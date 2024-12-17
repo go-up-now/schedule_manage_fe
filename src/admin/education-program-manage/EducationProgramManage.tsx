@@ -20,6 +20,9 @@ import ModalConfirm from "../../component/ModalConfirm.tsx";
 import { getAllYearAPI } from "../../api/years.js";
 import { getAllByEducationProgramId } from "../../api/Subject.js";
 import CheckboxGroup from "../../component/CheckBoxGroup.tsx";
+import SelectBox from "../../component/SelectBox.jsx";
+import { getAllSpecializationsAPI } from "../../api/Specialization.js";
+import { getAllSubjectBySpecializationIdAPI } from "../../api/Subject.js";
 
 interface EducationProgram {
   id: number;
@@ -54,6 +57,7 @@ function EducationProgramManage() {
     useState<EducationProgram>();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const {
     isConfirmOpen,
     openConfirm,
@@ -111,6 +115,7 @@ function EducationProgramManage() {
     // }
     else if (id === "subject-modal") {
       setIsModalSubject(true);
+      // handleSpecializationChange(1);
     }
   };
   const closeModal = () => {
@@ -264,9 +269,9 @@ function EducationProgramManage() {
       values.id === 0
         ? openConfirm(action, "Bạn có chắc muốn thêm chương trình đào tạo này?")
         : openConfirm(
-          action,
-          `Bạn có chắc muốn cập nhật ${editEducationProgram?.name}?`
-        );
+            action,
+            `Bạn có chắc muốn cập nhật ${editEducationProgram?.name}?`
+          );
     },
   });
 
@@ -277,10 +282,12 @@ function EducationProgramManage() {
       const response = await getAllYearAPI();
       if (response && response.data) {
         if (response.statusCode === 200) {
-          const formattedYears = response.data.map((item) => ({
-            value: item.year,
-            label: item.year,
-          })).reverse();
+          const formattedYears = response.data
+            .map((item) => ({
+              value: item.year,
+              label: item.year,
+            }))
+            .reverse();
           setYears(formattedYears);
         }
       }
@@ -293,6 +300,66 @@ function EducationProgramManage() {
     callAPI();
     setSelectedYear(new Date().getFullYear()); // Đặt năm hiện tại làm mặc định
   }, []);
+
+  // bien bo mon
+  const [specializations, setSpecializations] = useState([]);
+  console.log(specializations);
+  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
+  console.log(selectedSpecialization);
+  //GET API VALUE CB SPECIALIZATION
+
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const data = await getAllSpecializationsAPI().then((data) => {
+        const formattedSpecializations = data.map((specialization) => ({
+          value: specialization.id,
+          label: specialization.name,
+        })); // Format data with value and label
+        setSpecializations(formattedSpecializations);
+        setSelectedSpecialization(formattedSpecializations[7].value);
+      }); // Fetch the specializations
+    };
+
+    fetchSpecializations(); // Call the API function
+  }, []);
+
+  // thao tac doi bo mon
+  const handleSpecializationChange = async (event) => {
+    setSelectedSpecialization(event.target.value);
+    // let response = await getAllSubjectBySpecializationIdAPI(event.target.value);
+    // if (response && response.data) {
+    //   setListSubject(response.data);
+    //   setIsHidden("");
+    //   // setSelectedSpecialization(response.data[0].value);
+    //   // console.log(response.data);
+    // }
+  };
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        const response = await getAllSubjectBySpecializationIdAPI(
+          selectedSpecialization
+        );
+        setListSubject(response.data);
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+      }
+    };
+    fetchSubjects();
+  }, [selectedSpecialization]);
+
+  console.log(listSubject);
+
+  // const selectBoxs = [
+  //   {
+  //     options: specializations,
+  //     nameSelect: "Bộ môn",
+  //     onChange: handleSpecializationChange,
+  //     value: selectedSpecialization,
+  //     className: "mr-1 w-full md:w-[150px] pt-4 md:pt-4",
+  //   },
+  // ];
 
   return (
     <Container>
@@ -339,6 +406,14 @@ function EducationProgramManage() {
               label={`Chọn môn học cho chương trình đào tạo`}
             >
               <div>
+                <SelectBox
+                  name={"Bộ môn"}
+                  options={specializations}
+                  avaiableNameSelect={false}
+                  onChange={handleSpecializationChange}
+                  value={selectedSpecialization}
+                  className={"mr-1 w-full md:w-[150px] pt-4 md:pt-4"}
+                />
                 <div className="w-[700px] py-2">
                   <CheckboxGroup
                     items={items}
@@ -361,7 +436,7 @@ function EducationProgramManage() {
             setEditEducationProgram={setEditEducationProgram}
             setIsEditDisabled={setIsEditDisabled}
             years={years}
-            setListSubject={setListSubject}
+            // setListSubject={setListSubject}
             selectedItem={selectedItem}
             setSelectedItem={setSelectedItem}
             privateMajorValue={privateMajorValue}

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SelectBox from "../../component/SelectBox";
+import {getStatisticByYear} from '../../api/admin.js'
+import {getAllYearAPI} from '../../api/years.js'
 import {
   faChalkboardUser,
   faF,
@@ -12,15 +15,6 @@ import TitleHeader from "../../component/TitleHeader.tsx";
 import CustomLineChart from "./CustomLineChart.jsx";
 
 //line chart
-
-const data = [
-  { name: "2019", student: 4000, pass: 2400, fail: 2400 },
-  { name: "2020", student: 3000, pass: 1398, fail: 2210 },
-  { name: "2021", student: 2000, pass: 9800, fail: 2290 },
-  { name: "2022", student: 2780, pass: 3908, fail: 2000 },
-  { name: "2023", student: 1890, pass: 4800, fail: 2181 },
-  { name: "2024", student: 2390, pass: 3800, fail: 2500 },
-];
 
 const lines = [
   {
@@ -60,31 +54,90 @@ const gradients = [
 //
 
 function Statistic() {
-  const statistics = [
-    {
-      year: 2024,
-      student: 12345,
-      instructor: 12345,
-      clazz: 123,
-      pass: 1234,
-      fail: 987,
-    },
-  ];
+  const [selectedYear, setSelectedYear] = useState("2024");
+  const [years, setYears] = useState([]);
+  const [statistics, setStatistics] = useState({});
+  const [chartData, setChartData] = useState([]);
 
-  const stat = statistics[0];
+  useEffect(() => {
+    const fetchYears = async () => {
+      try {
+        const response = await getAllYearAPI();
+        if (response && response.data) {
+          const formattedYears = response.data.map((item) => ({
+            value: item.year.toString(),
+            label: item.year.toString(),
+          }));
+          setYears(formattedYears.reverse());
+        }
+      } catch (error) {
+        console.error("Error fetching years:", error);
+      }
+    };
 
+    fetchYears();
+  }, []);
+
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        const response = await getStatisticByYear(selectedYear);
+        if (response.data) {
+          setStatistics(response.data);
+
+          const yearStart = parseInt(selectedYear) - 5; 
+          const yearEnd = parseInt(selectedYear); 
+          let tempChartData = [];
+          for (let year = yearStart; year <= yearEnd; year++) {
+            const response = await getStatisticByYear(year.toString());
+            if (response.data) {
+              tempChartData.push({
+                year: year.toString(),
+                student: response.data.student_amout,
+                pass: response.data.pass,
+                fail: response.data.fail,
+              });
+            }
+          }
+
+          setChartData(tempChartData);
+        } else {
+          console.error("Invalid data structure:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    fetchStatistics();
+  }, [selectedYear]);
+  
   return (
     <Container>
       <TitleHeader title="THỐNG KÊ" />
+       {/* SelectBox for Year Selection */}
+       <div className="my-6 w-56">
+          <SelectBox
+            options={years}
+            value={selectedYear}
+            onChange={handleYearChange}
+            name="Năm học"
+            nameSelect="Chọn năm"
+            nameSelectValue=""
+          />
+        </div>
       <div className="w-full mt-6 flex md:flex-row flex-col min-h-[500px]">
         <div className="w-3/12 flex flex-col items-center justify-between">
           <div className="w-full flex border items-center rounded-md">
             <FontAwesomeIcon icon={faPeopleGroup} className="w-3/12 text-3xl" />
             <div className="w-9/12 flex flex-col p-4">
               <p className="text-lg font-medium text-blue-500">
-                Số lượng học viên
+                Số lượng sinh viên
               </p>
-              <p>{stat.student} học viên</p>
+              <p>{statistics?.student_amout ?? 0} sinh viên</p>
             </div>
           </div>
           <div className="w-full flex border items-center rounded-md">
@@ -96,7 +149,7 @@ function Statistic() {
               <p className="text-lg font-medium text-blue-500">
                 Số lượng giảng viên
               </p>
-              <p>{stat.instructor} giảng viên</p>
+              <p>{statistics?.active_instructor ?? 0} giảng viên</p>
             </div>
           </div>
           <div className="w-full flex border items-center rounded-md">
@@ -105,7 +158,7 @@ function Statistic() {
               <p className="text-lg font-medium text-blue-500">
                 Số lượng lớp hiện có
               </p>
-              <p>{stat.clazz} lớp</p>
+              <p>{statistics?.clazz_amount ?? 0} lớp</p>
             </div>
           </div>
           <div className="w-full flex border items-center rounded-md">
@@ -115,24 +168,24 @@ function Statistic() {
             />
             <div className="w-9/12 flex flex-col p-4">
               <p className="text-lg font-medium text-blue-500">
-                Học viên pass môn
+                Sinh viên pass môn
               </p>
-              <p>{stat.pass} học viên</p>
+              <p>{statistics?.pass ?? 0} học viên</p>
             </div>
           </div>
           <div className="w-full flex border items-center rounded-md">
             <FontAwesomeIcon icon={faF} className="w-3/12 text-3xl" />
             <div className="w-9/12 flex flex-col p-4">
               <p className="text-lg font-medium text-blue-500">
-                Học viên fail môn
+                Sinh viên fail môn
               </p>
-              <p>{stat.fail} học viên</p>
+              <p>{statistics?.fail ?? 0} học viên</p>
             </div>
           </div>
         </div>
 
         <div className={`w-9/12 flex items-center`}>
-          <CustomLineChart data={data} lines={lines} gradients={gradients} />
+          <CustomLineChart data={chartData} lines={lines} gradients={gradients} />
         </div>
       </div>
     </Container>

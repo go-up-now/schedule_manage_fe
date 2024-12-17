@@ -27,6 +27,7 @@ function Table({
   btnEnd = [],
   cbWidth = "w-4/12",
   StickyHeader = false,
+  nullData = "Không có dữ liệu",
 }) {
   const [filteredData, setFilteredData] = useState(data);
   const [currentPage, setCurrentPage] = useState(0);
@@ -207,11 +208,11 @@ function Table({
           className={`border bg-blue-50 ${StickyHeader ? "sticky top-0" : ""}`}
         >
           <tr>
-            <th key="STT" className="px-2 py-4">
+            <th key="STT" className="px-2 py-4 max-w-[20px]">
               STT
             </th>
             {headers.map((header, index) => (
-              <th key={index} className="px-2 py-4">
+              <th key={index} className="px-2 py-4 max-w-[50px]">
                 {header}
               </th>
             ))}
@@ -221,7 +222,7 @@ function Table({
         <tbody className="">
           {currentData.map((item, index) => (
             <tr key={index} className="border">
-              <th key={`stt-${item.id}`} className="px-2 py-4 ">
+              <th key={`stt-${item.id}`} className="px-2 py-4 max-w-[50px]">
                 {index + 1 + currentPage * rowsPerPage}
               </th>
               {renderRow(item)}
@@ -231,8 +232,8 @@ function Table({
       </table>
 
       {currentData.length === 0 && (
-        <div className="border flex justify-center items-center w-full py-20 text-2xl">
-          Không có dữ liệu
+        <div className="border flex justify-center items-center w-full h-[500px] py-20 text-2xl font-medium">
+          {nullData}
         </div>
       )}
 
@@ -252,8 +253,9 @@ function Table({
             {getPageNumbers().map((page, index) => (
               <button
                 key={index}
-                className={`mx-0 px-4 py-2 font-bold ${currentPage === page ? "bg-blue-50" : ""
-                  } rounded`}
+                className={`mx-0 px-4 py-2 font-bold ${
+                  currentPage === page ? "bg-blue-50" : ""
+                } rounded`}
                 onClick={() => setCurrentPage(page)}
               >
                 {page + 1}

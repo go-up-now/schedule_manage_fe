@@ -4,6 +4,7 @@ import Button from "../../component/Button";
 import { getSchedule, calculateDates } from "../../api/ScheduleStudent";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
+import { getCurrentProgressAPI } from "../../api/SemesterProgress.js";
 
 function StudySchedule() {
   const headers = [
@@ -65,6 +66,23 @@ function StudySchedule() {
     };
   }, []);
 
+  // CALL API CURRENT PROGRESS
+  const [currentProgress, setCurrentProgress] = useState("");
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const response = await getCurrentProgressAPI();
+        setCurrentProgress(response.data);
+      } catch (error) {
+        console.error("Error fetching schedule data:", error);
+      }
+    };
+    fetchSchedule();
+  }, []);
+  console.log(currentProgress);
+
+  //CALL API STUDY SCHEDULE
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
@@ -128,36 +146,56 @@ function StudySchedule() {
       <a href={item.link}>{item.link ? "Link" : "No Link"}</a>
     </td>,
   ];
-
+  const flag =
+    currentProgress === "first-part" || currentProgress === "second-part";
+  const scheduleNull = [];
   return (
     <Container>
       <TitleHeader title={"LỊCH HỌC"} />
-      <div className="py-4">
-        {desktop && (
-          <Table
-            DefaultTable={true}
-            showOptions={true}
-            showSelectBox={true}
-            optionsValue={numberSelectBox}
-            headers={headers}
-            renderRow={renderRow}
-            data={scheduleData}
-            maxRow={10}
-          />
-        )}
-        {mobile && (
-          <Table
-            DefaultTable={true}
-            showOptions={true}
-            showSelectBox={true}
-            optionsValue={numberSelectBox}
-            headers={header1s}
-            renderRow={renderRow1}
-            data={scheduleData}
-            maxRow={10}
-          />
-        )}
-      </div>
+      {!flag ? (
+        <>
+          <div className="py-4 min-h-[600px]">
+            <Table
+              DefaultTable={true}
+              showTurnPage={false}
+              headers={headers}
+              renderRow={renderRow}
+              data={scheduleNull}
+              maxRow={10}
+              nullData="Hiện tại chưa có lịch học"
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="py-4 min-h-[600px]">
+            {desktop && (
+              <Table
+                DefaultTable={true}
+                showOptions={true}
+                showSelectBox={true}
+                optionsValue={numberSelectBox}
+                headers={headers}
+                renderRow={renderRow}
+                data={scheduleData}
+                maxRow={10}
+              />
+            )}
+            {mobile && (
+              <Table
+                DefaultTable={true}
+                showOptions={true}
+                showSelectBox={true}
+                optionsValue={numberSelectBox}
+                headers={header1s}
+                renderRow={renderRow1}
+                data={scheduleData}
+                maxRow={10}
+              />
+            )}
+          </div>
+        </>
+      )}
     </Container>
   );
 }

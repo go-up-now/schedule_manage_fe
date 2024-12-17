@@ -24,8 +24,6 @@ export const getAllStudyResult = () => {
     });
 };
 
-
-
 //Lấy toàn bộ môn phải học trong chương trình đào tạo, nếu đã học qua phải hiện ra kết quả (Passed, Failed) và điểm trung bình
 export const getStudyHistoryByStudentIdAPI = () => {
   return axiosInstance
@@ -66,4 +64,40 @@ export const getMarkDetail = (studyInId) => {
       console.error("Lỗi khi lấy bảng điểm chi tiết của sinh viên:", error);
       throw error;
     });
+};
+
+export const getMarkByClazzId = (clazzId) => {
+  return axiosInstance
+    .get(`api/studyResult/getMarkByClazzId`, {
+      params: {
+        clazzId: clazzId,
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Lỗi khi lấy bảng điểm chi tiết của sinh viên:", error);
+      throw error;
+    });
+};
+
+export const updateMarkForStudentAPI = async (
+  studentId,
+  clazzId,
+  studyResultDTOS
+) => {
+  try {
+    const response = await axiosInstance.put(
+      "/api/studyResult/update-mark",
+      studyResultDTOS,
+      {
+        params: { studentId, clazzId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating marks:", error);
+    throw error;
+  }
 };
