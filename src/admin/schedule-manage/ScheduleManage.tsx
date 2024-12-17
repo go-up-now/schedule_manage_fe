@@ -9,10 +9,15 @@ import FontGroup from "./FontGroup.tsx";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
 import TextFieldGroup from "./TextFieldGroup.jsx";
-import { getAllYearAPI } from "../../api/years.js";
-import { getAllByBlockAndSemesterAndYear, updateScheduleAPI, createScheduleAPI, importExcelScheduleAPI } from "../../api/Schedule.js";
+import {
+  getAllByBlockAndSemesterAndYear,
+  updateScheduleAPI,
+  createScheduleAPI,
+  importExcelScheduleAPI,
+} from "../../api/Schedule.js";
 import { getAllBlocksAPI } from "../../api/Block.js";
 import { getAllSemesterAPI } from "../../api/Semester.js";
+import { getAllYearAPI } from "../../api/years.js";
 import { format } from "date-fns";
 import useConfirm from "../../hook/useConfirm.ts";
 import ModalConfirm from "../../component/ModalConfirm.tsx";
@@ -79,8 +84,7 @@ function ScheduleManage() {
   const openModal = (item, id) => {
     if (id === "chi-tiet") {
       setSelectedSchedule(item);
-    }
-    else if (id === "excel") {
+    } else if (id === "excel") {
       setIsModalOpenExcel(true);
     }
     // else if (id === "delete") {
@@ -254,8 +258,7 @@ function ScheduleManage() {
           try {
             const response = await createScheduleAPI(formattedSchedule);
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message);
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
                 toast.success("Thêm mới lịch học thành công");
                 resetForm();
@@ -275,8 +278,7 @@ function ScheduleManage() {
               values.id
             );
             if (response && response.data) {
-              if (response.statusCode !== 200)
-                toast.error(response.message);
+              if (response.statusCode !== 200) toast.error(response.message);
               if (response.statusCode === 200) {
                 toast.success("Cập nhật lịch học thành công");
                 resetForm();
@@ -297,10 +299,7 @@ function ScheduleManage() {
       };
       values.id === 0
         ? openConfirm(action, `Bạn có chắc muốn thêm lịch học này?`)
-        : openConfirm(
-          action,
-          `Bạn có chắc muốn cập nhật lịch học này?`
-        );
+        : openConfirm(action, `Bạn có chắc muốn cập nhật lịch học này?`);
     },
   });
 
@@ -310,7 +309,7 @@ function ScheduleManage() {
     subject_name: item.subject_name,
     clazz_code: item.clazz_code,
     instructor_code: item.instructor_code,
-    instructor_name: item.instructor_lastName + ' ' + item.instructor_firstName,
+    instructor_name: item.instructor_lastName + " " + item.instructor_firstName,
     date_schedule: item.date_schedule,
     shift_id: item.shift_id,
     room_name: item.room_name,
@@ -327,18 +326,18 @@ function ScheduleManage() {
       date: new Date("2025-01-03"),
       clazzCode: "SD18301",
       year: 2024,
-      semester: 'Spring',
+      semester: "Spring",
       block: 1,
-      subjectCode: 'COM203'
+      subjectCode: "COM203",
     },
     {
       STT: "2",
       date: new Date("2025-01-06"),
       clazzCode: "SD18303",
       year: 2024,
-      semester: 'Spring',
+      semester: "Spring",
       block: 2,
-      subjectCode: 'SOF203'
+      subjectCode: "SOF203",
     },
   ];
 
@@ -366,7 +365,8 @@ function ScheduleManage() {
               className=""
               label={
                 <>
-                  {selectedSchedule.clazz_code} - {selectedSchedule.subject_code} -{" "}
+                  {selectedSchedule.clazz_code} -{" "}
+                  {selectedSchedule.subject_code} -{" "}
                   {format(selectedSchedule.date_schedule, "dd/MM/yyyy")}
                 </>
               }

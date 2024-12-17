@@ -7,14 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleLeft, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../component/Container.tsx";
 import TitleHeader from "../../component/TitleHeader.tsx";
-import { getAllStudentbyClazzId } from "../../api/Student.js";
+import { doArrangeBatchAPI } from "../../api/ArrangeBatch.js";
+import { toast } from "react-toastify";
 
 function ExamArrange() {
   const location = useLocation();
-  const { item, studentList } = location.state || {};
+  const { item, students } = location.state || {};
+
   const navigate = useNavigate();
-  console.log("studentListCallAPI at EXAM");
-  console.log(studentList);
   const numberBoard = Array.from({ length: 3 }, (_, index) => index + 1);
 
   const handleStudentListClick = useCallback(
@@ -42,70 +42,28 @@ function ExamArrange() {
     },
   ];
 
-  const saveList = () => {
-    console.log("danh sach thi cua idClazz: " + item.id + "|" + listExam);
+  // const saveList = () => {
+  //   console.log("danh sach thi cua idClazz: " + item.clazz_id + "|" + listExam);
+  // };
+
+  const saveList = async () => {
+    try {
+      const arrangeBatchDTOS = listExam.split(";").map((entry) => {
+        const { clazz_id, student_id, batch } = JSON.parse(entry);
+        return {
+          clazzId: clazz_id,
+          studentId: student_id,
+          batch: batch,
+        };
+      });
+
+      await doArrangeBatchAPI(arrangeBatchDTOS);
+      toast.success("Xếp lịch thi thành công!");
+    } catch (error) {
+      console.error("Error arranging batch:", error);
+      toast.error("Lỗi khi xếp lịch thi!");
+    }
   };
-
-  // call api
-
-  // const students = [
-  //   {
-  //     studentId: 1,
-  //     studentName: "Nguyễn Trung Hiếu",
-  //     avatar: "student1.png",
-  //     studentCode: "PS27619",
-  //     studentEmail: "hieuntps27619@fpt.edu.vn",
-  //     condition: true,
-  //   },
-  //   {
-  //     studentId: 2,
-  //     studentEmail: "nhuntdps27430@fpt.edu.vn",
-  //     studentCode: "PS27430",
-  //     studentName: "Ngô Thị Đức Nhu",
-  //     condition: true,
-  //     avatar: "student2.png",
-  //   },
-  //   {
-  //     studentName: "Liêu Vinh Phát",
-  //     condition: true,
-  //     studentId: 3,
-  //     studentCode: "PS27456",
-  //     studentEmail: "phatlvps27456@fpt.edu.vn",
-  //     avatar: "student3.png",
-  //   },
-  //   {
-  //     studentId: 4,
-  //     studentName: "Nguyễn Tiến Học",
-  //     condition: true,
-  //     studentEmail: "hocntps27837@fpt.edu.vn",
-  //     avatar: "student4.png",
-  //     studentCode: "PS27837",
-  //   },
-  //   {
-  //     studentName: "Nguyễn Hưũ Nghĩa",
-  //     studentCode: "PS27127",
-  //     studentId: 5,
-  //     avatar: "student5.png",
-  //     condition: true,
-  //     studentEmail: "nghianhps27127@fpt.edu.vn",
-  //   },
-  //   {
-  //     studentName: "Nguyễn Hoàng Lệ Băng",
-  //     avatar: "student7.png",
-  //     condition: true,
-  //     studentCode: "PS27457",
-  //     studentId: 7,
-  //     studentEmail: "bangnhlps27457@fpt.edu.vn",
-  //   },
-  //   {
-  //     studentEmail: "bichnhnps27838@fpt.edu.vn",
-  //     studentId: 8,
-  //     studentName: "Nguyễn Hoàng Ngọc Bích",
-  //     studentCode: "PS27838",
-  //     condition: true,
-  //     avatar: "student8.png",
-  //   },
-  // ];
 
   return (
     <Container>
@@ -117,12 +75,13 @@ function ExamArrange() {
         <div className="h-[700px]">
           <DragDrop
             numberBoard={numberBoard}
-            initialStudents={studentList}
+            initialStudents={students}
             showOptions={true}
             showSearchItem={true}
             showRandomBtn={true}
             showOtherBtn={true}
             otherBtns={getbackBtn}
+            clazz={item}
           />
         </div>
 

@@ -19,6 +19,10 @@ const TextField = ({
   max, // Add max prop
   required = true,
 }) => {
+  const handleFocus = (event) => {
+    event.target.select(); // Selects all text inside the input field
+  };
+
   return (
     <div className={`${className}`}>
       {onField && (
@@ -51,6 +55,7 @@ const TextField = ({
               }`}
               min={type === "number" ? min : undefined} // Set min if type is number
               max={type === "number" ? max : undefined} // Set max if type is number
+              onFocus={handleFocus}
             />
           </div>
         </>
@@ -85,6 +90,7 @@ const TextField = ({
                 } `}
                 min={type === "number" ? min : undefined} // Set min if type is number
                 max={type === "number" ? max : undefined} // Set max if type is number
+                onFocus={handleFocus}
               />
             </div>
           </div>

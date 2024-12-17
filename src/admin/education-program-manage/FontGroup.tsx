@@ -5,28 +5,28 @@ import Button from "../../component/Button";
 import { yearOption, semesters } from "./DataSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
-import * as Yup from 'yup';
-import { FormikProps } from 'formik';
+import * as Yup from "yup";
+import { FormikProps } from "formik";
 import Spinner from "../../component/Spinner.tsx";
 import BoxComponent from "../../component/BoxComponent.tsx";
-import { getAllPrivateMajorAPI } from '../../api/PrivateMajor.js';
-import { getAllSubjectBySpecializationIdAPI } from '../../api/Subject.js'
+import { getAllPrivateMajorAPI } from "../../api/PrivateMajor.js";
+import { getAllSubjectBySpecializationIdAPI } from "../../api/Subject.js";
 
 interface FontGroupProps {
   isEditDisabled?: boolean;
-  onClick?: (React.MouseEventHandler<HTMLButtonElement>);
-  onClickAddSubject?: (React.MouseEventHandler<HTMLButtonElement>);
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onClickAddSubject?: React.MouseEventHandler<HTMLButtonElement>;
   formik: FormikProps<any>;
   loading?: boolean;
-  setEditEducationProgram
-  setIsEditDisabled
-  years,
-  setListSubject
+  setEditEducationProgram;
+  setIsEditDisabled;
+  years;
+  // setListSubject;
   selectedItem;
   setSelectedItem;
-  privateMajorValue
-  setIsHidden
-  isHidden
+  privateMajorValue;
+  setIsHidden;
+  isHidden;
 }
 
 interface PrivateMajor {
@@ -38,13 +38,10 @@ interface PrivateMajor {
 // Xác thực giảng viên
 export const iducationProgramValidationSchema = Yup.object().shape({
   id: Yup.number().required(),
-  privateMajorId: Yup.string()
-    .required("Vui lòng chọn chuyên ngành hẹp"),
-  name: Yup.string().required('Vui lòng nhập tên chương trình'),
-  semester: Yup.string()
-    .required("Vui lòng chọn học kỳ triển khai"),
-  year: Yup.string()
-    .required("Vui lòng chọn năm triển khai"),
+  privateMajorId: Yup.string().required("Vui lòng chọn chuyên ngành hẹp"),
+  name: Yup.string().required("Vui lòng nhập tên chương trình"),
+  semester: Yup.string().required("Vui lòng chọn học kỳ triển khai"),
+  year: Yup.string().required("Vui lòng chọn năm triển khai"),
 });
 
 const FontGroup: React.FC<FontGroupProps> = ({
@@ -56,7 +53,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
   setEditEducationProgram,
   setIsEditDisabled,
   years,
-  setListSubject,
+  // setListSubject,
   selectedItem,
   setSelectedItem,
   privateMajorValue,
@@ -68,28 +65,28 @@ const FontGroup: React.FC<FontGroupProps> = ({
 
   useEffect(() => {
     setAreSelectBoxesDisabled(isEditDisabled);
-    if (isEditDisabled)
-      setIsHidden('')
+    if (isEditDisabled) setIsHidden("");
   }, [isEditDisabled]);
 
   const handleResetForm = () => {
-    setAreSelectBoxesDisabled(false)
+    setAreSelectBoxesDisabled(false);
     setIsEditDisabled(false);
-    if (formik.getFieldProps('id').value === 0) {
+    if (formik.getFieldProps("id").value === 0) {
       formik.resetForm();
+    } else {
+      setEditEducationProgram(null);
     }
-    else {
-      setEditEducationProgram(null)
-    }
-    setIsHidden('hidden')
-    setSelectedItem([])
+    setIsHidden("hidden");
+    setSelectedItem([]);
   };
 
   const handleEdit = () => {
-    formik.setFieldValue('privateMajorId', privateMajorValue); // Cập nhật giá trị Formik
+    formik.setFieldValue("privateMajorId", privateMajorValue); // Cập nhật giá trị Formik
 
     // Tìm option tương ứng với giá trị mới
-    const selectedOption = privateMajorOptions.find(option => option.value == privateMajorValue);
+    const selectedOption = privateMajorOptions.find(
+      (option) => option.value == privateMajorValue
+    );
 
     // Gọi hàm onChange thủ công
     if (selectedOption) {
@@ -105,31 +102,35 @@ const FontGroup: React.FC<FontGroupProps> = ({
 
   const handleChangeprivateMajor = async (value) => {
     // Tìm option dựa trên giá trị được chọn
-    const selectOption = privateMajorOptions.filter(option => option.value == value)
+    const selectOption = privateMajorOptions.filter(
+      (option) => option.value == value
+    );
 
     // Lấy giá trị 'specializationId' từ option đã chọn
     if (selectOption) {
       const specializationId = selectOption[0]?.specializationId;
       if (specializationId) {
-        let response = await getAllSubjectBySpecializationIdAPI(specializationId);
-        if (response && response.data) {
-          setListSubject(response.data)
-          setIsHidden('');
-        }
-      }
-      else {
-        setIsHidden('hidden');
+        setIsHidden("");
+
+        // let response = await getAllSubjectBySpecializationIdAPI(
+        //   specializationId
+        // );
+        // if (response && response.data) {
+        //   setListSubject(response.data);
+        //   setIsHidden("");
+        // }
+      } else {
+        setIsHidden("hidden");
       }
     }
-  }
+  };
 
   // Tạo option subject
-  const privateMajorOptions = listPrivateMajor?.map(privateMajor => (
-    {
-      value: `${privateMajor.id}`,
-      label: `${privateMajor.name}`,
-      specializationId: `${privateMajor.specializationId}`,
-    }));
+  const privateMajorOptions = listPrivateMajor?.map((privateMajor) => ({
+    value: `${privateMajor.id}`,
+    label: `${privateMajor.name}`,
+    specializationId: `${privateMajor.specializationId}`,
+  }));
 
   const handleAPI = async () => {
     // get AllPrivateMajor
@@ -140,7 +141,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
       .catch((error) => {
         console.error("Failed to fetch all subject:", error);
       });
-  }
+  };
 
   useEffect(() => {
     handleAPI();
@@ -153,55 +154,71 @@ const FontGroup: React.FC<FontGroupProps> = ({
           onField={true}
           placeholder="Tên chương trình"
           className="p-0 mt-2"
-          className1={`w-full ${formik.touched.name && formik.errors.name && 'border-red-500'}`}
+          className1={`w-full ${
+            formik.touched.name && formik.errors.name && "border-red-500"
+          }`}
           // disabled={areSelectBoxesDisabled}
-          {...formik.getFieldProps('name')}
+          {...formik.getFieldProps("name")}
         />
         {formik.errors.name && formik.touched.name && (
-          <div className='text-red-500'>{formik.errors.name as string}</div>
+          <div className="text-red-500">{formik.errors.name as string}</div>
         )}
       </div>
       <div className="pt-6 mb-2">
         <SelectBox
           options={years ? years : yearOption}
           nameSelect="Năm triển khai"
-          nameSelectValue=''
-          className1={`w-full ${formik.touched.year && formik.errors.year && 'border-red-500'}`}
-          onChange={(value) => formik.setFieldValue('year', value.target.value)}
+          nameSelectValue=""
+          className1={`w-full ${
+            formik.touched.year && formik.errors.year && "border-red-500"
+          }`}
+          onChange={(value) => formik.setFieldValue("year", value.target.value)}
           value={formik.values.year || undefined}
         />
         {formik.errors.year && formik.touched.year && (
-          <div className='text-red-500'>{formik.errors.year as string}</div>
+          <div className="text-red-500">{formik.errors.year as string}</div>
         )}
       </div>
       <div className="pt-6 mb-2">
         <SelectBox
           options={semesters}
           nameSelect="Học kỳ triển khai"
-          nameSelectValue=''
-          className1={`w-full ${formik.touched.semester && formik.errors.semester && 'border-red-500'}`}
-          onChange={(value) => formik.setFieldValue('semester', value.target.value)}
+          nameSelectValue=""
+          className1={`w-full ${
+            formik.touched.semester &&
+            formik.errors.semester &&
+            "border-red-500"
+          }`}
+          onChange={(value) =>
+            formik.setFieldValue("semester", value.target.value)
+          }
           value={formik.values.semester || undefined}
         />
         {formik.errors.semester && formik.touched.semester && (
-          <div className='text-red-500'>{formik.errors.semester as string}</div>
+          <div className="text-red-500">{formik.errors.semester as string}</div>
         )}
       </div>
       <div className="pt-6 mb-2">
         <SelectBox
           options={privateMajorOptions}
           nameSelect="Chuyên ngành hẹp"
-          nameSelectValue=''
-          className1={`w-full ${formik.touched.privateMajorId && formik.errors.privateMajorId && 'border-red-500'}`}
+          nameSelectValue=""
+          className1={`w-full ${
+            formik.touched.privateMajorId &&
+            formik.errors.privateMajorId &&
+            "border-red-500"
+          }`}
           // onChange={(value) => formik.setFieldValue('privateMajorId', value.target.value)}
           value={formik.values.privateMajorId || undefined}
           onChange={(value) => {
-            formik.setFieldValue('privateMajorId', value.target.value);
-            handleChangeprivateMajor(value.target.value)
+            formik.setFieldValue("privateMajorId", value.target.value);
+            handleChangeprivateMajor(value.target.value);
           }}
         />
         {formik.errors.privateMajorId && formik.touched.privateMajorId && (
-          <div className='text-red-500'>{formik.errors.privateMajorId as string}</div>
+          <div className="text-red-500">
+            {formik.errors.privateMajorId as string}
+          </div>
         )}
       </div>
 
@@ -233,9 +250,7 @@ const FontGroup: React.FC<FontGroupProps> = ({
                   <Spinner className="text-white" />
                 </>
               ) : (
-                <>
-                  Lưu
-                </>
+                <>Lưu</>
               )
             }
             className="w-11/12 p-2 text-white justify-center"
@@ -255,6 +270,6 @@ const FontGroup: React.FC<FontGroupProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default FontGroup;
