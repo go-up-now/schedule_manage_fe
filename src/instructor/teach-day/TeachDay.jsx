@@ -135,11 +135,11 @@ function TeachDay() {
   const handleCancelSchedule = async (clazz) => {
     try {
       // Fetch schedule details based on the class scheduleId
-      const scheduleData = await getScheduleById(clazz.scheculeId);
+      const scheduleData = await getScheduleById(clazz.scheduleId);
       console.log("Schedule Data:", scheduleData); // Log fetched schedule data
 
       // Call the cancelSchedule API with the correct data
-      const response = await cancelSchedule(clazz.scheculeId, scheduleData);
+      const response = await cancelSchedule(clazz.scheduleId, scheduleData);
       console.log("Lịch dạy đã được huỷ thành công:", response);
 
       // Success toast
@@ -151,7 +151,7 @@ function TeachDay() {
     } catch (error) {
       console.error("Lỗi khi huỷ lịch dạy:", error);
       // Show error toast
-      const scheduleData = await getScheduleById(clazz.scheculeId);
+      const scheduleData = await getScheduleById(clazz.scheduleId);
       console.log("Schedule Data:", scheduleData);
       toast.error("HUỶ THẤT BẠI");
     }

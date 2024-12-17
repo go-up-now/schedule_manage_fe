@@ -44,6 +44,7 @@ function CheckAttendance() {
           if (data && data.length > 0) {
             const initializedData = data.map((student) => ({
               ...student,
+              presentable: true,
             }));
             setStudentList(initializedData);
             console.log("lấy danh sách diem danh thành công");
@@ -99,6 +100,7 @@ function CheckAttendance() {
           const initializedData = data.map((student) => ({
             ...student,
             present: false,
+            presentable: true,
           }));
           setStudentList(initializedData);
           console.log("Lay danh sach diem danh []");
@@ -189,7 +191,7 @@ function CheckAttendance() {
     const attendanceList = studentList.map((student) => ({
       studentId: student.studentId,
       scheduleId: item.scheduleId,
-      present: student.present,
+      present: student.present || false,
     }));
     console.log("Payload to be sent:", attendanceList);
 
