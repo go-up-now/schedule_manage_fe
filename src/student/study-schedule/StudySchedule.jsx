@@ -147,7 +147,8 @@ function StudySchedule() {
     </td>,
   ];
   const flag =
-    currentProgress === "first-part" || currentProgress === "second-part";
+    currentProgress.currentProgress === "first-part" ||
+    currentProgress.currentProgress === "second-part";
   const scheduleNull = [];
   return (
     <Container>

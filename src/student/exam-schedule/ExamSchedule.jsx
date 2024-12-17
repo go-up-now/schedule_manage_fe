@@ -152,7 +152,8 @@ function ExamSchedule() {
   }, [mobile, desktop]);
 
   const flag =
-    currentProgress === "first-part" || currentProgress === "second-part";
+    currentProgress.currentProgress === "first-part" ||
+    currentProgress.currentProgress === "second-part";
   const scheduleNull = [];
 
   return (
